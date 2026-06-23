@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>ABID SIR · premium gaming</title>
+  <!-- SEO Meta -->
+  <meta name="description" content="ABID SIR – premium gaming hub. Exclusive files, monthly membership 2000 PKR, secure access, gaming updates.">
+  <meta name="keywords" content="ABID SIR, gaming, premium, files, membership, PKR, updates">
+  <link rel="canonical" href="https://abidsir.gaming">
+  <!-- Font & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+    }
+
+    body {
+      background: #0b0d12;
+      color: #e3e9f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .glass-container {
+      max-width: 1300px;
+      width: 100%;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 3rem 3rem 2rem 2rem;
+      padding: 1.8rem 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 180, 255, 0.15);
+      border: 1px solid rgba(0, 180, 255, 0.2);
+      transition: all 0.2s;
+    }
+
+    /* ===== HEADER / BRAND ===== */
+    .brand-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 200, 255, 0.15);
+      padding-bottom: 1rem;
+    }
+
+    .logo h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(145deg, #a0f0ff, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo i {
+      font-size: 2.2rem;
+      color: #00ccff;
+      -webkit-text-fill-color: #00ccff;
+      filter: drop-shadow(0 0 8px #00a6ff);
+    }
+
+    .membership-badge {
+      background: #0f1a2b;
+      padding: 0.5rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid #00a3ff;
+      box-shadow: 0 0 12px #003b6b;
+      color: #b3e4ff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .membership-badge i {
+      color: #ffd966;
+    }
+
+    /* ===== BANNER ===== */
+    .hero-banner {
+      background: radial-gradient(circle at 20% 30%, #0b2a3f, #03080f);
+      border-radius: 2.5rem;
+      padding: 2rem 2.5rem;
+      margin-bottom: 2.2rem;
+      border: 1px solid #005f8a;
+      box-shadow: 0 0 30px rgba(0, 140, 255, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: "⚡";
+      font-size: 11rem;
+      opacity: 0.04;
+      position: absolute;
+      right: -1rem;
+      bottom: -2rem;
+      transform: rotate(15deg);
+      color: #00c8ff;
+      pointer-events: none;
+    }
+
+    .hero-text h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #ddf0ff;
+    }
+
+    .hero-text h2 span {
+      color: #00dcff;
+      text-shadow: 0 0 20px #0088ff;
+    }
+
+    .hero-text p {
+      color: #9fbad0;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    .cta-whatsapp {
+      background: #1d2b3a;
+      padding: 0.6rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #25d366;
+      color: #25d366;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: 0.2s;
+      text-decoration: none;
+      font-size: 1.1rem;
+      box-shadow: 0 0 15px #1f8b4d40;
+    }
+
+    .cta-whatsapp:hover {
+      background: #25d366;
+      color: #0b0d12;
+      transform: scale(1.02);
+      border-color: #9effb2;
+    }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 2.5rem;
+      margin-bottom: 2rem;
+      background: #0b111e80;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #1b3349;
+      justify-content: center;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      color: #b8d0e5;
+    }
+
+    .stat-item i {
+      color: #00c3ff;
+      width: 1.6rem;
+      font-size: 1.3rem;
+    }
+
+    .stat-number {
+      font-weight: 700;
+      color: #ddf4ff;
+      background: #142433;
+      padding: 0 0.7rem;
+      border-radius: 30px;
+      font-size: 1.2rem;
+    }
+
+    /* ===== PASSWORD PROTECT (simulated) ===== */
+    .access-panel {
+      background: #0d1624;
+      border-radius: 2rem;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 2rem;
+      border: 1px solid #00507a;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .access-panel label {
+      font-weight: 600;
+      color: #b0d5ff;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .access-panel input {
+      background: #01060e;
+      border: 1px solid #1f4a6b;
+      padding: 0.6rem 1.2rem;
+      border-radius: 60px;
+      color: white;
+      font-size: 1rem;
+      min-width: 180px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .access-panel input:focus {
+      border-color: #00a6ff;
+      box-shadow: 0 0 20px #0077ff60;
+    }
+
+    .btn {
+      background: #005f9e;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid #0088d0;
+      box-shadow: 0 0 12px #004c80;
+    }
+
+    .btn:hover {
+      background: #0080cc;
+      transform: scale(1.02);
+      box-shadow: 0 0 25px #0080ff;
+    }
+
+    .btn-admin {
+      background: #202f44;
+      border-color: #3d6d8f;
+    }
+
+    /* ===== ANNOUNCEMENT ===== */
+    .announce-box {
+      background: #0d1c2b;
+      border-left: 5px solid #00b7ff;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      box-shadow: 0 0 15px #00386560;
+    }
+
+    .announce-box i {
+      color: #00e0ff;
+      font-size: 1.4rem;
+    }
+
+    .announce-text {
+      color: #c2defa;
+      font-weight: 500;
+    }
+
+    .announce-text strong {
+      color: #ffd966;
+    }
+
+    /* ===== FILES GRID ===== */
+    .file-section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 1.2rem 0 0.8rem 0;
+    }
+
+    .file-section-title h3 {
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: #b0d5ff;
+      border-bottom: 2px solid #006b9e;
+      padding-bottom: 0.3rem;
+    }
+
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .file-card {
+      background: #0f1a26;
+      border-radius: 1.8rem;
+      padding: 1.2rem 1rem 1.2rem 1rem;
+      border: 1px solid #1c3f59;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+
+    .file-card:hover {
+      transform: translateY(-6px);
+      border-color: #00a6ff;
+      box-shadow: 0 0 30px #004c7a70;
+    }
+
+    .file-label {
+      background: #002a44;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #8bcbff;
+      border: 1px solid #0077be;
+      margin-bottom: 0.8rem;
+    }
+
+    .file-card h4 {
+      font-size: 1.1rem;
+      color: #d8edff;
+      margin-bottom: 0.5rem;
+    }
+
+    .file-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #7797b0;
+      margin: 0.5rem 0 0.8rem 0;
+    }
+
+    .file-download-btn {
+      background: #003759;
+      border: 1px solid #0080c0;
+      padding: 0.4rem 1rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #b0e0ff;
+      transition: 0.2s;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .file-download-btn i {
+      color: #00ccff;
+    }
+
+    .file-download-btn.enabled {
+      cursor: pointer;
+      background: #004b77;
+    }
+
+    .file-download-btn.enabled:hover {
+      background: #0073b0;
+      color: white;
+    }
+
+    /* ===== ADMIN PANEL (collapsible) ===== */
+    .admin-area {
+      margin-top: 2rem;
+      background: #0b111e;
+      border-radius: 2rem;
+      padding: 1.5rem 2rem;
+      border: 1px solid #1f405b;
+    }
+
+    .admin-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-toggle h4 {
+      color: #9dc6ff;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    .admin-toggle i {
+      color: #0099ff;
+      margin-right: 0.5rem;
+    }
+
+    .admin-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      margin-top: 1.5rem;
+      align-items: center;
+      border-top: 1px solid #1f3850;
+      padding-top: 1.5rem;
+    }
+
+    .admin-controls input,
+    .admin-controls select {
+      background: #030a14;
+      border: 1px solid #1d4a6b;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      color: white;
+    }
+
+    .admin-controls .btn {
+      background: #113755;
+      border-color: #0066aa;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-note {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #43647a;
+      border-top: 1px solid #162b3d;
+      padding-top: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .glass-container { padding: 1rem; }
+      .hero-text h2 { font-size: 1.6rem; }
+      .logo h1 { font-size: 1.8rem; }
+      .stats-grid { border-radius: 30px; padding: 0.5rem 1rem; gap: 0.8rem; }
+      .access-panel { flex-direction: column; align-items: stretch; }
+      .admin-controls { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+<div class="glass-container">
+
+  <!-- Brand -->
+  <div class="brand-bar">
+    <div class="logo">
+      <h1><i class="fas fa-crown"></i> ABID SIR</h1>
+    </div>
+    <div class="membership-badge">
+      <i class="fas fa-star"></i> 2000 PKR / month
+    </div>
+  </div>
+
+  <!-- Banner -->
+  <div class="hero-banner">
+    <div class="hero-text">
+      <h2>🔥 <span>Premium</span> Gaming Vault</h2>
+      <p>Exclusive files · daily updates · neon speed</p>
+    </div>
+    <a href="#" class="cta-whatsapp"><i class="fab fa-whatsapp"></i> Contact</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-item"><i class="fas fa-download"></i> Downloads <span class="stat-number" id="downloadCounter">1,284</span></div>
+    <div class="stat-item"><i class="fas fa-eye"></i> Visitors <span class="stat-number" id="visitorCounter">9,471</span></div>
+    <div class="stat-item"><i class="fas fa-file-archive"></i> Files <span class="stat-number">12</span></div>
+  </div>
+
+  <!-- Password protection (simulated) -->
+  <div class="access-panel">
+    <label><i class="fas fa-lock"></i> Member access</label>
+    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+      <input type="password" id="accessKey" placeholder="Enter password" value="gaming2026">
+      <button class="btn" id="authBtn"><i class="fas fa-key"></i> Unlock</button>
+    </div>
+    <span style="font-size:0.75rem; color:#2f7090;"><i class="fas fa-shield-alt"></i> authorized only</span>
+  </div>
+
+  <!-- Announcement -->
+  <div class="announce-box">
+    <i class="fas fa-bullhorn"></i>
+    <div class="announce-text"><strong>📢 NEW:</strong> Cyberpunk 2077 mod pack + 4K textures uploaded. Monthly update #12.</div>
+  </div>
+
+  <!-- File section -->
+  <div class="file-section-title">
+    <h3><i class="fas fa-folder-open" style="margin-right: 10px;"></i> Game files</h3>
+    <span style="color:#2b6b8f; font-size:0.8rem;"><i class="fas fa-tag"></i> label banner above each file</span>
+  </div>
+
+  <div class="file-grid" id="fileGrid">
+    <!-- card 1 -->
+    <div class="file-card">
+      <div class="file-label"><i class="fas fa-flag"></i> PREMIUM</div>
+      <h4>Cyberpunk 2077 · Ultra+</h4>
+      <div class="file-meta"><span>v2.1</span> <span>1.8 GB</span></div>
+      <div class="file-download-btn enabled" data-file="cyberpunk-ultra"><i class="fas fa-download"></i> Download</div>
+      <div style="font-size:0.65rem; color:#3d6e8a; margin-top: 0.3rem;">⬆️ updated: today</div>
+    </div>
+    <!-- card 2 -->
+    <div class="file-card">
+      <div class="file-label"><i class="fas fa-crown"></i> EXCLUSIVE</div>
+      <h4>Call of Duty · MW3</h4>
+      <div class="file-meta"><span>season 6</span> <span>2.1 GB</span></div>
+      <div class="file-download-btn enabled" data-file="cod-mw3"><i class="fas fa-download"></i> Download</div>
+      <div style="font-size:0.65rem; color:#3d6e8a; margin-top: 0.3rem;">⬆️ updated: 2d ago</div>
+    </div>
+    <!-- card 3 -->
+    <div class="file-card">
+      <div class="file-label"><i class="fas fa-bolt"></i> FLASH</div>
+      <h4>Fortnite · 4K pack</h4>
+      <div class="file-meta"><span>v28.1</span> <span>1.2 GB</span></div>
+      <div class="file-download-btn enabled" data-file="fortnite-4k"><i class="fas fa-download"></i> Download</div>
+      <div style="font-size:0.65rem; color:#3d6e8a; margin-top: 0.3rem;">⬆️ updated: 5d ago</div>
+    </div>
+  </div>
+
+  <!-- Admin panel -->
+  <div class="admin-area">
+    <div class="admin-toggle">
+      <h4><i class="fas fa-user-cog"></i> Admin panel</h4>
+      <span style="color: #317a9e; font-size: 0.8rem;"><i class="fas fa-sync-alt"></i> manage files & passwords</span>
+    </div>
+    <div class="admin-controls">
+      <input type="text" placeholder="New password" id="newPassInput" value="gaming2026">
+      <button class="btn btn-admin" id="updatePassBtn"><i class="fas fa-key"></i> Update password</button>
+      <input type="file" id="fileUpload" style="display: none;">
+      <button class="btn btn-admin" id="uploadFileBtn"><i class="fas fa-upload"></i> Upload file</button>
+      <button class="btn btn-admin" id="replaceFileBtn"><i class="fas fa-exchange-alt"></i> Replace file</button>
+    </div>
+    <div style="margin-top: 1rem; color: #437a97; font-size:0.85rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
+      <span><i class="fas fa-check-circle" style="color:#00bb8c;"></i> Admin: update & change passwords anytime</span>
+      <span><i class="fas fa-cloud-upload-alt" style="color:#00bbf0;"></i> Upload / manage files online</span>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure member access
+  </div>
+</div>
+
+<script>
+  // ========== FIREBASE INIT (your config) ==========
+  const firebaseConfig = {
+    apiKey: "AIzaSyALnJyYqSpgZeapdNUkAKkwImgijuG935g",
+    authDomain: "abid-sir-6fa1d.firebaseapp.com",
+    projectId: "abid-sir-6fa1d",
+    storageBucket: "abid-sir-6fa1d.firebasestorage.app",
+    messagingSenderId: "870139030210",
+    appId: "1:870139030210:web:5237413bfcf9ba0c59a95b",
+    measurementId: "G-B2WJW1REN1"
+  };
+
+  // Initialize Firebase (using compat libraries loaded in HTML)
+  const app = firebase.initializeApp(firebaseConfig);
+  const analytics = firebase.analytics(app);
+
+  // (Optional) log a custom event to verify Firebase is working
+  analytics.logEvent('page_view', { page_title: 'ABID SIR Gaming' });
+
+  // ========== REST OF YOUR SCRIPT (unchanged) ==========
+  (function() {
+    // Simulate password protection + admin
+    let currentPassword = "gaming2026";
+    let isAuthorized = false; // simple client-side simulation
+
+    const authBtn = document.getElementById('authBtn');
+    const accessInput = document.getElementById('accessKey');
+    const downloadBtns = document.querySelectorAll('.file-download-btn');
+
+    function updateDownloadButtons(enable) {
+      downloadBtns.forEach(btn => {
+        if (enable) {
+          btn.classList.add('enabled');
+          btn.style.cursor = 'pointer';
+          btn.style.opacity = '1';
+        } else {
+          btn.classList.remove('enabled');
+          btn.style.cursor = 'default';
+          btn.style.opacity = '0.5';
+        }
+      });
+    }
+
+    // initial state: unlocked because demo, but we set as authorized = true for demo
+    isAuthorized = true; 
+    updateDownloadButtons(true);
+
+    authBtn.addEventListener('click', function() {
+      const entered = accessInput.value.trim();
+      if (entered === currentPassword) {
+        isAuthorized = true;
+        updateDownloadButtons(true);
+        alert('✅ Access granted. Welcome member!');
+      } else {
+        isAuthorized = false;
+        updateDownloadButtons(false);
+        alert('❌ Invalid password. Access denied.');
+      }
+    });
+
+    // download handler (simulated)
+    document.querySelectorAll('.file-download-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        if (!isAuthorized) {
+          alert('⛔ Please enter valid password to download.');
+          return;
+        }
+        if (!this.classList.contains('enabled')) return;
+        // download counter increment
+        let counterSpan = document.getElementById('downloadCounter');
+        let current = parseInt(counterSpan.innerText.replace(/,/g,''));
+        if (!isNaN(current)) {
+          current += 1;
+          counterSpan.innerText = current.toLocaleString();
+        }
+        alert(`⬇️ Download started: ${this.getAttribute('data-file') || 'file'}`);
+      });
+    });
+
+    // visitor counter (simulate increment)
+    let visitorSpan = document.getElementById('visitorCounter');
+    let visitorVal = parseInt(visitorSpan.innerText.replace(/,/g,''));
+    if (!isNaN(visitorVal)) {
+      visitorVal += 1;
+      visitorSpan.innerText = visitorVal.toLocaleString();
+    }
+
+    // Admin: update password
+    document.getElementById('updatePassBtn').addEventListener('click', function() {
+      const newPass = document.getElementById('newPassInput').value.trim();
+      if (newPass.length < 4) {
+        alert('Password must be at least 4 characters.');
+        return;
+      }
+      currentPassword = newPass;
+      accessInput.value = newPass; // reflect
+      alert(`✅ Password updated successfully! New password: ${newPass}`);
+    });
+
+    // Admin: upload file (simulate)
+    document.getElementById('uploadFileBtn').addEventListener('click', function() {
+      const fileInput = document.getElementById('fileUpload');
+      fileInput.click();
+      fileInput.onchange = function() {
+        if (this.files.length > 0) {
+          const file = this.files[0];
+          alert(`📁 File "${file.name}" uploaded successfully (simulated).`);
+          // add a new file card
+          const grid = document.getElementById('fileGrid');
+          const card = document.createElement('div');
+          card.className = 'file-card';
+          card.innerHTML = `
+            <div class="file-label"><i class="fas fa-tag"></i> NEW</div>
+            <h4>${file.name}</h4>
+            <div class="file-meta"><span>custom</span> <span>${(file.size/1024/1024).toFixed(1)} MB</span></div>
+            <div class="file-download-btn enabled" data-file="${file.name}"><i class="fas fa-download"></i> Download</div>
+            <div style="font-size:0.65rem; color:#3d6e8a; margin-top: 0.3rem;">⬆️ uploaded just now</div>
+          `;
+          grid.appendChild(card);
+          // rebind download
+          const newBtn = card.querySelector('.file-download-btn');
+          newBtn.addEventListener('click', function(e) {
+            if (!isAuthorized) { alert('⛔ Please enter valid password.'); return; }
+            let counterSpan = document.getElementById('downloadCounter');
+            let current = parseInt(counterSpan.innerText.replace(/,/g,''));
+            if (!isNaN(current)) { current += 1; counterSpan.innerText = current.toLocaleString(); }
+            alert(`⬇️ Download started: ${this.getAttribute('data-file')}`);
+          });
+          // update file count
+          const fileCountSpan = document.querySelector('.stat-item:last-child .stat-number');
+          if (fileCountSpan) {
+            let count = parseInt(fileCountSpan.innerText) || 0;
+            fileCountSpan.innerText = count + 1;
+          }
+        }
+        this.value = '';
+      };
+    });
+
+    // Admin: replace file (simulate)
+    document.getElementById('replaceFileBtn').addEventListener('click', function() {
+      const fileInput = document.getElementById('fileUpload');
+      fileInput.click();
+      fileInput.onchange = function() {
+        if (this.files.length > 0) {
+          const file = this.files[0];
+          alert(`🔄 File "${file.name}" replaced (simulated). Existing file updated.`);
+        }
+        this.value = '';
+      };
+    });
+
+    // announcement dynamic update (placeholder)
+    // extra: download button style for "authorized" 
+  })();
+</script>
+</body>
+</html>
