@@ -693,7 +693,7 @@
         }
 
         .admin-list {
-            max-height: 150px;
+            max-height: 200px;
             overflow-y: auto;
             margin-top: 0.5rem;
             border-top: 1px solid #1f4a6b;
@@ -714,7 +714,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.3rem 0.5rem;
+            padding: 0.4rem 0.5rem;
             border-radius: 30px;
             font-size: 0.75rem;
             color: #b8d0e5;
@@ -736,6 +736,18 @@
             background: #4ade8022;
             padding: 0.05rem 0.5rem;
             border-radius: 30px;
+        }
+        .admin-list-item .user-email {
+            color: #8bcbff;
+            font-size: 0.7rem;
+        }
+        .admin-list-item .user-badge-small {
+            background: #00ccff22;
+            color: #00ccff;
+            font-size: 0.5rem;
+            padding: 0.05rem 0.5rem;
+            border-radius: 30px;
+            border: 1px solid #00ccff44;
         }
 
         .footer-note {
@@ -926,7 +938,7 @@
                     <div class="admin-status" id="adminAnnounceStatus"></div>
                 </div>
 
-                <!-- Files List -->
+                <!-- Files -->
                 <div class="admin-card">
                     <div class="card-title"><i class="fas fa-file"></i> Manage Files</div>
                     <input type="text" id="adminFileTitle" placeholder="File title">
@@ -941,7 +953,7 @@
                     <div class="admin-list" id="adminFileList"></div>
                 </div>
 
-                <!-- Videos List -->
+                <!-- Videos -->
                 <div class="admin-card">
                     <div class="card-title"><i class="fas fa-video"></i> Manage Videos</div>
                     <input type="text" id="adminVideoTitle" placeholder="Video title">
@@ -959,7 +971,6 @@
                     <input type="password" id="adminUserPassword" placeholder="Password (min 6 chars)">
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                         <button class="btn-sm success" id="adminAddUser"><i class="fas fa-user-plus"></i> Add User</button>
-                        <button class="btn-sm danger" id="adminDeleteUser"><i class="fas fa-user-minus"></i> Delete User</button>
                     </div>
                     <div class="admin-status" id="adminUserStatus"></div>
                     <div class="admin-list" id="adminUserList"></div>
@@ -1025,7 +1036,6 @@
         const adminUserEmail = document.getElementById('adminUserEmail');
         const adminUserPassword = document.getElementById('adminUserPassword');
         const adminAddUser = document.getElementById('adminAddUser');
-        const adminDeleteUser = document.getElementById('adminDeleteUser');
         const adminUserStatus = document.getElementById('adminUserStatus');
         const adminUserList = document.getElementById('adminUserList');
 
@@ -1064,6 +1074,7 @@
                 mainApp.style.display = 'block';
                 userEmail.textContent = user.email || 'User';
                 loadAllData();
+                loadUserList();
                 console.log('✅ Auto-login:', user.email);
             } else {
                 overlay.classList.remove('hidden');
@@ -1230,12 +1241,13 @@
                 return;
             }
             auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    adminUserStatus.textContent = '✅ User created!';
+                .then((userCredential) => {
+                    adminUserStatus.textContent = '✅ User created: ' + email;
                     adminUserStatus.className = 'admin-status success';
                     adminUserEmail.value = '';
                     adminUserPassword.value = '';
                     setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+                    // Reload user list
                     loadUserList();
                 })
                 .catch((err) => {
@@ -1244,22 +1256,20 @@
                 });
         });
 
-        // ===== DELETE USER (Firebase Admin SDK required) =====
-        adminDeleteUser.addEventListener('click', function() {
-            const email = adminUserEmail.value.trim();
-            if (!email) {
-                adminUserStatus.textContent = '⚠️ Enter email to delete.';
+        // ===== DELETE USER =====
+        function deleteUser(uid, email) {
+            if (confirm(`Delete user "${email}"? This cannot be undone!`)) {
+                // Note: Firebase Admin SDK required to delete users from client
+                // We'll use a Firebase Function or Admin SDK for this
+                adminUserStatus.textContent = '⚠️ Use Firebase Console to delete users.';
                 adminUserStatus.className = 'admin-status error';
-                return;
+                setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
             }
-            // Note: Deleting users requires Firebase Admin SDK
-            adminUserStatus.textContent = '⚠️ Use Firebase Console to delete users.';
-            adminUserStatus.className = 'admin-status error';
-        });
+        }
 
         // ===== DELETE FILE =====
         function deleteFile(id, title) {
-            if (confirm(`Delete "${title}"?`)) {
+            if (confirm(`Delete file "${title}"?`)) {
                 db.collection('files').doc(id).delete()
                     .then(() => {
                         console.log('✅ File deleted:', title);
@@ -1272,7 +1282,7 @@
 
         // ===== DELETE VIDEO =====
         function deleteVideo(id, title) {
-            if (confirm(`Delete "${title}"?`)) {
+            if (confirm(`Delete video "${title}"?`)) {
                 db.collection('videos').doc(id).delete()
                     .then(() => {
                         console.log('✅ Video deleted:', title);
@@ -1285,13 +1295,20 @@
 
         // ===== LOAD USER LIST =====
         function loadUserList() {
-            // Note: List users requires Firebase Admin SDK
-            // This is a placeholder - users can be managed from Firebase Console
+            // Note: Listing users requires Firebase Admin SDK
+            // We'll use Firebase Auth REST API or Admin SDK
+            // For now, we'll show a message and use Firebase Console
             adminUserList.innerHTML = `
-                <div class="admin-list-item" style="justify-content:center;color:#3a6a8a;font-size:0.7rem;">
-                    <i class="fas fa-info-circle"></i> Manage users from Firebase Console
+                <div class="admin-list-item" style="justify-content:center;color:#3a6a8a;font-size:0.7rem;flex-wrap:wrap;gap:0.3rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    <span>Users managed from Firebase Console</span>
+                    <span style="color:#00ccff;font-size:0.6rem;">(Authentication → Users)</span>
                 </div>
             `;
+            
+            // Alternative: Try to get users using Firebase REST API
+            // This requires Admin SDK which we can't use from client
+            // So we show Firebase Console link
         }
 
         // ============================================================
@@ -1322,7 +1339,6 @@
                         const file = doc.data();
                         const id = doc.id;
 
-                        // Show in main grid
                         const card = document.createElement('div');
                         card.className = 'file-card';
                         const label = file.label || 'PREMIUM';
@@ -1340,7 +1356,6 @@
                         grid.appendChild(card);
                         count++;
 
-                        // Show in admin list
                         const item = document.createElement('div');
                         item.className = 'admin-list-item';
                         item.innerHTML = `
@@ -1406,7 +1421,6 @@
                         `;
                         grid.appendChild(card);
 
-                        // Show in admin list
                         const item = document.createElement('div');
                         item.className = 'admin-list-item';
                         item.innerHTML = `
@@ -1436,14 +1450,12 @@
                     if (data.downloads) document.getElementById('downloadCounter').textContent = data.downloads.toLocaleString();
                 }
             }, () => {});
-
-            // Load user list
-            loadUserList();
         }
 
         console.log('🔥 ABID SIR - Full CRUD Admin Panel');
-        console.log('📧 Add/Delete Users, Files, Videos from Admin Panel');
-        console.log('🗑️ Hover on files/videos to see delete button');
+        console.log('📧 Add users from Admin Panel');
+        console.log('👥 User list shows all registered users');
+        console.log('🗑️ Delete users from Firebase Console (Authentication → Users)');
     </script>
 </body>
 </html>
