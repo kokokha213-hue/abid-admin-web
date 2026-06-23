@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ABID SIR · Premium Gaming</title>
-    <meta name="description" content="ABID SIR – premium gaming hub. Exclusive files, monthly membership 2000 PKR, secure access, gaming updates.">
-    <meta name="keywords" content="ABID SIR, gaming, premium, files, membership, PKR, updates">
-    <link rel="canonical" href="https://abidsir.gaming">
+    <title>ABID SIR · Admin Panel</title>
+    <meta name="description" content="ABID SIR – premium gaming hub. Admin panel to manage content.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -26,7 +24,6 @@
             padding: 1rem;
         }
 
-        /* ===== LOGIN OVERLAY ===== */
         #passwordOverlay {
             position: fixed;
             inset: 0;
@@ -402,118 +399,6 @@
             font-size: 1rem;
         }
 
-        .announce-box {
-            background: #0d1c2b;
-            border-left: 5px solid #00b7ff;
-            padding: 0.6rem 1.5rem;
-            border-radius: 60px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            box-shadow: 0 0 15px #00386560;
-        }
-        .announce-box i {
-            color: #00e0ff;
-            font-size: 1.2rem;
-        }
-        .announce-text {
-            color: #c2defa;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .announce-text strong {
-            color: #ffd966;
-        }
-
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin: 1rem 0 0.6rem 0;
-        }
-        .section-title h3 {
-            font-weight: 500;
-            letter-spacing: 2px;
-            color: #b0d5ff;
-            border-bottom: 2px solid #006b9e;
-            padding-bottom: 0.2rem;
-            font-size: 1.1rem;
-        }
-
-        .file-grid,
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-        .file-card,
-        .video-card {
-            background: #0f1a26;
-            border-radius: 1.5rem;
-            padding: 1rem;
-            border: 1px solid #1c3f59;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-        }
-        .file-card:hover,
-        .video-card:hover {
-            transform: translateY(-4px);
-            border-color: #00a6ff;
-            box-shadow: 0 0 30px #004c7a70;
-        }
-        .file-label,
-        .video-label {
-            background: #002a44;
-            padding: 0.1rem 0.8rem;
-            border-radius: 40px;
-            display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #8bcbff;
-            border: 1px solid #0077be;
-            margin-bottom: 0.5rem;
-        }
-        .file-card h4,
-        .video-card h4 {
-            font-size: 1rem;
-            color: #d8edff;
-            margin-bottom: 0.3rem;
-        }
-        .file-meta,
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: #7797b0;
-            margin: 0.3rem 0 0.5rem 0;
-        }
-        .file-download-btn {
-            background: #003759;
-            border: 1px solid #0080c0;
-            padding: 0.3rem 0.8rem;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #b0e0ff;
-            transition: 0.2s;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .file-download-btn:hover {
-            background: #0073b0;
-            color: white;
-        }
-        .file-download-btn i {
-            color: #00ccff;
-        }
-
         /* ===== ADMIN PANEL ===== */
         .admin-panel {
             margin-top: 2rem;
@@ -552,7 +437,7 @@
         }
         .admin-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 1.5rem;
         }
         .admin-card {
@@ -633,6 +518,13 @@
         .admin-card .btn-sm.success:hover {
             background: #2a8b3a;
         }
+        .admin-card .btn-sm.warning {
+            background: #5f4a1a;
+            border-color: #8b6a2a;
+        }
+        .admin-card .btn-sm.warning:hover {
+            background: #8b6a2a;
+        }
         .admin-card .file-input-wrapper {
             display: flex;
             gap: 0.5rem;
@@ -670,14 +562,81 @@
             color: #ff6b6b;
         }
 
-        .footer-note {
-            margin-top: 1.5rem;
+        /* ===== LIST ITEMS ===== */
+        .list-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+            border-top: 1px solid #1f4a6b;
+            padding-top: 0.5rem;
+        }
+        .list-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .list-container::-webkit-scrollbar-track {
+            background: #0b0d12;
+        }
+        .list-container::-webkit-scrollbar-thumb {
+            background: #1f4a6b;
+            border-radius: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.4rem 0.6rem;
+            margin-bottom: 0.3rem;
+            background: #0b0d12;
+            border-radius: 40px;
+            border: 1px solid #1a2a3a;
+            transition: 0.3s;
+            gap: 0.5rem;
+        }
+        .list-item:hover {
+            border-color: #00a6ff44;
+        }
+        .list-item .item-info {
+            flex: 1;
+            font-size: 0.8rem;
+            color: #b8d0e5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .list-item .item-info .item-label {
+            color: #6a8fa8;
+            font-size: 0.65rem;
+            display: block;
+        }
+        .list-item .item-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+        .list-item .item-actions .btn-icon {
+            background: transparent;
+            border: none;
+            color: #6a8fa8;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 40px;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+        .list-item .item-actions .btn-icon:hover {
+            color: #ff6b6b;
+            background: #ff6b6b22;
+        }
+        .list-item .item-actions .btn-icon.edit:hover {
+            color: #fbbf24;
+            background: #fbbf2422;
+        }
+        .list-empty {
+            color: #3a5a7a;
+            font-size: 0.8rem;
             text-align: center;
-            font-size: 0.75rem;
-            color: #43647a;
-            border-top: 1px solid #162b3d;
-            padding-top: 1rem;
-            letter-spacing: 1px;
+            padding: 0.5rem;
         }
 
         .logout-btn {
@@ -730,6 +689,16 @@
             }
         }
 
+        .footer-note {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #43647a;
+            border-top: 1px solid #162b3d;
+            padding-top: 1rem;
+            letter-spacing: 1px;
+        }
+
         @media (max-width: 700px) {
             .glass-container {
                 padding: 0.8rem;
@@ -748,11 +717,6 @@
             .login-box {
                 padding: 1.8rem 1.2rem;
             }
-            .file-grid,
-            .video-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.8rem;
-            }
             .admin-grid {
                 grid-template-columns: 1fr;
             }
@@ -763,9 +727,11 @@
             }
         }
         @media (max-width: 480px) {
-            .file-grid,
-            .video-grid {
-                grid-template-columns: 1fr;
+            .list-item {
+                flex-wrap: wrap;
+            }
+            .list-item .item-info {
+                white-space: normal;
             }
         }
     </style>
@@ -783,7 +749,7 @@
         <div class="login-box">
             <div class="icon"><i class="fas fa-crown"></i></div>
             <h2>ABID SIR</h2>
-            <p class="subtitle">Premium Gaming Vault</p>
+            <p class="subtitle">Admin Panel</p>
 
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
@@ -830,8 +796,8 @@
         <!-- Hero Banner -->
         <div class="hero-banner">
             <div class="hero-text">
-                <h2>🔥 <span>Premium</span> Gaming Vault</h2>
-                <p>Exclusive files · daily updates · neon speed</p>
+                <h2>⚡ <span>Admin</span> Control Panel</h2>
+                <p>Manage announcements, files, videos & users</p>
             </div>
             <a href="#" class="cta-whatsapp"><i class="fab fa-whatsapp"></i> Contact</a>
         </div>
@@ -843,20 +809,6 @@
             <div class="stat-item"><i class="fas fa-file-archive"></i> Files <span class="stat-number" id="fileCount">0</span></div>
         </div>
 
-        <!-- Announcement -->
-        <div class="announce-box">
-            <i class="fas fa-bullhorn"></i>
-            <div class="announce-text" id="announceText"><strong>📢</strong> Loading...</div>
-        </div>
-
-        <!-- Files -->
-        <div class="section-title"><h3><i class="fas fa-folder-open" style="margin-right:8px;"></i> Game Files</h3></div>
-        <div class="file-grid" id="fileGrid"></div>
-
-        <!-- Videos -->
-        <div class="section-title"><h3><i class="fas fa-video" style="margin-right:8px;"></i> Gaming Videos</h3></div>
-        <div class="video-grid" id="videoGrid"></div>
-
         <!-- ===== ADMIN PANEL ===== -->
         <div class="admin-panel" id="adminPanel">
             <div class="admin-header">
@@ -865,15 +817,15 @@
             </div>
 
             <div class="admin-grid">
-                <!-- Announcement -->
+                <!-- ===== ANNOUNCEMENT CARD ===== -->
                 <div class="admin-card">
-                    <div class="card-title"><i class="fas fa-bullhorn"></i> Update Announcement</div>
+                    <div class="card-title"><i class="fas fa-bullhorn"></i> Announcement</div>
                     <input type="text" id="adminAnnounceInput" placeholder="New announcement text">
                     <button class="btn-sm success" id="adminUpdateAnnounce"><i class="fas fa-save"></i> Update</button>
                     <div class="admin-status" id="adminAnnounceStatus"></div>
                 </div>
 
-                <!-- Add File -->
+                <!-- ===== ADD FILE CARD ===== -->
                 <div class="admin-card">
                     <div class="card-title"><i class="fas fa-upload"></i> Add File</div>
                     <input type="text" id="adminFileTitle" placeholder="File title">
@@ -887,7 +839,7 @@
                     <div class="admin-status" id="adminFileStatus"></div>
                 </div>
 
-                <!-- Add Video -->
+                <!-- ===== ADD VIDEO CARD ===== -->
                 <div class="admin-card">
                     <div class="card-title"><i class="fas fa-video"></i> Add Video</div>
                     <input type="text" id="adminVideoTitle" placeholder="Video title">
@@ -897,7 +849,7 @@
                     <div class="admin-status" id="adminVideoStatus"></div>
                 </div>
 
-                <!-- Manage Users -->
+                <!-- ===== USERS CARD ===== -->
                 <div class="admin-card">
                     <div class="card-title"><i class="fas fa-users"></i> Manage Users</div>
                     <input type="email" id="adminUserEmail" placeholder="User email">
@@ -909,9 +861,31 @@
                     <div class="admin-status" id="adminUserStatus"></div>
                 </div>
             </div>
+
+            <!-- ===== LIST ALL FILES ===== -->
+            <div style="margin-top:1.5rem; border-top:1px solid #1f4a6b; padding-top:1.5rem;">
+                <h4 style="color:#8bcbff; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-list"></i> All Files
+                    <span style="font-size:0.7rem; color:#3a6a8a; font-weight:400;" id="fileListCount">(0)</span>
+                </h4>
+                <div class="list-container" id="fileListContainer">
+                    <div class="list-empty">No files added yet</div>
+                </div>
+            </div>
+
+            <!-- ===== LIST ALL VIDEOS ===== -->
+            <div style="margin-top:1.5rem; border-top:1px solid #1f4a6b; padding-top:1.5rem;">
+                <h4 style="color:#8bcbff; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-list"></i> All Videos
+                    <span style="font-size:0.7rem; color:#3a6a8a; font-weight:400;" id="videoListCount">(0)</span>
+                </h4>
+                <div class="list-container" id="videoListContainer">
+                    <div class="list-empty">No videos added yet</div>
+                </div>
+            </div>
         </div>
 
-        <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure member access</div>
+        <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · Admin Panel · Full Control</div>
     </div>
 
     <script>
@@ -973,6 +947,11 @@
         const adminDeleteUser = document.getElementById('adminDeleteUser');
         const adminUserStatus = document.getElementById('adminUserStatus');
 
+        const fileListContainer = document.getElementById('fileListContainer');
+        const videoListContainer = document.getElementById('videoListContainer');
+        const fileListCount = document.getElementById('fileListCount');
+        const videoListCount = document.getElementById('videoListCount');
+
         let isAuthorized = false;
         let currentUser = null;
 
@@ -1009,16 +988,14 @@
                 mainApp.style.display = 'block';
                 userEmail.textContent = user.email || 'User';
                 passError.textContent = '';
-                passSuccess.textContent = '✅ Welcome back, ' + (user.displayName || user.email) + '!';
+                passSuccess.textContent = '✅ Welcome, ' + (user.displayName || user.email) + '!';
                 loadAllData();
                 setTimeout(() => { passSuccess.textContent = ''; }, 3000);
-                console.log('✅ Auto-login:', user.email);
             } else {
                 overlay.classList.remove('hidden');
                 mainApp.style.display = 'none';
                 isAuthorized = false;
                 currentUser = null;
-                console.log('👤 Not logged in');
             }
         });
 
@@ -1074,9 +1051,11 @@
             });
         });
 
-        // ========== ADMIN FUNCTIONS ==========
+        // ============================================================
+        // ADMIN FUNCTIONS
+        // ============================================================
 
-        // Update Announcement
+        // ===== UPDATE ANNOUNCEMENT =====
         adminUpdateAnnounce.addEventListener('click', function() {
             const text = adminAnnounceInput.value.trim();
             if (!text) {
@@ -1087,9 +1066,8 @@
 
             db.collection('content').doc('announcement').set({ text: text, timestamp: Date.now() })
                 .then(() => {
-                    adminAnnounceStatus.textContent = '✅ Announcement updated successfully!';
+                    adminAnnounceStatus.textContent = '✅ Announcement updated!';
                     adminAnnounceStatus.className = 'admin-status success';
-                    adminAnnounceInput.value = '';
                     setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
                 })
                 .catch((err) => {
@@ -1098,7 +1076,7 @@
                 });
         });
 
-        // Add File
+        // ===== ADD FILE =====
         adminAddFile.addEventListener('click', function() {
             const title = adminFileTitle.value.trim();
             const label = adminFileLabel.value.trim() || 'PREMIUM';
@@ -1129,7 +1107,7 @@
 
             db.collection('files').add(fileData)
                 .then(() => {
-                    adminFileStatus.textContent = '✅ File added successfully!';
+                    adminFileStatus.textContent = '✅ File added!';
                     adminFileStatus.className = 'admin-status success';
                     adminFileTitle.value = '';
                     adminFileLink.value = '';
@@ -1142,7 +1120,7 @@
                 });
         });
 
-        // Add Video
+        // ===== ADD VIDEO =====
         adminAddVideo.addEventListener('click', function() {
             const title = adminVideoTitle.value.trim();
             const label = adminVideoLabel.value.trim() || 'GAMING';
@@ -1163,7 +1141,7 @@
                 date: new Date().toLocaleDateString()
             })
             .then(() => {
-                adminVideoStatus.textContent = '✅ Video added successfully!';
+                adminVideoStatus.textContent = '✅ Video added!';
                 adminVideoStatus.className = 'admin-status success';
                 adminVideoTitle.value = '';
                 adminVideoLink.value = '';
@@ -1175,7 +1153,7 @@
             });
         });
 
-        // Add User
+        // ===== ADD USER =====
         adminAddUser.addEventListener('click', function() {
             const email = adminUserEmail.value.trim();
             const password = adminUserPassword.value.trim();
@@ -1188,7 +1166,7 @@
 
             auth.createUserWithEmailAndPassword(email, password)
                 .then(() => {
-                    adminUserStatus.textContent = '✅ User created successfully!';
+                    adminUserStatus.textContent = '✅ User created!';
                     adminUserStatus.className = 'admin-status success';
                     adminUserEmail.value = '';
                     adminUserPassword.value = '';
@@ -1200,7 +1178,7 @@
                 });
         });
 
-        // Delete User (Admin only - needs to be admin user)
+        // ===== DELETE USER =====
         adminDeleteUser.addEventListener('click', function() {
             const email = adminUserEmail.value.trim();
             if (!email) {
@@ -1208,108 +1186,118 @@
                 adminUserStatus.className = 'admin-status error';
                 return;
             }
-
-            // Note: Deleting users requires admin privileges via Firebase Admin SDK
-            // This is a workaround - we need to use Firebase Admin SDK or Cloud Function
-            adminUserStatus.textContent = '⚠️ User deletion requires Firebase Admin SDK. Use Firebase Console.';
+            adminUserStatus.textContent = '⚠️ Use Firebase Console to delete users.';
             adminUserStatus.className = 'admin-status error';
         });
 
-        // ========== LOAD DATA FROM FIRESTORE ==========
+        // ============================================================
+        // DELETE FUNCTIONS (for files and videos)
+        // ============================================================
+
+        function deleteFile(docId) {
+            if (!confirm('Are you sure you want to delete this file?')) return;
+            db.collection('files').doc(docId).delete()
+                .then(() => {
+                    console.log('✅ File deleted:', docId);
+                })
+                .catch((err) => {
+                    console.error('❌ Delete error:', err);
+                    alert('Error deleting file: ' + err.message);
+                });
+        }
+
+        function deleteVideo(docId) {
+            if (!confirm('Are you sure you want to delete this video?')) return;
+            db.collection('videos').doc(docId).delete()
+                .then(() => {
+                    console.log('✅ Video deleted:', docId);
+                })
+                .catch((err) => {
+                    console.error('❌ Delete error:', err);
+                    alert('Error deleting video: ' + err.message);
+                });
+        }
+
+        // ============================================================
+        // LOAD DATA WITH LIST VIEW
+        // ============================================================
+
         function loadAllData() {
-            // Announcement
+            // ===== ANNOUNCEMENT =====
             db.collection('content').doc('announcement').onSnapshot((doc) => {
-                const el = document.getElementById('announceText');
                 if (doc.exists) {
                     const data = doc.data();
-                    el.innerHTML = `<strong>📢</strong> ${data.text || data.value || 'Welcome!'}`;
                     adminAnnounceInput.value = data.text || '';
-                } else {
-                    el.innerHTML = '<strong>📢</strong> Welcome to ABID SIR!';
                 }
             }, () => {});
 
-            // Files
-            db.collection('files').orderBy('timestamp', 'desc').limit(20).onSnapshot((snapshot) => {
-                const grid = document.getElementById('fileGrid');
-                grid.innerHTML = '';
+            // ===== FILES LIST =====
+            db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+                fileListContainer.innerHTML = '';
                 let count = 0;
 
                 if (!snapshot.empty) {
                     snapshot.forEach(doc => {
                         const file = doc.data();
-                        const card = document.createElement('div');
-                        card.className = 'file-card';
-                        const label = file.label || 'PREMIUM';
-                        const fileLink = file.fileLink || file.link || file.url || '#';
-                        card.innerHTML = `
-                            <div class="file-label"><i class="fas fa-tag"></i> ${label}</div>
-                            <h4>${file.title || 'Untitled'}</h4>
-                            <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
-                            <div class="file-download-btn" data-id="${doc.id}" data-link="${fileLink}">
-                                <i class="fas fa-download"></i> ${file.downloads || 0}
+                        const item = document.createElement('div');
+                        item.className = 'list-item';
+                        item.innerHTML = `
+                            <div class="item-info">
+                                <strong>${file.title || 'Untitled'}</strong>
+                                <span class="item-label">${file.label || 'PREMIUM'} · ${file.version || 'v1'} · ${file.size || '—'}</span>
                             </div>
-                            <div style="font-size:0.6rem; color:#3d6e8a; margin-top:0.2rem;">⬆️ ${file.updated || 'new'}</div>
+                            <div class="item-actions">
+                                <button class="btn-icon edit" onclick="window.open('${file.fileLink || '#'}', '_blank')" title="Open Link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="btn-icon" onclick="deleteFile('${doc.id}')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         `;
-                        grid.appendChild(card);
+                        fileListContainer.appendChild(item);
                         count++;
                     });
-                    document.getElementById('fileCount').textContent = count;
-
-                    document.querySelectorAll('.file-download-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            if (!isAuthorized) { alert('⛔ Access denied.'); return; }
-                            const link = this.dataset.link;
-                            const id = this.dataset.id;
-
-                            if (id) {
-                                db.collection('files').doc(id).update({
-                                    downloads: firebase.firestore.FieldValue.increment(1)
-                                }).catch(() => {});
-                            }
-
-                            db.collection('counters').doc('stats').update({
-                                downloads: firebase.firestore.FieldValue.increment(1)
-                            }).catch(() => {});
-
-                            if (link && link !== '#') {
-                                window.open(link, '_blank');
-                            } else {
-                                alert('⬇️ Download started!');
-                            }
-                        });
-                    });
                 } else {
-                    document.getElementById('fileCount').textContent = '0';
+                    fileListContainer.innerHTML = '<div class="list-empty">No files added yet</div>';
                 }
+                fileListCount.textContent = '(' + count + ')';
             }, () => {});
 
-            // Videos
-            db.collection('videos').orderBy('timestamp', 'desc').limit(20).onSnapshot((snapshot) => {
-                const grid = document.getElementById('videoGrid');
-                grid.innerHTML = '';
+            // ===== VIDEOS LIST =====
+            db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+                videoListContainer.innerHTML = '';
+                let count = 0;
 
                 if (!snapshot.empty) {
                     snapshot.forEach(doc => {
                         const vid = doc.data();
-                        const card = document.createElement('div');
-                        card.className = 'video-card';
-                        const videoUrl = vid.videoLink || vid.link || vid.url || '';
-                        const isEmbed = videoUrl && videoUrl.includes('youtube.com/embed');
-                        card.innerHTML = `
-                            <div class="video-label"><i class="fas fa-play"></i> ${vid.label || 'GAMING'}</div>
-                            <h4>${vid.title || 'Video'}</h4>
-                            ${isEmbed ? `<div style="aspect-ratio:16/9; background:#000; border-radius:0.8rem; margin:0.3rem 0;"><iframe src="${videoUrl}" style="width:100%;height:100%;border:none;border-radius:0.8rem;" allowfullscreen loading="lazy"></iframe></div>` 
-                                      : videoUrl ? `<div style="aspect-ratio:16/9; background:#0a1a2a; border-radius:0.8rem; margin:0.3rem 0; display:flex; align-items:center; justify-content:center; color:#3d7a9a;"><a href="${videoUrl}" target="_blank" style="color:#00ccff;text-decoration:none;font-size:0.8rem;"><i class="fas fa-play-circle" style="font-size:2rem;display:block;"></i>Watch</a></div>`
-                                      : `<div style="aspect-ratio:16/9; background:#0a1a2a; border-radius:0.8rem; margin:0.3rem 0; display:flex; align-items:center; justify-content:center; color:#3d7a9a;"><i class="fas fa-film" style="font-size:1.5rem;"></i></div>`}
-                            <div class="video-meta"><span>${vid.views || 0} views</span> <span>${vid.date || 'new'}</span></div>
+                        const item = document.createElement('div');
+                        item.className = 'list-item';
+                        item.innerHTML = `
+                            <div class="item-info">
+                                <strong>${vid.title || 'Untitled'}</strong>
+                                <span class="item-label">${vid.label || 'GAMING'} · ${vid.views || 0} views</span>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-icon edit" onclick="window.open('${vid.videoLink || '#'}', '_blank')" title="Watch Video">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn-icon" onclick="deleteVideo('${doc.id}')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         `;
-                        grid.appendChild(card);
+                        videoListContainer.appendChild(item);
+                        count++;
                     });
+                } else {
+                    videoListContainer.innerHTML = '<div class="list-empty">No videos added yet</div>';
                 }
+                videoListCount.textContent = '(' + count + ')';
             }, () => {});
 
-            // Counters
+            // ===== COUNTERS =====
             db.collection('counters').doc('stats').update({
                 visitors: firebase.firestore.FieldValue.increment(1)
             }).catch(() => {});
@@ -1323,9 +1311,9 @@
             }, () => {});
         }
 
-        console.log('🔥 ABID SIR - Full Website + Admin Panel');
+        console.log('🔥 ABID SIR - Full Admin Panel with View & Delete');
+        console.log('📁 All files and videos are listed with delete buttons');
         console.log('📧 Admin: Add users from Firebase Console OR from Admin Panel');
-        console.log('📁 Manage: Announcements, Files, Videos from Admin Panel');
     </script>
 </body>
 </html>
