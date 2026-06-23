@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ABID SIR · Premium Gaming</title>
+    <meta name="description" content="ABID SIR – premium gaming hub. Exclusive files, monthly membership 2000 PKR, secure access, gaming updates.">
+    <meta name="keywords" content="ABID SIR, gaming, premium, files, membership, PKR, updates">
+    <link rel="canonical" href="https://abidsir.gaming">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+        }
+        body {
+            background: #0b0d12;
+            color: #e3e9f0;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        /* ===== LOGIN OVERLAY ===== */
+        #passwordOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #080b12;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(6px);
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+        #passwordOverlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .login-box {
+            background: #0f1a2b;
+            padding: 2.8rem 2.5rem;
+            border-radius: 3rem;
+            border: 1px solid #0066aa;
+            box-shadow: 0 0 60px #002b55, inset 0 0 60px rgba(0, 100, 200, 0.05);
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 200, 255, 0.05), transparent, rgba(0, 200, 255, 0.05), transparent);
+            animation: rotate 10s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .login-box>* {
+            position: relative;
+            z-index: 1;
+        }
+        .login-box .icon {
+            font-size: 3.5rem;
+            color: #00ccff;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 20px #00ccff44);
+        }
+        .login-box h2 {
+            color: #b0daff;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 2rem;
+            background: linear-gradient(145deg, #a0f0ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-box .subtitle {
+            color: #6a8fa8;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .login-box .input-group {
+            position: relative;
+            margin-bottom: 1.2rem;
+        }
+        .login-box .input-group i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3a6a8a;
+            font-size: 1rem;
+            transition: 0.3s;
+            z-index: 2;
+        }
+        .login-box .input-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem 0.9rem 3rem;
+            background: #010a14;
+            border: 1px solid #1f4a6b;
+            border-radius: 60px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .login-box .input-group input:focus {
+            border-color: #00a6ff;
+            box-shadow: 0 0 25px #0077ff40;
+        }
+        .login-box .input-group input:focus+i {
+            color: #00ccff;
+        }
+        .login-box .input-group input::placeholder {
+            color: #3a5a7a;
+        }
+        .login-box .input-group .toggle-pass {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3a6a8a;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+            z-index: 2;
+            background: transparent;
+            border: none;
+            padding: 0.3rem;
+        }
+        .login-box .input-group .toggle-pass:hover {
+            color: #00ccff;
+        }
+        .login-box .remember-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0.5rem 0 1.2rem 0;
+            font-size: 0.85rem;
+            color: #6a8fa8;
+        }
+        .login-box .remember-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .login-box .remember-group input[type="checkbox"] {
+            accent-color: #00ccff;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .login-box .btn {
+            background: linear-gradient(145deg, #005f9e, #0077cc);
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            border: 1px solid #0088d0;
+            box-shadow: 0 0 30px #004c8060;
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+        .login-box .btn:hover {
+            background: linear-gradient(145deg, #0077cc, #0099ee);
+            transform: scale(1.02);
+            box-shadow: 0 0 50px #0066cc80;
+        }
+        .login-box .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .login-box .error-msg {
+            color: #ff6b6b;
+            margin-top: 0.8rem;
+            font-weight: 500;
+            min-height: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .login-box .success-msg {
+            color: #4ade80;
+            margin-top: 0.8rem;
+            font-weight: 500;
+            min-height: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .login-box .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.2rem 0;
+            color: #2a4a6a;
+            font-size: 0.8rem;
+        }
+        .login-box .divider::before,
+        .login-box .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #1f4a6b, transparent);
+        }
+        .loader-ring {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin: 0.3rem auto;
+            border: 3px solid #1a3850;
+            border-top: 3px solid #00ccff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== MAIN APP ===== */
+        .glass-container {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(4px);
+            border-radius: 2.5rem 2.5rem 2rem 2rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 180, 255, 0.15);
+            border: 1px solid rgba(0, 180, 255, 0.2);
+        }
+
+        .brand-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 200, 255, 0.15);
+            padding-bottom: 0.8rem;
+        }
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #a0f0ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo i {
+            font-size: 2rem;
+            color: #00ccff;
+            -webkit-text-fill-color: #00ccff;
+            filter: drop-shadow(0 0 8px #00a6ff);
+        }
+        .membership-badge {
+            background: #0f1a2b;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 1px solid #00a3ff;
+            box-shadow: 0 0 12px #003b6b;
+            color: #b3e4ff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-badge {
+            background: #0f1a2b;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            border: 1px solid #4ade80;
+            color: #4ade80;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-badge i {
+            color: #4ade80;
+        }
+
+        .hero-banner {
+            background: radial-gradient(circle at 20% 30%, #0b2a3f, #03080f);
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #005f8a;
+            box-shadow: 0 0 30px rgba(0, 140, 255, 0.2);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::after {
+            content: "⚡";
+            font-size: 8rem;
+            opacity: 0.04;
+            position: absolute;
+            right: -1rem;
+            bottom: -2rem;
+            transform: rotate(15deg);
+            color: #00c8ff;
+            pointer-events: none;
+        }
+        .hero-text h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ddf0ff;
+        }
+        .hero-text h2 span {
+            color: #00dcff;
+            text-shadow: 0 0 20px #0088ff;
+        }
+        .hero-text p {
+            color: #9fbad0;
+            font-size: 1rem;
+            margin-top: 0.3rem;
+        }
+        .cta-whatsapp {
+            background: #1d2b3a;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid #25d366;
+            color: #25d366;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: 0.2s;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0 0 15px #1f8b4d40;
+        }
+        .cta-whatsapp:hover {
+            background: #25d366;
+            color: #0b0d12;
+            transform: scale(1.02);
+            border-color: #9effb2;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            margin-bottom: 1.5rem;
+            background: #0b111e80;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid #1b3349;
+            justify-content: center;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: #b8d0e5;
+        }
+        .stat-item i {
+            color: #00c3ff;
+            width: 1.4rem;
+            font-size: 1.1rem;
+        }
+        .stat-number {
+            font-weight: 700;
+            color: #ddf4ff;
+            background: #142433;
+            padding: 0 0.6rem;
+            border-radius: 30px;
+            font-size: 1rem;
+        }
+
+        .announce-box {
+            background: #0d1c2b;
+            border-left: 5px solid #00b7ff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            box-shadow: 0 0 15px #00386560;
+        }
+        .announce-box i {
+            color: #00e0ff;
+            font-size: 1.2rem;
+        }
+        .announce-text {
+            color: #c2defa;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .announce-text strong {
+            color: #ffd966;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 1rem 0 0.6rem 0;
+        }
+        .section-title h3 {
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: #b0d5ff;
+            border-bottom: 2px solid #006b9e;
+            padding-bottom: 0.2rem;
+            font-size: 1.1rem;
+        }
+
+        .file-grid,
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .file-card,
+        .video-card {
+            background: #0f1a26;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #1c3f59;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+        .file-card:hover,
+        .video-card:hover {
+            transform: translateY(-4px);
+            border-color: #00a6ff;
+            box-shadow: 0 0 30px #004c7a70;
+        }
+        .file-label,
+        .video-label {
+            background: #002a44;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #8bcbff;
+            border: 1px solid #0077be;
+            margin-bottom: 0.5rem;
+        }
+        .file-card h4,
+        .video-card h4 {
+            font-size: 1rem;
+            color: #d8edff;
+            margin-bottom: 0.3rem;
+        }
+        .file-meta,
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #7797b0;
+            margin: 0.3rem 0 0.5rem 0;
+        }
+        .file-download-btn {
+            background: #003759;
+            border: 1px solid #0080c0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #b0e0ff;
+            transition: 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .file-download-btn:hover {
+            background: #0073b0;
+            color: white;
+        }
+        .file-download-btn i {
+            color: #00ccff;
+        }
+
+        /* ===== ADMIN PANEL ===== */
+        .admin-panel {
+            margin-top: 2rem;
+            background: #0d1c2b;
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            border: 1px solid #1f4a6b;
+            box-shadow: 0 0 30px #00386540;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .admin-header h3 {
+            color: #00ccff;
+            font-weight: 500;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .admin-header h3 i {
+            font-size: 1.2rem;
+        }
+        .admin-badge {
+            background: #00ccff22;
+            color: #00ccff;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            border: 1px solid #00ccff44;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .admin-card {
+            background: #0f1a2b;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            border: 1px solid #1f4a6b;
+            transition: 0.3s;
+        }
+        .admin-card:hover {
+            border-color: #00a6ff;
+            box-shadow: 0 0 20px #004c7a40;
+        }
+        .admin-card .card-title {
+            color: #8bcbff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .admin-card .card-title i {
+            color: #00ccff;
+        }
+        .admin-card input,
+        .admin-card textarea {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            background: #010a14;
+            border: 1px solid #1f4a6b;
+            border-radius: 40px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 0.6rem;
+        }
+        .admin-card input:focus,
+        .admin-card textarea:focus {
+            border-color: #00a6ff;
+            box-shadow: 0 0 20px #0077ff40;
+        }
+        .admin-card textarea {
+            border-radius: 1rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .admin-card .btn-sm {
+            background: #005f9e;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid #0088d0;
+            box-shadow: 0 0 15px #004c8060;
+        }
+        .admin-card .btn-sm:hover {
+            background: #0080cc;
+            transform: scale(1.02);
+        }
+        .admin-card .btn-sm.danger {
+            background: #5f1a1a;
+            border-color: #8b2a2a;
+        }
+        .admin-card .btn-sm.danger:hover {
+            background: #8b2a2a;
+        }
+        .admin-card .btn-sm.success {
+            background: #1a5f2a;
+            border-color: #2a8b3a;
+        }
+        .admin-card .btn-sm.success:hover {
+            background: #2a8b3a;
+        }
+        .admin-card .file-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .admin-card .file-input-wrapper input[type="file"] {
+            flex: 1;
+            min-width: 100px;
+            padding: 0.4rem;
+            background: #010a14;
+            border: 1px solid #1f4a6b;
+            border-radius: 40px;
+            color: #6a8fa8;
+            font-size: 0.8rem;
+        }
+        .admin-card .file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+            background: #005f9e;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .admin-status {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            color: #6a8fa8;
+        }
+        .admin-status.success {
+            color: #4ade80;
+        }
+        .admin-status.error {
+            color: #ff6b6b;
+        }
+
+        .footer-note {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #43647a;
+            border-top: 1px solid #162b3d;
+            padding-top: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #ff6b6b44;
+            color: #ff6b6b;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.3s;
+            margin-left: 0.5rem;
+        }
+        .logout-btn:hover {
+            background: #ff6b6b22;
+            border-color: #ff6b6b;
+        }
+
+        .auth-loading {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: #080b12;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .auth-loading.hidden {
+            display: none;
+        }
+        .auth-loading .loader-ring {
+            width: 50px;
+            height: 50px;
+        }
+        .auth-loading p {
+            color: #6a8fa8;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .glass-container {
+                padding: 0.8rem;
+            }
+            .hero-text h2 {
+                font-size: 1.4rem;
+            }
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            .stats-grid {
+                border-radius: 30px;
+                padding: 0.4rem 0.8rem;
+                gap: 0.5rem;
+            }
+            .login-box {
+                padding: 1.8rem 1.2rem;
+            }
+            .file-grid,
+            .video-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            .remember-group {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .file-grid,
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== AUTH LOADING SCREEN ===== -->
+    <div class="auth-loading" id="authLoading">
+        <div class="loader-ring"></div>
+        <p>🔐 Verifying session...</p>
+    </div>
+
+    <!-- ===== LOGIN OVERLAY ===== -->
+    <div id="passwordOverlay">
+        <div class="login-box">
+            <div class="icon"><i class="fas fa-crown"></i></div>
+            <h2>ABID SIR</h2>
+            <p class="subtitle">Premium Gaming Vault</p>
+
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="emailInput" placeholder="Email address" autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="passInput" placeholder="Password" autocomplete="current-password">
+                <button class="toggle-pass" id="togglePass" type="button">
+                    <i class="fas fa-eye" id="eyeIcon"></i>
+                </button>
+            </div>
+
+            <div class="remember-group">
+                <label>
+                    <input type="checkbox" id="rememberMe" checked>
+                    <i class="fas fa-check-circle" style="color:#00ccff;"></i> Remember me
+                </label>
+            </div>
+
+            <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+
+            <div id="loaderContainer" style="display:none;"><div class="loader-ring"></div></div>
+            <div class="error-msg" id="passError"></div>
+            <div class="success-msg" id="passSuccess"></div>
+
+            <div class="divider">🔐 Secure Access</div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div class="glass-container" id="mainApp" style="display:none;">
+        <!-- Brand Bar -->
+        <div class="brand-bar">
+            <div class="logo"><h1><i class="fas fa-crown"></i> ABID SIR</h1></div>
+            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <div class="membership-badge"><i class="fas fa-star"></i> 2000 PKR / month</div>
+                <div class="user-badge" id="userBadge"><i class="fas fa-user-circle"></i> <span id="userEmail">User</span></div>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-text">
+                <h2>🔥 <span>Premium</span> Gaming Vault</h2>
+                <p>Exclusive files · daily updates · neon speed</p>
+            </div>
+            <a href="#" class="cta-whatsapp"><i class="fab fa-whatsapp"></i> Contact</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-item"><i class="fas fa-download"></i> Downloads <span class="stat-number" id="downloadCounter">0</span></div>
+            <div class="stat-item"><i class="fas fa-eye"></i> Visitors <span class="stat-number" id="visitorCounter">0</span></div>
+            <div class="stat-item"><i class="fas fa-file-archive"></i> Files <span class="stat-number" id="fileCount">0</span></div>
+        </div>
+
+        <!-- Announcement -->
+        <div class="announce-box">
+            <i class="fas fa-bullhorn"></i>
+            <div class="announce-text" id="announceText"><strong>📢</strong> Loading...</div>
+        </div>
+
+        <!-- Files -->
+        <div class="section-title"><h3><i class="fas fa-folder-open" style="margin-right:8px;"></i> Game Files</h3></div>
+        <div class="file-grid" id="fileGrid"></div>
+
+        <!-- Videos -->
+        <div class="section-title"><h3><i class="fas fa-video" style="margin-right:8px;"></i> Gaming Videos</h3></div>
+        <div class="video-grid" id="videoGrid"></div>
+
+        <!-- ===== ADMIN PANEL ===== -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-header">
+                <h3><i class="fas fa-user-cog"></i> Admin Panel</h3>
+                <span class="admin-badge"><i class="fas fa-shield-alt"></i> Secure</span>
+            </div>
+
+            <div class="admin-grid">
+                <!-- Announcement -->
+                <div class="admin-card">
+                    <div class="card-title"><i class="fas fa-bullhorn"></i> Update Announcement</div>
+                    <input type="text" id="adminAnnounceInput" placeholder="New announcement text">
+                    <button class="btn-sm success" id="adminUpdateAnnounce"><i class="fas fa-save"></i> Update</button>
+                    <div class="admin-status" id="adminAnnounceStatus"></div>
+                </div>
+
+                <!-- Add File -->
+                <div class="admin-card">
+                    <div class="card-title"><i class="fas fa-upload"></i> Add File</div>
+                    <input type="text" id="adminFileTitle" placeholder="File title">
+                    <input type="text" id="adminFileLabel" placeholder="Label (e.g. PREMIUM)" value="PREMIUM">
+                    <input type="text" id="adminFileLink" placeholder="File link (URL)">
+                    <input type="text" id="adminFileVersion" placeholder="Version (e.g. v1)" value="v1">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="adminFileUpload">
+                    </div>
+                    <button class="btn-sm success" id="adminAddFile"><i class="fas fa-plus"></i> Add File</button>
+                    <div class="admin-status" id="adminFileStatus"></div>
+                </div>
+
+                <!-- Add Video -->
+                <div class="admin-card">
+                    <div class="card-title"><i class="fas fa-video"></i> Add Video</div>
+                    <input type="text" id="adminVideoTitle" placeholder="Video title">
+                    <input type="text" id="adminVideoLabel" placeholder="Label" value="GAMING">
+                    <input type="text" id="adminVideoLink" placeholder="YouTube embed URL">
+                    <button class="btn-sm success" id="adminAddVideo"><i class="fas fa-plus"></i> Add Video</button>
+                    <div class="admin-status" id="adminVideoStatus"></div>
+                </div>
+
+                <!-- Manage Users -->
+                <div class="admin-card">
+                    <div class="card-title"><i class="fas fa-users"></i> Manage Users</div>
+                    <input type="email" id="adminUserEmail" placeholder="User email">
+                    <input type="password" id="adminUserPassword" placeholder="Password">
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button class="btn-sm success" id="adminAddUser"><i class="fas fa-user-plus"></i> Add User</button>
+                        <button class="btn-sm danger" id="adminDeleteUser"><i class="fas fa-user-minus"></i> Delete User</button>
+                    </div>
+                    <div class="admin-status" id="adminUserStatus"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure member access</div>
+    </div>
+
+    <script>
+        // ============================================================
+        // FIREBASE CONFIG
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyALnJyYqSpgZeapdNUkAKkwImgijuG935g",
+            authDomain: "abid-sir-6fa1d.firebaseapp.com",
+            projectId: "abid-sir-6fa1d",
+            storageBucket: "abid-sir-6fa1d.firebasestorage.app",
+            messagingSenderId: "870139030210",
+            appId: "1:870139030210:web:5237413bfcf9ba0c59a95b"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+
+        // ========== DOM REFS ==========
+        const overlay = document.getElementById('passwordOverlay');
+        const mainApp = document.getElementById('mainApp');
+        const authLoading = document.getElementById('authLoading');
+        const emailInput = document.getElementById('emailInput');
+        const passInput = document.getElementById('passInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const passError = document.getElementById('passError');
+        const passSuccess = document.getElementById('passSuccess');
+        const loaderContainer = document.getElementById('loaderContainer');
+        const userEmail = document.getElementById('userEmail');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const rememberMe = document.getElementById('rememberMe');
+        const togglePass = document.getElementById('togglePass');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        // Admin elements
+        const adminAnnounceInput = document.getElementById('adminAnnounceInput');
+        const adminUpdateAnnounce = document.getElementById('adminUpdateAnnounce');
+        const adminAnnounceStatus = document.getElementById('adminAnnounceStatus');
+
+        const adminFileTitle = document.getElementById('adminFileTitle');
+        const adminFileLabel = document.getElementById('adminFileLabel');
+        const adminFileLink = document.getElementById('adminFileLink');
+        const adminFileVersion = document.getElementById('adminFileVersion');
+        const adminFileUpload = document.getElementById('adminFileUpload');
+        const adminAddFile = document.getElementById('adminAddFile');
+        const adminFileStatus = document.getElementById('adminFileStatus');
+
+        const adminVideoTitle = document.getElementById('adminVideoTitle');
+        const adminVideoLabel = document.getElementById('adminVideoLabel');
+        const adminVideoLink = document.getElementById('adminVideoLink');
+        const adminAddVideo = document.getElementById('adminAddVideo');
+        const adminVideoStatus = document.getElementById('adminVideoStatus');
+
+        const adminUserEmail = document.getElementById('adminUserEmail');
+        const adminUserPassword = document.getElementById('adminUserPassword');
+        const adminAddUser = document.getElementById('adminAddUser');
+        const adminDeleteUser = document.getElementById('adminDeleteUser');
+        const adminUserStatus = document.getElementById('adminUserStatus');
+
+        let isAuthorized = false;
+        let currentUser = null;
+
+        // ========== LOAD SAVED EMAIL ==========
+        const savedEmail = localStorage.getItem('savedEmail');
+        if (savedEmail) {
+            emailInput.value = savedEmail;
+            rememberMe.checked = true;
+        }
+
+        // ========== PASSWORD TOGGLE ==========
+        let passwordVisible = false;
+        togglePass.addEventListener('click', function() {
+            passwordVisible = !passwordVisible;
+            if (passwordVisible) {
+                passInput.type = 'text';
+                eyeIcon.className = 'fas fa-eye-slash';
+                eyeIcon.style.color = '#00ccff';
+            } else {
+                passInput.type = 'password';
+                eyeIcon.className = 'fas fa-eye';
+                eyeIcon.style.color = '#3a6a8a';
+            }
+        });
+
+        // ========== CHECK AUTH STATE ==========
+        auth.onAuthStateChanged((user) => {
+            authLoading.classList.add('hidden');
+
+            if (user) {
+                isAuthorized = true;
+                currentUser = user;
+                overlay.classList.add('hidden');
+                mainApp.style.display = 'block';
+                userEmail.textContent = user.email || 'User';
+                passError.textContent = '';
+                passSuccess.textContent = '✅ Welcome back, ' + (user.displayName || user.email) + '!';
+                loadAllData();
+                setTimeout(() => { passSuccess.textContent = ''; }, 3000);
+                console.log('✅ Auto-login:', user.email);
+            } else {
+                overlay.classList.remove('hidden');
+                mainApp.style.display = 'none';
+                isAuthorized = false;
+                currentUser = null;
+                console.log('👤 Not logged in');
+            }
+        });
+
+        // ========== LOGIN ==========
+        loginBtn.addEventListener('click', function() {
+            const email = emailInput.value.trim();
+            const password = passInput.value.trim();
+
+            if (!email || !password) {
+                passError.textContent = 'Please enter email and password.';
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loaderContainer.style.display = 'block';
+            passError.textContent = '';
+            passSuccess.textContent = '⏳ Signing in...';
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    if (rememberMe.checked) {
+                        localStorage.setItem('savedEmail', email);
+                    } else {
+                        localStorage.removeItem('savedEmail');
+                    }
+                    loaderContainer.style.display = 'none';
+                    loginBtn.disabled = false;
+                    passSuccess.textContent = '✅ Login successful!';
+                    passError.textContent = '';
+                    emailInput.value = '';
+                    passInput.value = '';
+                    setTimeout(() => { passSuccess.textContent = ''; }, 3000);
+                })
+                .catch((error) => {
+                    loaderContainer.style.display = 'none';
+                    loginBtn.disabled = false;
+                    passError.textContent = '❌ ' + error.message;
+                    passSuccess.textContent = '';
+                });
+        });
+
+        // ========== ENTER KEY ==========
+        passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+        emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+
+        // ========== LOGOUT ==========
+        logoutBtn.addEventListener('click', function() {
+            auth.signOut().then(() => {
+                localStorage.removeItem('savedEmail');
+                overlay.classList.remove('hidden');
+                mainApp.style.display = 'none';
+                isAuthorized = false;
+            });
+        });
+
+        // ========== ADMIN FUNCTIONS ==========
+
+        // Update Announcement
+        adminUpdateAnnounce.addEventListener('click', function() {
+            const text = adminAnnounceInput.value.trim();
+            if (!text) {
+                adminAnnounceStatus.textContent = '⚠️ Please enter announcement text.';
+                adminAnnounceStatus.className = 'admin-status error';
+                return;
+            }
+
+            db.collection('content').doc('announcement').set({ text: text, timestamp: Date.now() })
+                .then(() => {
+                    adminAnnounceStatus.textContent = '✅ Announcement updated successfully!';
+                    adminAnnounceStatus.className = 'admin-status success';
+                    adminAnnounceInput.value = '';
+                    setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+                })
+                .catch((err) => {
+                    adminAnnounceStatus.textContent = '❌ Error: ' + err.message;
+                    adminAnnounceStatus.className = 'admin-status error';
+                });
+        });
+
+        // Add File
+        adminAddFile.addEventListener('click', function() {
+            const title = adminFileTitle.value.trim();
+            const label = adminFileLabel.value.trim() || 'PREMIUM';
+            const link = adminFileLink.value.trim();
+            const version = adminFileVersion.value.trim() || 'v1';
+            const file = adminFileUpload.files[0];
+
+            if (!title || !link) {
+                adminFileStatus.textContent = '⚠️ Please enter title and link.';
+                adminFileStatus.className = 'admin-status error';
+                return;
+            }
+
+            const fileData = {
+                title: title,
+                label: label,
+                fileLink: link,
+                version: version,
+                downloads: 0,
+                timestamp: Date.now(),
+                updated: new Date().toLocaleDateString()
+            };
+
+            if (file) {
+                fileData.size = (file.size / 1024 / 1024).toFixed(1) + ' MB';
+                fileData.fileName = file.name;
+            }
+
+            db.collection('files').add(fileData)
+                .then(() => {
+                    adminFileStatus.textContent = '✅ File added successfully!';
+                    adminFileStatus.className = 'admin-status success';
+                    adminFileTitle.value = '';
+                    adminFileLink.value = '';
+                    adminFileUpload.value = '';
+                    setTimeout(() => { adminFileStatus.textContent = ''; }, 3000);
+                })
+                .catch((err) => {
+                    adminFileStatus.textContent = '❌ Error: ' + err.message;
+                    adminFileStatus.className = 'admin-status error';
+                });
+        });
+
+        // Add Video
+        adminAddVideo.addEventListener('click', function() {
+            const title = adminVideoTitle.value.trim();
+            const label = adminVideoLabel.value.trim() || 'GAMING';
+            const link = adminVideoLink.value.trim();
+
+            if (!title || !link) {
+                adminVideoStatus.textContent = '⚠️ Please enter title and link.';
+                adminVideoStatus.className = 'admin-status error';
+                return;
+            }
+
+            db.collection('videos').add({
+                title: title,
+                label: label,
+                videoLink: link,
+                views: 0,
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString()
+            })
+            .then(() => {
+                adminVideoStatus.textContent = '✅ Video added successfully!';
+                adminVideoStatus.className = 'admin-status success';
+                adminVideoTitle.value = '';
+                adminVideoLink.value = '';
+                setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminVideoStatus.textContent = '❌ Error: ' + err.message;
+                adminVideoStatus.className = 'admin-status error';
+            });
+        });
+
+        // Add User
+        adminAddUser.addEventListener('click', function() {
+            const email = adminUserEmail.value.trim();
+            const password = adminUserPassword.value.trim();
+
+            if (!email || !password || password.length < 6) {
+                adminUserStatus.textContent = '⚠️ Valid email and password (min 6 chars) required.';
+                adminUserStatus.className = 'admin-status error';
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    adminUserStatus.textContent = '✅ User created successfully!';
+                    adminUserStatus.className = 'admin-status success';
+                    adminUserEmail.value = '';
+                    adminUserPassword.value = '';
+                    setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+                })
+                .catch((err) => {
+                    adminUserStatus.textContent = '❌ Error: ' + err.message;
+                    adminUserStatus.className = 'admin-status error';
+                });
+        });
+
+        // Delete User (Admin only - needs to be admin user)
+        adminDeleteUser.addEventListener('click', function() {
+            const email = adminUserEmail.value.trim();
+            if (!email) {
+                adminUserStatus.textContent = '⚠️ Please enter email to delete.';
+                adminUserStatus.className = 'admin-status error';
+                return;
+            }
+
+            // Note: Deleting users requires admin privileges via Firebase Admin SDK
+            // This is a workaround - we need to use Firebase Admin SDK or Cloud Function
+            adminUserStatus.textContent = '⚠️ User deletion requires Firebase Admin SDK. Use Firebase Console.';
+            adminUserStatus.className = 'admin-status error';
+        });
+
+        // ========== LOAD DATA FROM FIRESTORE ==========
+        function loadAllData() {
+            // Announcement
+            db.collection('content').doc('announcement').onSnapshot((doc) => {
+                const el = document.getElementById('announceText');
+                if (doc.exists) {
+                    const data = doc.data();
+                    el.innerHTML = `<strong>📢</strong> ${data.text || data.value || 'Welcome!'}`;
+                    adminAnnounceInput.value = data.text || '';
+                } else {
+                    el.innerHTML = '<strong>📢</strong> Welcome to ABID SIR!';
+                }
+            }, () => {});
+
+            // Files
+            db.collection('files').orderBy('timestamp', 'desc').limit(20).onSnapshot((snapshot) => {
+                const grid = document.getElementById('fileGrid');
+                grid.innerHTML = '';
+                let count = 0;
+
+                if (!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const file = doc.data();
+                        const card = document.createElement('div');
+                        card.className = 'file-card';
+                        const label = file.label || 'PREMIUM';
+                        const fileLink = file.fileLink || file.link || file.url || '#';
+                        card.innerHTML = `
+                            <div class="file-label"><i class="fas fa-tag"></i> ${label}</div>
+                            <h4>${file.title || 'Untitled'}</h4>
+                            <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
+                            <div class="file-download-btn" data-id="${doc.id}" data-link="${fileLink}">
+                                <i class="fas fa-download"></i> ${file.downloads || 0}
+                            </div>
+                            <div style="font-size:0.6rem; color:#3d6e8a; margin-top:0.2rem;">⬆️ ${file.updated || 'new'}</div>
+                        `;
+                        grid.appendChild(card);
+                        count++;
+                    });
+                    document.getElementById('fileCount').textContent = count;
+
+                    document.querySelectorAll('.file-download-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            if (!isAuthorized) { alert('⛔ Access denied.'); return; }
+                            const link = this.dataset.link;
+                            const id = this.dataset.id;
+
+                            if (id) {
+                                db.collection('files').doc(id).update({
+                                    downloads: firebase.firestore.FieldValue.increment(1)
+                                }).catch(() => {});
+                            }
+
+                            db.collection('counters').doc('stats').update({
+                                downloads: firebase.firestore.FieldValue.increment(1)
+                            }).catch(() => {});
+
+                            if (link && link !== '#') {
+                                window.open(link, '_blank');
+                            } else {
+                                alert('⬇️ Download started!');
+                            }
+                        });
+                    });
+                } else {
+                    document.getElementById('fileCount').textContent = '0';
+                }
+            }, () => {});
+
+            // Videos
+            db.collection('videos').orderBy('timestamp', 'desc').limit(20).onSnapshot((snapshot) => {
+                const grid = document.getElementById('videoGrid');
+                grid.innerHTML = '';
+
+                if (!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const vid = doc.data();
+                        const card = document.createElement('div');
+                        card.className = 'video-card';
+                        const videoUrl = vid.videoLink || vid.link || vid.url || '';
+                        const isEmbed = videoUrl && videoUrl.includes('youtube.com/embed');
+                        card.innerHTML = `
+                            <div class="video-label"><i class="fas fa-play"></i> ${vid.label || 'GAMING'}</div>
+                            <h4>${vid.title || 'Video'}</h4>
+                            ${isEmbed ? `<div style="aspect-ratio:16/9; background:#000; border-radius:0.8rem; margin:0.3rem 0;"><iframe src="${videoUrl}" style="width:100%;height:100%;border:none;border-radius:0.8rem;" allowfullscreen loading="lazy"></iframe></div>` 
+                                      : videoUrl ? `<div style="aspect-ratio:16/9; background:#0a1a2a; border-radius:0.8rem; margin:0.3rem 0; display:flex; align-items:center; justify-content:center; color:#3d7a9a;"><a href="${videoUrl}" target="_blank" style="color:#00ccff;text-decoration:none;font-size:0.8rem;"><i class="fas fa-play-circle" style="font-size:2rem;display:block;"></i>Watch</a></div>`
+                                      : `<div style="aspect-ratio:16/9; background:#0a1a2a; border-radius:0.8rem; margin:0.3rem 0; display:flex; align-items:center; justify-content:center; color:#3d7a9a;"><i class="fas fa-film" style="font-size:1.5rem;"></i></div>`}
+                            <div class="video-meta"><span>${vid.views || 0} views</span> <span>${vid.date || 'new'}</span></div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            }, () => {});
+
+            // Counters
+            db.collection('counters').doc('stats').update({
+                visitors: firebase.firestore.FieldValue.increment(1)
+            }).catch(() => {});
+
+            db.collection('counters').doc('stats').onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.visitors) document.getElementById('visitorCounter').textContent = data.visitors.toLocaleString();
+                    if (data.downloads) document.getElementById('downloadCounter').textContent = data.downloads.toLocaleString();
+                }
+            }, () => {});
+        }
+
+        console.log('🔥 ABID SIR - Full Website + Admin Panel');
+        console.log('📧 Admin: Add users from Firebase Console OR from Admin Panel');
+        console.log('📁 Manage: Announcements, Files, Videos from Admin Panel');
+    </script>
+</body>
+</html>
