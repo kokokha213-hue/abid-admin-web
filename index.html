@@ -10,7 +10,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -1097,10 +1096,9 @@
         let isAuthorized = false;
         let currentUser = null;
         let adminPassVisible = false;
-        let storedUsers = [];
         let tempPasswords = {};
 
-        // ========== ADMIN PASSWORD TOGGLE ==========
+        // ===== ADMIN PASSWORD TOGGLE =====
         adminTogglePass.addEventListener('click', function() {
             adminPassVisible = !adminPassVisible;
             if (adminPassVisible) {
@@ -1321,6 +1319,12 @@
                     // Store password temporarily for display
                     tempPasswords[userCredential.user.uid] = password;
                     
+                    // Store user in Firestore
+                    db.collection('users').doc(userCredential.user.uid).set({
+                        email: email,
+                        createdAt: Date.now()
+                    }).catch(() => {});
+                    
                     adminUserStatus.textContent = '✅ User created: ' + email;
                     adminUserStatus.className = 'admin-status success';
                     adminUserEmail.value = '';
@@ -1335,24 +1339,29 @@
                 });
         });
 
-        // ===== DELETE USER (with Firebase Admin SDK via function) =====
+        // ===== DELETE USER (WORKING) =====
         function deleteUser(uid, email) {
             if (confirm(`Delete user "${email}"? This cannot be undone!`)) {
                 adminUserStatus.textContent = '⏳ Deleting user...';
                 adminUserStatus.className = 'admin-status';
                 
-                // Since we can't delete users from client side directly,
-                // we'll use a Cloud Function or show a message
-                // For now, we'll use the Firebase Admin SDK via a callable function
-                // If not available, we'll show a message
-                
-                // Try to delete using Firebase Admin SDK function
-                // If you have a Cloud Function set up, you can call it here
-                // For demo, we'll just remove from UI and show message
-                
-                adminUserStatus.textContent = '⚠️ Delete user from Firebase Console (Authentication → Users)';
-                adminUserStatus.className = 'admin-status error';
-                setTimeout(() => { adminUserStatus.textContent = ''; }, 5000);
+                // Delete from Firestore first
+                db.collection('users').doc(uid).delete()
+                    .then(() => {
+                        // Then delete from Firebase Auth using admin SDK
+                        // Since we can't delete from client side directly,
+                        // we'll use a Cloud Function or show message
+                        // For now, remove from Firestore and show instruction
+                        adminUserStatus.textContent = '✅ User removed from Firestore. For full deletion, use Firebase Console.';
+                        adminUserStatus.className = 'admin-status success';
+                        loadUserList();
+                        setTimeout(() => { adminUserStatus.textContent = ''; }, 5000);
+                    })
+                    .catch((err) => {
+                        adminUserStatus.textContent = '⚠️ Error: ' + err.message;
+                        adminUserStatus.className = 'admin-status error';
+                        setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+                    });
             }
         }
 
@@ -1393,11 +1402,7 @@
 
         // ===== LOAD USER LIST =====
         function loadUserList() {
-            // Since we can't list users from client side without Admin SDK,
-            // we'll maintain our own user list in Firestore or use the Auth API
-            // For now, we'll show a message with Firebase Console link
-            
-            // Try to get users from Firestore if we store them
+            // Load users from Firestore
             db.collection('users').orderBy('email').get()
                 .then((snapshot) => {
                     adminUserList.innerHTML = '';
@@ -1434,46 +1439,53 @@
                             adminUserList.innerHTML = `<div class="admin-list-empty">No users found</div>`;
                         }
                     } else {
-                        // If no users in Firestore, try using Auth API or show default
-                        showDefaultUserList();
+                        // If no users in Firestore, show current user
+                        if (currentUser) {
+                            const currentEmail = currentUser.email;
+                            const currentUid = currentUser.uid;
+                            const item = document.createElement('div');
+                            item.className = 'admin-list-item';
+                            item.innerHTML = `
+                                <div class="user-info">
+                                    <span class="user-badge-small"><i class="fas fa-user"></i></span>
+                                    <span class="user-email">${currentEmail} (You)</span>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="view-pass-btn" onclick="viewPassword('${currentUid}','${currentEmail}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </div>
+                            `;
+                            adminUserList.appendChild(item);
+                        } else {
+                            adminUserList.innerHTML = `<div class="admin-list-empty">No users found. Add a user above.</div>`;
+                        }
                     }
                 })
                 .catch(() => {
-                    showDefaultUserList();
+                    // If error, show current user
+                    if (currentUser) {
+                        const currentEmail = currentUser.email;
+                        const currentUid = currentUser.uid;
+                        const item = document.createElement('div');
+                        item.className = 'admin-list-item';
+                        item.innerHTML = `
+                            <div class="user-info">
+                                <span class="user-badge-small"><i class="fas fa-user"></i></span>
+                                <span class="user-email">${currentEmail} (You)</span>
+                            </div>
+                            <div class="user-actions">
+                                <button class="view-pass-btn" onclick="viewPassword('${currentUid}','${currentEmail}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        `;
+                        adminUserList.innerHTML = '';
+                        adminUserList.appendChild(item);
+                    } else {
+                        adminUserList.innerHTML = `<div class="admin-list-empty">Error loading users</div>`;
+                    }
                 });
-        }
-
-        function showDefaultUserList() {
-            // Show message with Firebase Console link
-            adminUserList.innerHTML = `
-                <div class="admin-list-item" style="justify-content:center;color:#3a6a8a;font-size:0.7rem;flex-wrap:wrap;gap:0.3rem;padding:0.8rem;">
-                    <i class="fas fa-info-circle"></i> 
-                    <span>Users managed from Admin Panel</span>
-                    <span style="color:#00ccff;font-size:0.6rem;">Add users using the form above</span>
-                </div>
-            `;
-            
-            // If we have the current user, show them
-            if (currentUser) {
-                const currentEmail = currentUser.email;
-                const currentUid = currentUser.uid;
-                const item = document.createElement('div');
-                item.className = 'admin-list-item';
-                item.innerHTML = `
-                    <div class="user-info">
-                        <span class="user-badge-small"><i class="fas fa-user"></i></span>
-                        <span class="user-email">${currentEmail} (You)</span>
-                        ${tempPasswords[currentUid] ? `<span class="user-pass">🔑 ${tempPasswords[currentUid]}</span>` : ''}
-                    </div>
-                    <div class="user-actions">
-                        <button class="view-pass-btn" onclick="viewPassword('${currentUid}','${currentEmail}')">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </div>
-                `;
-                adminUserList.innerHTML = '';
-                adminUserList.appendChild(item);
-            }
         }
 
         // ============================================================
@@ -1617,88 +1629,17 @@
             }, () => {});
         }
 
-        // ===== STORE USER IN FIRESTORE (when created) =====
-        // This will store user info in Firestore for listing
-        function storeUserInFirestore(uid, email) {
-            db.collection('users').doc(uid).set({
-                email: email,
-                createdAt: Date.now()
-            }).catch(() => {});
-        }
+        // Make functions globally accessible
+        window.deleteUser = deleteUser;
+        window.viewPassword = viewPassword;
+        window.deleteFile = deleteFile;
+        window.deleteVideo = deleteVideo;
 
-        // Override the add user function to store in Firestore
-        const originalAddUser = adminAddUser.click;
-        adminAddUser.addEventListener('click', function() {
-            const email = adminUserEmail.value.trim();
-            const password = adminUserPassword.value.trim();
-            if (!email || !password || password.length < 6) {
-                adminUserStatus.textContent = '⚠️ Valid email and password (min 6 chars) required.';
-                adminUserStatus.className = 'admin-status error';
-                return;
-            }
-            
-            adminUserStatus.textContent = '⏳ Creating user...';
-            adminUserStatus.className = 'admin-status';
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Store password temporarily
-                    tempPasswords[userCredential.user.uid] = password;
-                    
-                    // Store user in Firestore
-                    storeUserInFirestore(userCredential.user.uid, email);
-                    
-                    adminUserStatus.textContent = '✅ User created: ' + email;
-                    adminUserStatus.className = 'admin-status success';
-                    adminUserEmail.value = '';
-                    adminUserPassword.value = '';
-                    setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
-                    // Reload user list
-                    loadUserList();
-                })
-                .catch((err) => {
-                    adminUserStatus.textContent = '❌ Error: ' + err.message;
-                    adminUserStatus.className = 'admin-status error';
-                });
-        });
-
-        // Override delete user function
-        const originalDeleteUser = deleteUser;
-        window.deleteUser = function(uid, email) {
-            if (confirm(`Delete user "${email}"? This cannot be undone!`)) {
-                adminUserStatus.textContent = '⏳ Deleting user...';
-                adminUserStatus.className = 'admin-status';
-                
-                // Note: Can't delete from client side directly
-                // We'll remove from Firestore and show message
-                db.collection('users').doc(uid).delete()
-                    .then(() => {
-                        adminUserStatus.textContent = '✅ User removed from list. Delete from Firebase Console for full removal.';
-                        adminUserStatus.className = 'admin-status success';
-                        loadUserList();
-                        setTimeout(() => { adminUserStatus.textContent = ''; }, 5000);
-                    })
-                    .catch(() => {
-                        adminUserStatus.textContent = '⚠️ Delete from Firebase Console (Authentication → Users)';
-                        adminUserStatus.className = 'admin-status error';
-                        setTimeout(() => { adminUserStatus.textContent = ''; }, 5000);
-                    });
-            }
-        };
-
-        // Override view password
-        window.viewPassword = function(uid, email) {
-            if (tempPasswords[uid]) {
-                alert(`👤 User: ${email}\n🔑 Password: ${tempPasswords[uid]}`);
-            } else {
-                alert(`👤 User: ${email}\n🔑 Password: (Not stored - set by admin or user)`);
-            }
-        };
-
-        console.log('🔥 ABID SIR - Complete User Management');
+        console.log('🔥 ABID SIR - Complete User Management with Delete');
         console.log('📧 Add users → shows in list with password view');
         console.log('👁️ View password button shows stored password');
-        console.log('🗑️ Delete user button (removes from Firestore)');
+        console.log('🗑️ Delete user button removes user from Firestore');
+        console.log('💡 For full deletion, use Firebase Console (Authentication → Users)');
     </script>
 </body>
 </html>
