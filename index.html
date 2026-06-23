@@ -11,7 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        /* ===== SIMPLE CLEAN STYLES ===== */
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
         body{background:#0b0d12;color:#e3e9f0;padding:1rem;min-height:100vh;}
         
@@ -46,7 +45,7 @@
         .stat-item i{color:#00c3ff;}
         .stat-number{font-weight:700;background:#142433;padding:0 0.6rem;border-radius:30px;}
         
-        .announce-box{background:#0d1c2b;border-left:5px solid #00b7ff;padding:0.6rem 1.5rem;border-radius:60px;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+        .announce-box{background:#0d1c2b;border-left:5px solid #00b7ff;padding:0.6rem 1.5rem;border-radius:60px;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
         .announce-text{color:#c2defa;}
         .announce-text strong{color:#ffd966;}
         
@@ -69,7 +68,7 @@
         .admin-panel{margin-top:2rem;background:#0d1c2b;border-radius:2rem;padding:1.5rem;border:1px solid #1f4a6b;}
         .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;}
         .admin-header h3{color:#00ccff;}
-        .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
+        .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
         .admin-card{background:#0f1a2b;border-radius:1.5rem;padding:1.2rem;border:1px solid #1f4a6b;}
         .admin-card .card-title{color:#8bcbff;font-size:0.8rem;font-weight:600;margin-bottom:0.8rem;}
         .admin-card .card-title i{color:#00ccff;}
@@ -79,14 +78,15 @@
         .admin-card .btn-sm:hover{background:#0080cc;}
         .admin-card .btn-sm.success{background:#1a5f2a;border-color:#2a8b3a;}
         .admin-card .btn-sm.danger{background:#5f1a1a;border-color:#8b2a2a;}
+        .admin-card .btn-sm.warning{background:#5f5a1a;border-color:#8b8a2a;}
         .admin-status{font-size:0.75rem;margin-top:0.5rem;color:#6a8fa8;min-height:1.2rem;}
         .admin-status.success{color:#4ade80;}
         .admin-status.error{color:#ff6b6b;}
         
         .admin-list{max-height:250px;overflow-y:auto;margin-top:0.5rem;border-top:1px solid #1f4a6b;padding-top:0.5rem;}
         .admin-list-item{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-radius:30px;font-size:0.75rem;color:#b8d0e5;border-bottom:1px solid #1f4a6b22;flex-wrap:wrap;gap:0.3rem;}
-        .admin-list-item .user-email{color:#8bcbff;}
-        .admin-list-item .user-pass{color:#fbbf24;font-family:monospace;background:#010a14;padding:0.05rem 0.5rem;border-radius:20px;font-size:0.6rem;}
+        .admin-list-item .item-text{flex:1;min-width:80px;}
+        .admin-list-item .item-actions{display:flex;gap:0.3rem;}
         .admin-list-item .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
         
         .footer-note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:#43647a;border-top:1px solid #162b3d;padding-top:1rem;}
@@ -174,8 +174,12 @@
             <div class="admin-card">
                 <div class="card-title"><i class="fas fa-bullhorn"></i> Announcement</div>
                 <input type="text" id="adminAnnounceInput" placeholder="New announcement text">
-                <button class="btn-sm success" id="adminUpdateAnnounce"><i class="fas fa-save"></i> Update</button>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminUpdateAnnounce"><i class="fas fa-save"></i> Update</button>
+                    <button class="btn-sm danger" id="adminDeleteAnnounce"><i class="fas fa-trash"></i> Delete</button>
+                </div>
                 <div class="admin-status" id="adminAnnounceStatus"></div>
+                <div class="admin-list" id="adminAnnounceList"></div>
             </div>
 
             <!-- Files -->
@@ -257,7 +261,9 @@ const eyeIcon = document.getElementById('eyeIcon');
 // Admin
 const adminAnnounceInput = document.getElementById('adminAnnounceInput');
 const adminUpdateAnnounce = document.getElementById('adminUpdateAnnounce');
+const adminDeleteAnnounce = document.getElementById('adminDeleteAnnounce');
 const adminAnnounceStatus = document.getElementById('adminAnnounceStatus');
+const adminAnnounceList = document.getElementById('adminAnnounceList');
 
 const adminFileTitle = document.getElementById('adminFileTitle');
 const adminFileLabel = document.getElementById('adminFileLabel');
@@ -285,6 +291,7 @@ const adminEyeIcon = document.getElementById('adminEyeIcon');
 let isAuthorized = false;
 let currentUser = null;
 let userPasswords = {};
+let currentAnnouncementId = null;
 
 // ========== PASSWORD TOGGLES ==========
 let passVisible = false;
@@ -366,10 +373,79 @@ logoutBtn.addEventListener('click', function() {
 });
 
 // ============================================================
-// ADMIN FUNCTIONS - WORKING DELETE USER
+// ANNOUNCEMENT FUNCTIONS - WITH DELETE
 // ============================================================
 
-// ===== ADD USER =====
+// Update Announcement
+adminUpdateAnnounce.addEventListener('click', function() {
+    const text = adminAnnounceInput.value.trim();
+    if (!text) {
+        adminAnnounceStatus.textContent = '⚠️ Please enter text.';
+        adminAnnounceStatus.className = 'admin-status error';
+        return;
+    }
+    
+    const announceData = { text: text, timestamp: Date.now() };
+    
+    if (currentAnnouncementId) {
+        // Update existing
+        db.collection('content').doc('announcement').update(announceData)
+            .then(() => {
+                adminAnnounceStatus.textContent = '✅ Announcement updated!';
+                adminAnnounceStatus.className = 'admin-status success';
+                adminAnnounceInput.value = '';
+                setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminAnnounceStatus.textContent = '❌ ' + err.message;
+                adminAnnounceStatus.className = 'admin-status error';
+            });
+    } else {
+        // Create new
+        db.collection('content').doc('announcement').set(announceData)
+            .then(() => {
+                adminAnnounceStatus.textContent = '✅ Announcement created!';
+                adminAnnounceStatus.className = 'admin-status success';
+                adminAnnounceInput.value = '';
+                setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminAnnounceStatus.textContent = '❌ ' + err.message;
+                adminAnnounceStatus.className = 'admin-status error';
+            });
+    }
+});
+
+// Delete Announcement
+adminDeleteAnnounce.addEventListener('click', function() {
+    if (!currentAnnouncementId) {
+        adminAnnounceStatus.textContent = '⚠️ No announcement to delete.';
+        adminAnnounceStatus.className = 'admin-status error';
+        return;
+    }
+    
+    if (!confirm('Delete current announcement?')) return;
+    
+    db.collection('content').doc('announcement').delete()
+        .then(() => {
+            currentAnnouncementId = null;
+            adminAnnounceStatus.textContent = '✅ Announcement deleted!';
+            adminAnnounceStatus.className = 'admin-status success';
+            adminAnnounceInput.value = '';
+            document.getElementById('announceText').innerHTML = '<strong>📢</strong> No announcement';
+            setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminAnnounceStatus.textContent = '❌ ' + err.message;
+            adminAnnounceStatus.className = 'admin-status error';
+        });
+});
+
+// ============================================================
+// USER FUNCTIONS
+// ============================================================
+
+// Add User
 adminAddUser.addEventListener('click', function() {
     const email = adminUserEmail.value.trim();
     const password = adminUserPassword.value.trim();
@@ -384,10 +460,7 @@ adminAddUser.addEventListener('click', function() {
     
     auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-            // Save password for view
             userPasswords[userCredential.user.uid] = password;
-            
-            // Save to Firestore
             db.collection('users').doc(userCredential.user.uid).set({
                 email: email,
                 createdAt: Date.now()
@@ -406,19 +479,17 @@ adminAddUser.addEventListener('click', function() {
         });
 });
 
-// ===== DELETE USER - WORKING =====
+// Delete User
 function deleteUser(uid, email) {
     if (!confirm(`Delete user "${email}" permanently?`)) return;
     
     adminUserStatus.textContent = '⏳ Deleting user...';
     adminUserStatus.className = 'admin-status';
     
-    // Delete from Firestore
     db.collection('users').doc(uid).delete()
         .then(() => {
-            // Remove from local storage
             delete userPasswords[uid];
-            adminUserStatus.textContent = '✅ User deleted from system';
+            adminUserStatus.textContent = '✅ User deleted';
             adminUserStatus.className = 'admin-status success';
             loadUsers();
             setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
@@ -430,7 +501,7 @@ function deleteUser(uid, email) {
         });
 }
 
-// ===== VIEW PASSWORD =====
+// View Password
 function viewPassword(uid, email) {
     if (userPasswords[uid]) {
         alert(`👤 User: ${email}\n🔑 Password: ${userPasswords[uid]}`);
@@ -439,7 +510,7 @@ function viewPassword(uid, email) {
     }
 }
 
-// ===== LOAD USERS =====
+// Load Users
 function loadUsers() {
     db.collection('users').orderBy('email').get()
         .then((snapshot) => {
@@ -458,11 +529,11 @@ function loadUsers() {
                 const div = document.createElement('div');
                 div.className = 'admin-list-item';
                 div.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-                        <span class="user-email">${email}</span>
-                        ${hasPass ? `<span class="user-pass">${hasPass}</span>` : ''}
+                    <div class="item-text">
+                        <span style="color:#8bcbff;">${email}</span>
+                        ${hasPass ? `<span style="color:#fbbf24;font-family:monospace;background:#010a14;padding:0.05rem 0.5rem;border-radius:20px;font-size:0.6rem;margin-left:0.3rem;">${hasPass}</span>` : ''}
                     </div>
-                    <div style="display:flex;gap:0.3rem;">
+                    <div class="item-actions">
                         <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#003759;border:1px solid #0080c0;" onclick="viewPassword('${uid}','${email}')">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -479,28 +550,11 @@ function loadUsers() {
         });
 }
 
-// ===== ANNOUNCEMENT =====
-adminUpdateAnnounce.addEventListener('click', function() {
-    const text = adminAnnounceInput.value.trim();
-    if (!text) {
-        adminAnnounceStatus.textContent = '⚠️ Please enter text.';
-        adminAnnounceStatus.className = 'admin-status error';
-        return;
-    }
-    db.collection('content').doc('announcement').set({ text: text, timestamp: Date.now() })
-        .then(() => {
-            adminAnnounceStatus.textContent = '✅ Updated!';
-            adminAnnounceStatus.className = 'admin-status success';
-            adminAnnounceInput.value = '';
-            setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
-        })
-        .catch((err) => {
-            adminAnnounceStatus.textContent = '❌ ' + err.message;
-            adminAnnounceStatus.className = 'admin-status error';
-        });
-});
+// ============================================================
+// FILE & VIDEO FUNCTIONS
+// ============================================================
 
-// ===== ADD FILE =====
+// Add File
 adminAddFile.addEventListener('click', function() {
     const title = adminFileTitle.value.trim();
     const label = adminFileLabel.value.trim() || 'PREMIUM';
@@ -533,7 +587,7 @@ adminAddFile.addEventListener('click', function() {
     });
 });
 
-// ===== ADD VIDEO =====
+// Add Video
 adminAddVideo.addEventListener('click', function() {
     const title = adminVideoTitle.value.trim();
     const label = adminVideoLabel.value.trim() || 'GAMING';
@@ -562,14 +616,14 @@ adminAddVideo.addEventListener('click', function() {
     });
 });
 
-// ===== DELETE FILE =====
+// Delete File
 function deleteFile(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('files').doc(id).delete().catch(() => {});
     }
 }
 
-// ===== DELETE VIDEO =====
+// Delete Video
 function deleteVideo(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('videos').doc(id).delete().catch(() => {});
@@ -590,10 +644,14 @@ function loadAllData() {
     db.collection('content').doc('announcement').onSnapshot((doc) => {
         const el = document.getElementById('announceText');
         if (doc.exists) {
-            el.innerHTML = `<strong>📢</strong> ${doc.data().text || 'Welcome!'}`;
-            adminAnnounceInput.value = doc.data().text || '';
+            const data = doc.data();
+            currentAnnouncementId = doc.id;
+            el.innerHTML = `<strong>📢</strong> ${data.text || 'Welcome!'}`;
+            adminAnnounceInput.value = data.text || '';
         } else {
-            el.innerHTML = '<strong>📢</strong> Welcome to ABID SIR!';
+            currentAnnouncementId = null;
+            el.innerHTML = '<strong>📢</strong> No announcement';
+            adminAnnounceInput.value = '';
         }
     }, () => {});
 
@@ -626,8 +684,10 @@ function loadAllData() {
                 const item = document.createElement('div');
                 item.className = 'admin-list-item';
                 item.innerHTML = `
-                    <span>📄 ${file.title || 'Untitled'}</span>
-                    <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                    <div class="item-text">📄 ${file.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                    </div>
                 `;
                 adminFileList.appendChild(item);
             });
@@ -678,8 +738,10 @@ function loadAllData() {
                 const item = document.createElement('div');
                 item.className = 'admin-list-item';
                 item.innerHTML = `
-                    <span>🎬 ${vid.title || 'Untitled'}</span>
-                    <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteVideo('${id}','${vid.title}')"><i class="fas fa-trash"></i></button>
+                    <div class="item-text">🎬 ${vid.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteVideo('${id}','${vid.title}')"><i class="fas fa-trash"></i></button>
+                    </div>
                 `;
                 adminVideoList.appendChild(item);
             });
@@ -699,8 +761,11 @@ function loadAllData() {
     }, () => {});
 }
 
-console.log('🔥 ABID SIR - WORKING DELETE USER');
-console.log('✅ Add user → View password → Delete user (works!)');
+console.log('🔥 ABID SIR - Complete Admin Panel');
+console.log('✅ Announcement: Update + Delete');
+console.log('✅ Users: Add + View Password + Delete');
+console.log('✅ Files: Add + Delete');
+console.log('✅ Videos: Add + Delete');
 </script>
 </body>
 </html>
