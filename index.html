@@ -1102,6 +1102,7 @@
                 </div>
                 <div class="admin-status" id="adminAnnounceStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#6a8fa8;"></div>
 
+                <!-- ===== ANNOUNCEMENT LIST WITH AUTO-SYNC ===== -->
                 <div class="list-container" id="adminAnnounceList">
                     <div class="empty-state">
                         <i class="fas fa-bullhorn"></i>
@@ -1807,50 +1808,52 @@
         }
 
         // ============================================================
-        // ANNOUNCEMENT MANAGEMENT (WORKING)
+        // ANNOUNCEMENT MANAGEMENT - AUTO-SYNC FIXED
         // ============================================================
 
         function loadAnnouncements() {
-            db.collection('announcements').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+            // Listen to the SAME Firestore document as user website
+            db.collection('content').doc('announcement').onSnapshot((doc) => {
                 adminAnnounceList.innerHTML = '';
                 let count = 0;
-                if (snapshot.empty) {
-                    adminAnnounceList.innerHTML = `<div class="empty-state"><i class="fas fa-bullhorn"></i><p>No announcements yet</p></div>`;
-                    document.getElementById('totalAnnouncements').textContent = '0';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const ann = doc.data();
-                    count++;
-                    const priorityColor = ann.priority === 'urgent' ? '#ff6b6b' : 
-                                        ann.priority === 'high' ? '#fbbf24' : '#4ade80';
-                    const priorityLabel = ann.priority === 'urgent' ? '🔴 Urgent' : 
-                                        ann.priority === 'high' ? '🟡 High' : '🟢 Normal';
-
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    const text = data.text || data.value || 'No announcement';
+                    
+                    count = 1;
                     const item = document.createElement('div');
                     item.className = 'list-item';
                     item.innerHTML = `
                         <div class="item-info">
-                            <div class="title">${ann.text || 'Untitled'}</div>
+                            <div class="title">${text}</div>
                             <div class="meta">
-                                <span style="color:${priorityColor};">${priorityLabel}</span>
-                                <span class="status ${ann.status === 'published' ? 'published' : 'draft'}">${ann.status || 'published'}</span>
-                                <span><i class="fas fa-calendar-alt"></i> ${ann.date || 'new'}</span>
+                                <span class="status published"><i class="fas fa-circle" style="color:#4ade80;font-size:0.5rem;"></i> Published</span>
+                                <span><i class="fas fa-calendar-alt"></i> ${data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'Today'}</span>
                             </div>
                         </div>
                         <div class="item-actions">
-                            <button class="btn-sm edit" onclick="editAnnouncement('${doc.id}', ${JSON.stringify(ann).replace(/"/g, '&quot;')})">
+                            <button class="btn-sm edit" onclick="editAnnouncement('${doc.id}', ${JSON.stringify(data).replace(/"/g, '&quot;')})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn-sm delete" onclick="deleteAnnouncement('${doc.id}','${ann.text || 'Untitled'}')">
+                            <button class="btn-sm delete" onclick="deleteAnnouncement('${doc.id}','${text}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     `;
                     adminAnnounceList.appendChild(item);
-                });
+                    
+                    // Also update the input field with current announcement
+                    adminAnnounceText.value = text;
+                } else {
+                    adminAnnounceList.innerHTML = `<div class="empty-state"><i class="fas fa-bullhorn"></i><p>No announcement yet</p></div>`;
+                    adminAnnounceText.value = '';
+                }
+                
                 document.getElementById('totalAnnouncements').textContent = count;
-            }, () => {});
+            }, (error) => {
+                console.error('❌ Announcement listener error:', error);
+            });
         }
 
         function editAnnouncement(id, data) {
@@ -1889,7 +1892,8 @@
 
             showLoading('Adding announcement...');
 
-            db.collection('announcements').add({
+            // Save to the same document as user website uses
+            db.collection('content').doc('announcement').set({
                 text: text,
                 priority: priority,
                 status: status,
@@ -1897,11 +1901,12 @@
                 date: new Date().toLocaleDateString()
             }).then(() => {
                 hideLoading();
-                showToast('✅ Announcement added!');
-                adminAnnounceStatusEl.textContent = '✅ Announcement added!';
+                showToast('✅ Announcement added and synced!');
+                adminAnnounceStatusEl.textContent = '✅ Announcement added! (Auto-synced)';
                 adminAnnounceStatusEl.style.color = '#4ade80';
                 adminAnnounceText.value = '';
                 setTimeout(() => { adminAnnounceStatusEl.textContent = ''; }, 3000);
+                loadAnnouncements();
             }).catch((err) => {
                 hideLoading();
                 adminAnnounceStatusEl.textContent = '❌ Error: ' + err.message;
@@ -1923,17 +1928,19 @@
 
             showLoading('Updating announcement...');
 
-            db.collection('announcements').doc(editingAnnounceId).update({
+            db.collection('content').doc('announcement').update({
                 text: text,
                 priority: priority,
-                status: status
+                status: status,
+                updated: new Date().toLocaleDateString()
             }).then(() => {
                 hideLoading();
-                showToast('✅ Announcement updated!');
-                adminAnnounceStatusEl.textContent = '✅ Announcement updated!';
+                showToast('✅ Announcement updated and synced!');
+                adminAnnounceStatusEl.textContent = '✅ Announcement updated! (Auto-synced)';
                 adminAnnounceStatusEl.style.color = '#4ade80';
                 cancelAnnounceEdit();
                 setTimeout(() => { adminAnnounceStatusEl.textContent = ''; }, 3000);
+                loadAnnouncements();
             }).catch((err) => {
                 hideLoading();
                 adminAnnounceStatusEl.textContent = '❌ Error: ' + err.message;
@@ -1946,10 +1953,14 @@
         function deleteAnnouncement(id, text) {
             if (!confirm(`Delete announcement "${text}"?`)) return;
             showLoading('Deleting announcement...');
-            db.collection('announcements').doc(id).delete()
+            
+            // Delete the document
+            db.collection('content').doc('announcement').delete()
                 .then(() => {
                     hideLoading();
                     showToast('🗑️ Announcement deleted!');
+                    adminAnnounceText.value = '';
+                    loadAnnouncements();
                 })
                 .catch((err) => {
                     hideLoading();
@@ -1984,8 +1995,9 @@
         console.log('✅ User Management: Create + Delete');
         console.log('✅ File Management: Add + Edit + Delete + Copy Link');
         console.log('✅ Video Management: Add + Edit + Delete + Featured');
-        console.log('✅ Announcement Management: Add + Edit + Delete + Priority');
+        console.log('✅ Announcement Management: Add + Edit + Delete + AUTO-SYNC');
         console.log('✨ All existing features working correctly!');
+        console.log('📢 Announcement auto-sync with User Website enabled!');
     </script>
 </body>
 </html>
