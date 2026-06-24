@@ -3,1989 +3,769 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ABID SIR · Admin Panel</title>
-    <meta name="description" content="ABID SIR – Premium Admin Panel for gaming website.">
-    <meta name="keywords" content="ABID SIR, admin, gaming, premium, dashboard">
-    <link rel="canonical" href="https://abidsir.gaming">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>ABID SIR · Premium Gaming</title>
+    <meta name="description" content="ABID SIR – premium gaming hub.">
+    <meta name="keywords" content="ABID SIR, gaming, premium, files">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        /* ============================================================
-           ADMIN PANEL - PREMIUM GAMING DASHBOARD
-           ============================================================ */
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+        body{background:#0b0d12;color:#e3e9f0;padding:1rem;min-height:100vh;}
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #0a0c12;
-            color: #e3e9f0;
-            min-height: 100vh;
-            font-family: 'Exo 2', 'Segoe UI', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* ===== ANIMATED BACKGROUND ===== */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .neon-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-            animation: floatOrb 8s ease-in-out infinite;
-        }
-        .neon-orb:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            background: rgba(0, 200, 255, 0.08);
-            top: -100px;
-            right: -100px;
-            animation-delay: 0s;
-        }
-        .neon-orb:nth-child(2) {
-            width: 400px;
-            height: 400px;
-            background: rgba(120, 0, 255, 0.06);
-            bottom: -150px;
-            left: -150px;
-            animation-delay: 3s;
-        }
-        .neon-orb:nth-child(3) {
-            width: 250px;
-            height: 250px;
-            background: rgba(0, 255, 200, 0.05);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: 6s;
-        }
-
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-            25% { transform: translate(30px, -30px) scale(1.1); opacity: 0.7; }
-            50% { transform: translate(-20px, 20px) scale(0.9); opacity: 0.4; }
-            75% { transform: translate(15px, 15px) scale(1.05); opacity: 0.6; }
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0c12; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #00ccff, #0066aa); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00ccff; }
-
-        /* ===== LOGIN OVERLAY ===== */
-        #passwordOverlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: rgba(8, 11, 18, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s;
-        }
-        #passwordOverlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .login-box {
-            background: rgba(15, 26, 43, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 3rem 2.8rem;
-            border-radius: 2.5rem;
-            border: 1px solid rgba(0, 102, 170, 0.4);
-            box-shadow: 0 0 80px rgba(0, 50, 100, 0.3), inset 0 0 80px rgba(0, 100, 200, 0.05);
-            text-align: center;
-            max-width: 440px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-        .login-box::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(0, 200, 255, 0.05), transparent, rgba(0, 200, 255, 0.05), transparent);
-            animation: rotateGlow 15s linear infinite;
-            pointer-events: none;
-        }
-        @keyframes rotateGlow {
-            to { transform: rotate(360deg); }
-        }
-
-        .login-box>* { position: relative; z-index: 1; }
-
-        .login-box .icon {
-            font-size: 4rem;
-            color: #00ccff;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 0 30px rgba(0, 204, 255, 0.3));
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 204, 255, 0.3)); }
-            50% { filter: drop-shadow(0 0 50px rgba(0, 204, 255, 0.6)); }
-        }
-
-        .login-box h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 900;
-            background: linear-gradient(145deg, #a0f0ff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 3px;
-        }
-        .login-box .subtitle {
-            color: #6a8fa8;
-            font-size: 0.85rem;
-            margin-bottom: 1.8rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        .login-box .input-group {
-            position: relative;
-            margin-bottom: 1.2rem;
-        }
-        .login-box .input-group i {
-            position: absolute;
-            left: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #3a6a8a;
-            font-size: 1rem;
-            transition: 0.3s;
-            z-index: 2;
-        }
-        .login-box .input-group input {
-            width: 100%;
-            padding: 0.9rem 1.2rem 0.9rem 3rem;
-            background: rgba(1, 10, 20, 0.8);
-            border: 1px solid rgba(31, 74, 107, 0.5);
-            border-radius: 60px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-            font-family: 'Exo 2', sans-serif;
-        }
-        .login-box .input-group input:focus {
-            border-color: #00a6ff;
-            box-shadow: 0 0 30px rgba(0, 119, 255, 0.2);
-        }
-        .login-box .input-group input:focus+i {
-            color: #00ccff;
-        }
-        .login-box .input-group input::placeholder {
-            color: #3a5a7a;
-        }
-
-        .login-box .input-group .toggle-pass {
-            position: absolute;
-            right: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #3a6a8a;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
-            z-index: 2;
-            background: transparent;
-            border: none;
-            padding: 0.3rem;
-        }
-        .login-box .input-group .toggle-pass:hover {
-            color: #00ccff;
-        }
-
-        .login-box .btn {
-            background: linear-gradient(145deg, #005f9e, #0077cc);
-            border: none;
-            padding: 0.9rem;
-            border-radius: 60px;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            font-size: 1.1rem;
-            width: 100%;
-            border: 1px solid rgba(0, 136, 208, 0.5);
-            box-shadow: 0 0 40px rgba(0, 76, 128, 0.3);
-            transition: all 0.3s;
-            letter-spacing: 2px;
-            font-family: 'Exo 2', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        .login-box .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transform: rotate(45deg);
-            transition: 0.5s;
-        }
-        .login-box .btn:hover::after {
-            left: 100%;
-        }
-        .login-box .btn:hover {
-            background: linear-gradient(145deg, #0077cc, #0099ee);
-            transform: scale(1.02);
-            box-shadow: 0 0 60px rgba(0, 102, 204, 0.5);
-        }
-        .login-box .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .login-box .error-msg {
-            color: #ff6b6b;
-            margin-top: 0.8rem;
-            font-weight: 500;
-            min-height: 1.5rem;
-            font-size: 0.9rem;
-        }
-        .login-box .success-msg {
-            color: #4ade80;
-            margin-top: 0.8rem;
-            font-weight: 500;
-            min-height: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .loader-ring {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            margin: 0.3rem auto;
-            border: 3px solid rgba(26, 56, 80, 0.3);
-            border-top: 3px solid #00ccff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== ADMIN DASHBOARD ===== */
-        .admin-container {
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ===== ADMIN HEADER ===== */
-        .admin-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.2rem 2rem;
-            background: rgba(15, 26, 43, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            border: 1px solid rgba(0, 102, 170, 0.2);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            margin-bottom: 2rem;
-        }
-        .admin-header .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .admin-header .logo h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(145deg, #a0f0ff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .admin-header .logo i {
-            font-size: 2rem;
-            color: #00ccff;
-        }
-        .admin-header .admin-badge {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .admin-header .admin-badge .badge {
-            background: rgba(0, 204, 255, 0.1);
-            border: 1px solid rgba(0, 204, 255, 0.2);
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            color: #00ccff;
-            letter-spacing: 1px;
-        }
-        .admin-header .admin-badge .badge i {
-            color: #4ade80;
-        }
-        .logout-btn {
-            background: rgba(255, 107, 107, 0.1);
-            border: 1px solid rgba(255, 107, 107, 0.2);
-            color: #ff6b6b;
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            transition: all 0.3s;
-            font-family: 'Exo 2', sans-serif;
-        }
-        .logout-btn:hover {
-            background: rgba(255, 107, 107, 0.2);
-            border-color: #ff6b6b;
-            box-shadow: 0 0 30px rgba(255, 107, 107, 0.1);
-            transform: scale(1.05);
-        }
-
-        /* ===== STATS ROW ===== */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: rgba(15, 26, 43, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 1.5rem;
-            padding: 1.2rem 1.5rem;
-            border: 1px solid rgba(28, 63, 89, 0.3);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 166, 255, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 76, 122, 0.15);
-        }
-        .stat-card .icon {
-            font-size: 1.8rem;
-            color: #00ccff;
-            width: 3rem;
-            height: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 204, 255, 0.05);
-            border-radius: 1rem;
-            border: 1px solid rgba(0, 204, 255, 0.1);
-        }
-        .stat-card .info h4 {
-            font-size: 0.65rem;
-            color: #6a8fa8;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .stat-card .info .number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #ddf4ff;
-        }
-
-        /* ===== ADMIN GRID ===== */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        /* ===== ADMIN CARDS ===== */
-        .admin-card {
-            background: rgba(15, 26, 43, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            padding: 1.5rem;
-            border: 1px solid rgba(28, 63, 89, 0.3);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
-        }
-        .admin-card:hover {
-            border-color: rgba(0, 166, 255, 0.3);
-        }
-        .admin-card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.2rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .admin-card .card-header h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            color: #b0d5ff;
-            letter-spacing: 1px;
-        }
-        .admin-card .card-header h3 i {
-            color: #00ccff;
-            margin-right: 0.5rem;
-        }
-        .admin-card .card-header .live-badge {
-            background: #ff0040;
-            color: white;
-            padding: 0.15rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.55rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            animation: pulseLive 1.5s ease-in-out infinite;
-        }
-        @keyframes pulseLive {
-            0%, 100% { opacity: 1; box-shadow: 0 0 20px rgba(255, 0, 64, 0.3); }
-            50% { opacity: 0.6; box-shadow: 0 0 40px rgba(255, 0, 64, 0.6); }
-        }
-
-        /* ===== FORM STYLES ===== */
-        .form-group {
-            margin-bottom: 0.8rem;
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.7rem;
-            color: #6a8fa8;
-            margin-bottom: 0.2rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            background: rgba(1, 10, 20, 0.8);
-            border: 1px solid rgba(31, 74, 107, 0.4);
-            border-radius: 60px;
-            color: white;
-            font-size: 0.85rem;
-            outline: none;
-            transition: all 0.3s;
-            font-family: 'Exo 2', sans-serif;
-        }
-        .form-group textarea {
-            border-radius: 1rem;
-            resize: vertical;
-            min-height: 50px;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #00a6ff;
-            box-shadow: 0 0 30px rgba(0, 119, 255, 0.1);
-        }
-        .form-group select {
-            appearance: none;
-            cursor: pointer;
-        }
-        .form-group select option {
-            background: #0f1a2b;
-            color: white;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-
-        .btn-admin {
-            background: linear-gradient(145deg, #005f9e, #0077cc);
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 60px;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            font-size: 0.85rem;
-            border: 1px solid rgba(0, 136, 208, 0.3);
-            box-shadow: 0 0 30px rgba(0, 76, 128, 0.15);
-            transition: all 0.3s;
-            font-family: 'Exo 2', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-admin:hover {
-            background: linear-gradient(145deg, #0077cc, #0099ee);
-            transform: scale(1.02);
-            box-shadow: 0 0 50px rgba(0, 102, 204, 0.3);
-        }
-        .btn-admin.success {
-            background: linear-gradient(145deg, #1a5f2a, #2a8b3a);
-            border-color: rgba(42, 139, 58, 0.3);
-        }
-        .btn-admin.success:hover {
-            background: linear-gradient(145deg, #2a8b3a, #3aad4a);
-        }
-        .btn-admin.danger {
-            background: linear-gradient(145deg, #5f1a1a, #8b2a2a);
-            border-color: rgba(139, 42, 42, 0.3);
-        }
-        .btn-admin.danger:hover {
-            background: linear-gradient(145deg, #8b2a2a, #ad3a3a);
-        }
-        .btn-admin.warning {
-            background: linear-gradient(145deg, #5f5a1a, #8b8a2a);
-            border-color: rgba(139, 138, 42, 0.3);
-        }
-        .btn-admin.warning:hover {
-            background: linear-gradient(145deg, #8b8a2a, #adad3a);
-        }
-        .btn-admin:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ===== LIST ITEMS ===== */
-        .list-container {
-            max-height: 350px;
-            overflow-y: auto;
-            margin-top: 0.8rem;
-            padding-right: 0.3rem;
-        }
-        .list-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .list-container::-webkit-scrollbar-track {
-            background: rgba(1, 10, 20, 0.3);
-            border-radius: 10px;
-        }
-        .list-container::-webkit-scrollbar-thumb {
-            background: #00a6ff;
-            border-radius: 10px;
-        }
-
-        .list-item {
-            background: rgba(1, 10, 20, 0.5);
-            border-radius: 1rem;
-            padding: 0.8rem;
-            margin-bottom: 0.6rem;
-            border: 1px solid rgba(31, 74, 107, 0.2);
-            transition: all 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .list-item:hover {
-            border-color: rgba(0, 166, 255, 0.3);
-            background: rgba(1, 10, 20, 0.7);
-        }
-        .list-item .item-info {
-            flex: 1;
-            min-width: 120px;
-        }
-        .list-item .item-info .title {
-            font-weight: 600;
-            color: #d8edff;
-            font-size: 0.85rem;
-        }
-        .list-item .item-info .desc {
-            font-size: 0.7rem;
-            color: #7797b0;
-        }
-        .list-item .item-info .meta {
-            font-size: 0.6rem;
-            color: #3a6a8a;
-            margin-top: 0.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .list-item .item-info .meta .status {
-            padding: 0.05rem 0.5rem;
-            border-radius: 40px;
-            font-size: 0.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .list-item .item-info .meta .status.live {
-            background: #ff004022;
-            color: #ff6b6b;
-            border: 1px solid #ff004044;
-        }
-        .list-item .item-info .meta .status.published {
-            background: #4ade8022;
-            color: #4ade80;
-            border: 1px solid #4ade8044;
-        }
-        .list-item .item-actions {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-        }
-        .list-item .item-actions .btn-sm {
-            padding: 0.2rem 0.6rem;
-            border-radius: 40px;
-            font-size: 0.6rem;
-            font-weight: 600;
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Exo 2', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.2rem;
-        }
-        .list-item .item-actions .btn-sm.edit {
-            background: rgba(0, 204, 255, 0.1);
-            color: #00ccff;
-            border-color: rgba(0, 204, 255, 0.2);
-        }
-        .list-item .item-actions .btn-sm.edit:hover {
-            background: rgba(0, 204, 255, 0.2);
-            transform: scale(1.05);
-        }
-        .list-item .item-actions .btn-sm.delete {
-            background: rgba(255, 107, 107, 0.1);
-            color: #ff6b6b;
-            border-color: rgba(255, 107, 107, 0.2);
-        }
-        .list-item .item-actions .btn-sm.delete:hover {
-            background: rgba(255, 107, 107, 0.2);
-            transform: scale(1.05);
-        }
-        .list-item .item-actions .btn-sm.copy {
-            background: rgba(255, 215, 0, 0.1);
-            color: #ffd700;
-            border-color: rgba(255, 215, 0, 0.2);
-        }
-        .list-item .item-actions .btn-sm.copy:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: scale(1.05);
-        }
-        .list-item .item-actions .btn-sm.featured {
-            background: rgba(255, 215, 0, 0.1);
-            color: #ffd700;
-            border-color: rgba(255, 215, 0, 0.2);
-        }
-        .list-item .item-actions .btn-sm.featured:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: scale(1.05);
-        }
-        .list-item .item-actions .btn-sm.featured.active {
-            background: rgba(255, 215, 0, 0.2);
-            border-color: #ffd700;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 1.5rem;
-            color: #3a6a8a;
-        }
-        .empty-state i {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 0.3rem;
-            color: #2a4a6a;
-        }
-        .empty-state p {
-            font-size: 0.8rem;
-        }
-
-        /* ===== SUCCESS TOAST ===== */
-        .success-toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(26, 95, 42, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 0.8rem 1.5rem;
-            border-radius: 1.2rem;
-            border: 1px solid rgba(42, 139, 58, 0.4);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            display: none;
-            align-items: center;
-            gap: 0.8rem;
-            z-index: 1000;
-            animation: slideUp 0.5s ease;
-        }
-        .success-toast.show {
-            display: flex;
-        }
-        .success-toast i {
-            font-size: 1.3rem;
-            color: #4ade80;
-        }
-        .success-toast .msg {
-            color: white;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== LOADING OVERLAY ===== */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(8, 11, 18, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .loading-overlay.show {
-            display: flex;
-        }
-        .loading-overlay .loader-ring {
-            width: 50px;
-            height: 50px;
-            border-width: 4px;
-        }
-        .loading-overlay p {
-            color: #6a8fa8;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 1024px) {
-            .admin-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 700px) {
-            .admin-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-                padding: 1rem;
-            }
-            .admin-header .admin-badge {
-                justify-content: center;
-            }
-            .stats-row {
-                grid-template-columns: 1fr 1fr;
-            }
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            .list-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .list-item .item-actions {
-                justify-content: flex-end;
-            }
-            .admin-container {
-                padding: 0.8rem;
-            }
-            .admin-card {
-                padding: 1rem;
-            }
-            .admin-header .logo h1 {
-                font-size: 1.4rem;
-            }
-        }
-        @media (max-width: 480px) {
-            .stats-row {
-                grid-template-columns: 1fr;
-            }
-            .login-box {
-                padding: 1.8rem 1.2rem;
-            }
-            .success-toast {
-                bottom: 1rem;
-                right: 1rem;
-                left: 1rem;
-                padding: 0.6rem 1rem;
-            }
-        }
+        #passwordOverlay{position:fixed;inset:0;z-index:9999;background:#080b12;display:flex;justify-content:center;align-items:center;transition:0.4s;}
+        #passwordOverlay.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+        .login-box{background:#0f1a2b;padding:2.5rem;border-radius:2.5rem;border:1px solid #0066aa;box-shadow:0 0 60px #002b55;text-align:center;max-width:400px;width:100%;}
+        .login-box h2{color:#b0daff;font-size:2rem;}
+        .login-box h2 i{color:#00ccff;}
+        .login-box input{width:100%;padding:0.8rem 1.2rem;margin:0.8rem 0;background:#010a14;border:1px solid #1f4a6b;border-radius:60px;color:white;font-size:1rem;outline:none;}
+        .login-box input:focus{border-color:#00a6ff;box-shadow:0 0 25px #0077ff40;}
+        .login-box .btn{background:linear-gradient(145deg,#005f9e,#0077cc);border:none;padding:0.8rem;border-radius:60px;font-weight:700;color:white;cursor:pointer;width:100%;font-size:1rem;border:1px solid #0088d0;}
+        .login-box .btn:hover{background:linear-gradient(145deg,#0077cc,#0099ee);transform:scale(1.02);}
+        .login-box .error-msg{color:#ff6b6b;margin-top:0.5rem;}
+        .login-box .success-msg{color:#4ade80;margin-top:0.5rem;}
+        
+        .glass-container{max-width:1400px;width:100%;margin:0 auto;background:rgba(10,14,23,0.85);border-radius:2.5rem;padding:1.5rem;border:1px solid rgba(0,180,255,0.2);}
+        .brand-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,200,255,0.15);padding-bottom:0.8rem;margin-bottom:1rem;}
+        .logo h1{font-size:2.2rem;background:linear-gradient(145deg,#a0f0ff,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .logo i{color:#00ccff;-webkit-text-fill-color:#00ccff;}
+        .user-badge{background:#0f1a2b;padding:0.3rem 1rem;border-radius:40px;border:1px solid #4ade80;color:#4ade80;font-size:0.8rem;}
+        .logout-btn{background:transparent;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.3rem 1rem;border-radius:40px;cursor:pointer;font-size:0.75rem;}
+        .logout-btn:hover{background:#ff6b6b22;}
+        
+        .hero-banner{background:radial-gradient(circle at 20% 30%,#0b2a3f,#03080f);border-radius:2rem;padding:1.5rem 2rem;margin-bottom:1.5rem;border:1px solid #005f8a;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;}
+        .hero-text h2{font-size:1.8rem;color:#ddf0ff;}
+        .hero-text h2 span{color:#00dcff;}
+        .cta-whatsapp{background:#1d2b3a;padding:0.5rem 1.5rem;border-radius:60px;border:1px solid #25d366;color:#25d366;text-decoration:none;display:inline-flex;align-items:center;gap:0.6rem;}
+        .cta-whatsapp:hover{background:#25d366;color:#0b0d12;}
+        
+        .stats-grid{display:flex;flex-wrap:wrap;gap:1rem 2rem;background:#0b111e80;padding:0.5rem 1.5rem;border-radius:60px;border:1px solid #1b3349;justify-content:center;margin-bottom:1.5rem;}
+        .stat-item{display:flex;align-items:center;gap:0.6rem;color:#b8d0e5;}
+        .stat-item i{color:#00c3ff;}
+        .stat-number{font-weight:700;background:#142433;padding:0 0.6rem;border-radius:30px;}
+        
+        .announce-box{background:#0d1c2b;border-left:5px solid #00b7ff;padding:0.6rem 1.5rem;border-radius:60px;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+        .announce-text{color:#c2defa;}
+        .announce-text strong{color:#ffd966;}
+        
+        .section-title{margin:1rem 0 0.6rem 0;}
+        .section-title h3{color:#b0d5ff;border-bottom:2px solid #006b9e;padding-bottom:0.2rem;display:inline-block;}
+        
+        .file-grid,.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.5rem;}
+        .file-card,.video-card{background:#0f1a26;border-radius:1.5rem;padding:1rem;border:1px solid #1c3f59;transition:0.3s;position:relative;}
+        .file-card:hover,.video-card:hover{transform:translateY(-4px);border-color:#00a6ff;box-shadow:0 0 30px #004c7a70;}
+        .file-label,.video-label{background:#002a44;padding:0.1rem 0.8rem;border-radius:40px;display:inline-block;font-size:0.6rem;color:#8bcbff;border:1px solid #0077be;}
+        .file-card h4,.video-card h4{font-size:1rem;color:#d8edff;margin:0.3rem 0;}
+        .file-meta,.video-meta{display:flex;justify-content:space-between;font-size:0.7rem;color:#7797b0;}
+        .file-download-btn{background:#003759;border:1px solid #0080c0;padding:0.2rem 0.8rem;border-radius:60px;font-size:0.75rem;color:#b0e0ff;cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;}
+        .file-download-btn:hover{background:#0073b0;}
+        
+        .delete-btn{position:absolute;top:0.3rem;right:0.3rem;background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.1rem 0.4rem;border-radius:40px;cursor:pointer;font-size:0.5rem;opacity:0;transition:0.3s;}
+        .file-card:hover .delete-btn,.video-card:hover .delete-btn{opacity:1;}
+        .delete-btn:hover{background:#ff6b6b44;}
+        
+        .admin-panel{margin-top:2rem;background:#0d1c2b;border-radius:2rem;padding:1.5rem;border:1px solid #1f4a6b;}
+        .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;}
+        .admin-header h3{color:#00ccff;}
+        .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
+        .admin-card{background:#0f1a2b;border-radius:1.5rem;padding:1.2rem;border:1px solid #1f4a6b;}
+        .admin-card .card-title{color:#8bcbff;font-size:0.8rem;font-weight:600;margin-bottom:0.8rem;}
+        .admin-card .card-title i{color:#00ccff;}
+        .admin-card input{width:100%;padding:0.6rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;margin-bottom:0.6rem;}
+        .admin-card input:focus{border-color:#00a6ff;}
+        .admin-card .btn-sm{background:#005f9e;border:none;padding:0.4rem 1.2rem;border-radius:40px;color:white;cursor:pointer;font-size:0.8rem;font-weight:600;border:1px solid #0088d0;}
+        .admin-card .btn-sm:hover{background:#0080cc;}
+        .admin-card .btn-sm.success{background:#1a5f2a;border-color:#2a8b3a;}
+        .admin-card .btn-sm.danger{background:#5f1a1a;border-color:#8b2a2a;}
+        .admin-card .btn-sm.warning{background:#5f5a1a;border-color:#8b8a2a;}
+        .admin-status{font-size:0.75rem;margin-top:0.5rem;color:#6a8fa8;min-height:1.2rem;}
+        .admin-status.success{color:#4ade80;}
+        .admin-status.error{color:#ff6b6b;}
+        
+        .admin-list{max-height:250px;overflow-y:auto;margin-top:0.5rem;border-top:1px solid #1f4a6b;padding-top:0.5rem;}
+        .admin-list-item{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-radius:30px;font-size:0.75rem;color:#b8d0e5;border-bottom:1px solid #1f4a6b22;flex-wrap:wrap;gap:0.3rem;}
+        .admin-list-item .item-text{flex:1;min-width:80px;}
+        .admin-list-item .item-actions{display:flex;gap:0.3rem;}
+        .admin-list-item .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
+        
+        .footer-note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:#43647a;border-top:1px solid #162b3d;padding-top:1rem;}
+        .auth-loading{position:fixed;inset:0;z-index:10000;background:#080b12;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;}
+        .auth-loading.hidden{display:none;}
+        .loader-ring{width:40px;height:40px;border:4px solid #1a3850;border-top:4px solid #00ccff;border-radius:50%;animation:spin 0.7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        
+        .toggle-pass{background:transparent;border:none;color:#3a6a8a;cursor:pointer;padding:0.3rem;position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);}
+        .input-wrapper{position:relative;}
+        .input-wrapper input{padding-right:3rem !important;}
+        
+        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}}
+        @media(max-width:480px){.file-grid,.video-grid{grid-template-columns:1fr;}}
     </style>
 </head>
 <body>
 
-    <!-- ===== FLOATING NEON ORBS ===== -->
-    <div class="neon-orb"></div>
-    <div class="neon-orb"></div>
-    <div class="neon-orb"></div>
+<!-- ===== AUTH LOADING ===== -->
+<div class="auth-loading" id="authLoading">
+    <div class="loader-ring"></div>
+    <p>🔐 Verifying session...</p>
+</div>
 
-    <!-- ===== PARTICLES CANVAS ===== -->
-    <canvas id="particles-canvas"></canvas>
-
-    <!-- ===== LOADING OVERLAY ===== -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loader-ring"></div>
-        <p id="loadingText">Processing...</p>
+<!-- ===== LOGIN ===== -->
+<div id="passwordOverlay">
+    <div class="login-box">
+        <h2><i class="fas fa-crown"></i> ABID SIR</h2>
+        <p style="color:#6a8fa8;margin-bottom:1rem;">Premium Gaming Vault</p>
+        <input type="email" id="emailInput" placeholder="Email address">
+        <div class="input-wrapper">
+            <input type="password" id="passInput" placeholder="Password">
+            <button class="toggle-pass" id="togglePass"><i class="fas fa-eye" id="eyeIcon"></i></button>
+        </div>
+        <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+        <div id="loaderContainer" style="display:none;"><div class="loader-ring" style="width:30px;height:30px;margin:0.5rem auto;"></div></div>
+        <div class="error-msg" id="passError"></div>
+        <div class="success-msg" id="passSuccess"></div>
     </div>
+</div>
 
-    <!-- ===== SUCCESS TOAST ===== -->
-    <div class="success-toast" id="successToast">
-        <i class="fas fa-check-circle"></i>
-        <span class="msg" id="toastMessage">Success!</span>
-    </div>
-
-    <!-- ===== LOGIN OVERLAY ===== -->
-    <div id="passwordOverlay">
-        <div class="login-box">
-            <div class="icon"><i class="fas fa-crown"></i></div>
-            <h2>ABID SIR</h2>
-            <p class="subtitle">⚡ Admin Panel ⚡</p>
-
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="emailInput" placeholder="Email address" autocomplete="email">
-            </div>
-
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="passInput" placeholder="Password" autocomplete="current-password">
-                <button class="toggle-pass" id="togglePass" type="button">
-                    <i class="fas fa-eye" id="eyeIcon"></i>
-                </button>
-            </div>
-
-            <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> ENTER ADMIN</button>
-
-            <div id="loaderContainer" style="display:none;"><div class="loader-ring"></div></div>
-            <div class="error-msg" id="passError"></div>
-            <div class="success-msg" id="passSuccess"></div>
+<!-- ===== MAIN APP ===== -->
+<div class="glass-container" id="mainApp" style="display:none;">
+    <div class="brand-bar">
+        <div class="logo"><h1><i class="fas fa-crown"></i> ABID SIR</h1></div>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <div class="user-badge"><i class="fas fa-user-circle"></i> <span id="userEmail">User</span></div>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </div>
 
-    <!-- ===== ADMIN DASHBOARD ===== -->
-    <div class="admin-container" id="adminDashboard" style="display:none;">
-        <!-- Header -->
+    <div class="hero-banner">
+        <div class="hero-text">
+            <h2>🔥 <span>Premium</span> Gaming Vault</h2>
+            <p>Exclusive files · daily updates</p>
+        </div>
+        <a href="#" class="cta-whatsapp"><i class="fab fa-whatsapp"></i> Contact</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-item"><i class="fas fa-download"></i> Downloads <span class="stat-number" id="downloadCounter">0</span></div>
+        <div class="stat-item"><i class="fas fa-eye"></i> Visitors <span class="stat-number" id="visitorCounter">0</span></div>
+        <div class="stat-item"><i class="fas fa-file-archive"></i> Files <span class="stat-number" id="fileCount">0</span></div>
+    </div>
+
+    <div class="announce-box">
+        <i class="fas fa-bullhorn"></i>
+        <div class="announce-text" id="announceText"><strong>📢</strong> Loading...</div>
+    </div>
+
+    <div class="section-title"><h3><i class="fas fa-folder-open"></i> Game Files</h3></div>
+    <div class="file-grid" id="fileGrid"></div>
+
+    <div class="section-title"><h3><i class="fas fa-video"></i> Gaming Videos</h3></div>
+    <div class="video-grid" id="videoGrid"></div>
+
+    <!-- ===== ADMIN PANEL ===== -->
+    <div class="admin-panel">
         <div class="admin-header">
-            <div class="logo">
-                <i class="fas fa-crown"></i>
-                <h1>ABID SIR · Admin</h1>
-            </div>
-            <div class="admin-badge">
-                <span class="badge"><i class="fas fa-circle" style="color:#4ade80;font-size:0.5rem;"></i> Live</span>
-                <span class="badge"><i class="fas fa-user-shield"></i> Admin</span>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
+            <h3><i class="fas fa-user-cog"></i> Admin Panel</h3>
+            <span style="background:#00ccff22;color:#00ccff;padding:0.2rem 1rem;border-radius:40px;font-size:0.7rem;"><i class="fas fa-shield-alt"></i> Secure</span>
         </div>
-
-        <!-- Stats -->
-        <div class="stats-row" id="statsRow">
-            <div class="stat-card">
-                <div class="icon"><i class="fas fa-users"></i></div>
-                <div class="info">
-                    <h4>Total Users</h4>
-                    <div class="number" id="totalUsers">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon"><i class="fas fa-file"></i></div>
-                <div class="info">
-                    <h4>Total Files</h4>
-                    <div class="number" id="totalFiles">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon"><i class="fas fa-video"></i></div>
-                <div class="info">
-                    <h4>Total Videos</h4>
-                    <div class="number" id="totalVideos">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon"><i class="fas fa-bullhorn"></i></div>
-                <div class="info">
-                    <h4>Announcements</h4>
-                    <div class="number" id="totalAnnouncements">0</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Admin Grid -->
         <div class="admin-grid">
-            <!-- ===== USER MANAGEMENT ===== -->
+            <!-- Announcement -->
             <div class="admin-card">
-                <div class="card-header">
-                    <h3><i class="fas fa-users"></i> User Management</h3>
-                    <span class="live-badge" style="background:#4ade80;">ACTIVE</span>
+                <div class="card-title"><i class="fas fa-bullhorn"></i> Announcement</div>
+                <input type="text" id="adminAnnounceInput" placeholder="New announcement text">
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminUpdateAnnounce"><i class="fas fa-save"></i> Update</button>
+                    <button class="btn-sm danger" id="adminDeleteAnnounce"><i class="fas fa-trash"></i> Delete</button>
                 </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="adminUserEmail" placeholder="Enter user email">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="adminUserPassword" placeholder="Enter password (min 6 chars)">
-                </div>
-                <button class="btn-admin success" id="adminAddUser"><i class="fas fa-user-plus"></i> Create User</button>
-                <div class="admin-status" id="adminUserStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#6a8fa8;"></div>
-
-                <div class="list-container" id="adminUserList">
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>No users found</p>
-                    </div>
-                </div>
+                <div class="admin-status" id="adminAnnounceStatus"></div>
+                <div class="admin-list" id="adminAnnounceList"></div>
             </div>
 
-            <!-- ===== FILE MANAGEMENT ===== -->
+            <!-- Files -->
             <div class="admin-card">
-                <div class="card-header">
-                    <h3><i class="fas fa-file"></i> File Management</h3>
-                    <span class="live-badge" style="background:#00ccff;">LIVE</span>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-tag"></i> File Title</label>
-                    <input type="text" id="adminFileTitle" placeholder="Enter file title">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-tag"></i> Label</label>
-                    <input type="text" id="adminFileLabel" placeholder="e.g. PREMIUM" value="PREMIUM">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-link"></i> File Link</label>
-                    <input type="text" id="adminFileLink" placeholder="Enter file URL">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Version</label>
-                        <input type="text" id="adminFileVersion" placeholder="v1" value="v1">
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <input type="text" id="adminFileCategory" placeholder="e.g. Mods">
-                    </div>
-                </div>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                    <button class="btn-admin success" id="adminAddFile"><i class="fas fa-plus"></i> Add File</button>
-                    <button class="btn-admin warning" id="adminUpdateFileBtn" style="display:none;"><i class="fas fa-save"></i> Update</button>
-                    <button class="btn-admin danger" id="adminCancelFileEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
-                </div>
-                <div class="admin-status" id="adminFileStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#6a8fa8;"></div>
-
-                <div class="list-container" id="adminFileList">
-                    <div class="empty-state">
-                        <i class="fas fa-file"></i>
-                        <p>No files added yet</p>
-                    </div>
-                </div>
+                <div class="card-title"><i class="fas fa-file"></i> Manage Files</div>
+                <input type="text" id="adminFileTitle" placeholder="File title">
+                <input type="text" id="adminFileLabel" placeholder="Label" value="PREMIUM">
+                <input type="text" id="adminFileLink" placeholder="File link (URL)">
+                <input type="text" id="adminFileVersion" placeholder="Version" value="v1">
+                <button class="btn-sm success" id="adminAddFile"><i class="fas fa-plus"></i> Add File</button>
+                <div class="admin-status" id="adminFileStatus"></div>
+                <div class="admin-list" id="adminFileList"></div>
             </div>
 
-            <!-- ===== VIDEO MANAGEMENT ===== -->
+            <!-- Videos -->
             <div class="admin-card">
-                <div class="card-header">
-                    <h3><i class="fas fa-video"></i> Video Management</h3>
-                    <span class="live-badge">● LIVE</span>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-tag"></i> Video Title</label>
-                    <input type="text" id="adminVideoTitle" placeholder="Enter video title">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Description</label>
-                    <textarea id="adminVideoDesc" placeholder="Enter video description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-link"></i> Video Link</label>
-                    <input type="text" id="adminVideoLink" placeholder="YouTube embed or URL">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Label</label>
-                        <input type="text" id="adminVideoLabel" placeholder="e.g. GAMING" value="GAMING">
-                    </div>
-                    <div class="form-group">
-                        <label>Featured</label>
-                        <select id="adminVideoFeatured">
-                            <option value="false">No</option>
-                            <option value="true">Yes</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                    <button class="btn-admin success" id="adminAddVideo"><i class="fas fa-plus"></i> Add Video</button>
-                    <button class="btn-admin warning" id="adminUpdateVideoBtn" style="display:none;"><i class="fas fa-save"></i> Update</button>
-                    <button class="btn-admin danger" id="adminCancelVideoEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
-                </div>
-                <div class="admin-status" id="adminVideoStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#6a8fa8;"></div>
-
-                <div class="list-container" id="adminVideoList">
-                    <div class="empty-state">
-                        <i class="fas fa-video"></i>
-                        <p>No videos added yet</p>
-                    </div>
-                </div>
+                <div class="card-title"><i class="fas fa-video"></i> Manage Videos</div>
+                <input type="text" id="adminVideoTitle" placeholder="Video title">
+                <input type="text" id="adminVideoLabel" placeholder="Label" value="GAMING">
+                <input type="text" id="adminVideoLink" placeholder="YouTube embed URL">
+                <button class="btn-sm success" id="adminAddVideo"><i class="fas fa-plus"></i> Add Video</button>
+                <div class="admin-status" id="adminVideoStatus"></div>
+                <div class="admin-list" id="adminVideoList"></div>
             </div>
 
-            <!-- ===== ANNOUNCEMENT MANAGEMENT ===== -->
+            <!-- Users -->
             <div class="admin-card">
-                <div class="card-header">
-                    <h3><i class="fas fa-bullhorn"></i> Announcement Management</h3>
-                    <span class="live-badge" style="background:#ff0040;">LIVE</span>
+                <div class="card-title"><i class="fas fa-users"></i> Manage Users</div>
+                <input type="email" id="adminUserEmail" placeholder="User email">
+                <div class="input-wrapper">
+                    <input type="password" id="adminUserPassword" placeholder="Password (min 6 chars)">
+                    <button class="toggle-pass" id="adminTogglePass"><i class="fas fa-eye" id="adminEyeIcon"></i></button>
                 </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-text"></i> Announcement Text</label>
-                    <input type="text" id="adminAnnounceText" placeholder="Enter announcement">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Priority</label>
-                        <select id="adminAnnouncePriority">
-                            <option value="normal">Normal</option>
-                            <option value="high">High</option>
-                            <option value="urgent">Urgent</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select id="adminAnnounceStatus">
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                    <button class="btn-admin success" id="adminAddAnnounce"><i class="fas fa-plus"></i> Add Announcement</button>
-                    <button class="btn-admin warning" id="adminUpdateAnnounceBtn" style="display:none;"><i class="fas fa-save"></i> Update</button>
-                    <button class="btn-admin danger" id="adminCancelAnnounceEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
-                </div>
-                <div class="admin-status" id="adminAnnounceStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#6a8fa8;"></div>
-
-                <div class="list-container" id="adminAnnounceList">
-                    <div class="empty-state">
-                        <i class="fas fa-bullhorn"></i>
-                        <p>No announcements yet</p>
-                    </div>
+                <button class="btn-sm success" id="adminAddUser"><i class="fas fa-user-plus"></i> Add User</button>
+                <div class="admin-status" id="adminUserStatus"></div>
+                <div class="admin-list" id="adminUserList">
+                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">Loading users...</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // ============================================================
-        // PARTICLES BACKGROUND
-        // ============================================================
-        (function initParticles() {
-            const canvas = document.getElementById('particles-canvas');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            let w, h;
+    <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure</div>
+</div>
 
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
+<script>
+// ============================================================
+// FIREBASE CONFIG
+// ============================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyALnJyYqSpgZeapdNUkAKkwImgijuG935g",
+    authDomain: "abid-sir-6fa1d.firebaseapp.com",
+    projectId: "abid-sir-6fa1d",
+    storageBucket: "abid-sir-6fa1d.firebasestorage.app",
+    messagingSenderId: "870139030210",
+    appId: "1:870139030210:web:5237413bfcf9ba0c59a95b"
+};
 
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * w;
-                    this.y = Math.random() * h;
-                    this.size = Math.random() * 2 + 0.5;
-                    this.speedX = (Math.random() - 0.5) * 0.5;
-                    this.speedY = (Math.random() - 0.5) * 0.5;
-                    this.opacity = Math.random() * 0.5 + 0.1;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x < 0 || this.x > w) this.speedX *= -1;
-                    if (this.y < 0 || this.y > h) this.speedY *= -1;
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 200, 255, ${this.opacity})`;
-                    ctx.fill();
-                }
-            }
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
-            for (let i = 0; i < 80; i++) {
-                particles.push(new Particle());
-            }
+// ========== DOM REFS ==========
+const overlay = document.getElementById('passwordOverlay');
+const mainApp = document.getElementById('mainApp');
+const authLoading = document.getElementById('authLoading');
+const emailInput = document.getElementById('emailInput');
+const passInput = document.getElementById('passInput');
+const loginBtn = document.getElementById('loginBtn');
+const passError = document.getElementById('passError');
+const passSuccess = document.getElementById('passSuccess');
+const loaderContainer = document.getElementById('loaderContainer');
+const userEmail = document.getElementById('userEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+const togglePass = document.getElementById('togglePass');
+const eyeIcon = document.getElementById('eyeIcon');
 
-            function animate() {
-                ctx.clearRect(0, 0, w, h);
-                particles.forEach(p => { p.update(); p.draw(); });
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(0, 200, 255, ${0.05 * (1 - dist / 120)})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(animate);
-            }
-            animate();
-        })();
+// Admin
+const adminAnnounceInput = document.getElementById('adminAnnounceInput');
+const adminUpdateAnnounce = document.getElementById('adminUpdateAnnounce');
+const adminDeleteAnnounce = document.getElementById('adminDeleteAnnounce');
+const adminAnnounceStatus = document.getElementById('adminAnnounceStatus');
+const adminAnnounceList = document.getElementById('adminAnnounceList');
 
-        // ============================================================
-        // FIREBASE CONFIG (UNCHANGED)
-        // ============================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyALnJyYqSpgZeapdNUkAKkwImgijuG935g",
-            authDomain: "abid-sir-6fa1d.firebaseapp.com",
-            projectId: "abid-sir-6fa1d",
-            storageBucket: "abid-sir-6fa1d.firebasestorage.app",
-            messagingSenderId: "870139030210",
-            appId: "1:870139030210:web:5237413bfcf9ba0c59a95b"
-        };
+const adminFileTitle = document.getElementById('adminFileTitle');
+const adminFileLabel = document.getElementById('adminFileLabel');
+const adminFileLink = document.getElementById('adminFileLink');
+const adminFileVersion = document.getElementById('adminFileVersion');
+const adminAddFile = document.getElementById('adminAddFile');
+const adminFileStatus = document.getElementById('adminFileStatus');
+const adminFileList = document.getElementById('adminFileList');
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+const adminVideoTitle = document.getElementById('adminVideoTitle');
+const adminVideoLabel = document.getElementById('adminVideoLabel');
+const adminVideoLink = document.getElementById('adminVideoLink');
+const adminAddVideo = document.getElementById('adminAddVideo');
+const adminVideoStatus = document.getElementById('adminVideoStatus');
+const adminVideoList = document.getElementById('adminVideoList');
 
-        // ========== DOM REFS ==========
-        const overlay = document.getElementById('passwordOverlay');
-        const dashboard = document.getElementById('adminDashboard');
-        const emailInput = document.getElementById('emailInput');
-        const passInput = document.getElementById('passInput');
-        const loginBtn = document.getElementById('loginBtn');
-        const passError = document.getElementById('passError');
-        const passSuccess = document.getElementById('passSuccess');
-        const loaderContainer = document.getElementById('loaderContainer');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const togglePass = document.getElementById('togglePass');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const successToast = document.getElementById('successToast');
-        const toastMessage = document.getElementById('toastMessage');
+const adminUserEmail = document.getElementById('adminUserEmail');
+const adminUserPassword = document.getElementById('adminUserPassword');
+const adminAddUser = document.getElementById('adminAddUser');
+const adminUserStatus = document.getElementById('adminUserStatus');
+const adminUserList = document.getElementById('adminUserList');
+const adminTogglePass = document.getElementById('adminTogglePass');
+const adminEyeIcon = document.getElementById('adminEyeIcon');
 
-        // User Management
-        const adminUserEmail = document.getElementById('adminUserEmail');
-        const adminUserPassword = document.getElementById('adminUserPassword');
-        const adminAddUser = document.getElementById('adminAddUser');
-        const adminUserStatus = document.getElementById('adminUserStatus');
-        const adminUserList = document.getElementById('adminUserList');
+let isAuthorized = false;
+let currentUser = null;
+let userPasswords = {};
+let currentAnnouncementId = null;
 
-        // File Management
-        const adminFileTitle = document.getElementById('adminFileTitle');
-        const adminFileLabel = document.getElementById('adminFileLabel');
-        const adminFileLink = document.getElementById('adminFileLink');
-        const adminFileVersion = document.getElementById('adminFileVersion');
-        const adminFileCategory = document.getElementById('adminFileCategory');
-        const adminAddFile = document.getElementById('adminAddFile');
-        const adminUpdateFileBtn = document.getElementById('adminUpdateFileBtn');
-        const adminCancelFileEdit = document.getElementById('adminCancelFileEdit');
-        const adminFileStatus = document.getElementById('adminFileStatus');
-        const adminFileList = document.getElementById('adminFileList');
+// ========== PASSWORD TOGGLES ==========
+let passVisible = false;
+togglePass.addEventListener('click', function() {
+    passVisible = !passVisible;
+    passInput.type = passVisible ? 'text' : 'password';
+    eyeIcon.className = passVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
+    eyeIcon.style.color = passVisible ? '#00ccff' : '#3a6a8a';
+});
 
-        // Video Management
-        const adminVideoTitle = document.getElementById('adminVideoTitle');
-        const adminVideoDesc = document.getElementById('adminVideoDesc');
-        const adminVideoLink = document.getElementById('adminVideoLink');
-        const adminVideoLabel = document.getElementById('adminVideoLabel');
-        const adminVideoFeatured = document.getElementById('adminVideoFeatured');
-        const adminAddVideo = document.getElementById('adminAddVideo');
-        const adminUpdateVideoBtn = document.getElementById('adminUpdateVideoBtn');
-        const adminCancelVideoEdit = document.getElementById('adminCancelVideoEdit');
-        const adminVideoStatus = document.getElementById('adminVideoStatus');
-        const adminVideoList = document.getElementById('adminVideoList');
+let adminPassVisible = false;
+adminTogglePass.addEventListener('click', function() {
+    adminPassVisible = !adminPassVisible;
+    adminUserPassword.type = adminPassVisible ? 'text' : 'password';
+    adminEyeIcon.className = adminPassVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
+    adminEyeIcon.style.color = adminPassVisible ? '#00ccff' : '#3a6a8a';
+});
 
-        // Announcement Management
-        const adminAnnounceText = document.getElementById('adminAnnounceText');
-        const adminAnnouncePriority = document.getElementById('adminAnnouncePriority');
-        const adminAnnounceStatus = document.getElementById('adminAnnounceStatus');
-        const adminAddAnnounce = document.getElementById('adminAddAnnounce');
-        const adminUpdateAnnounceBtn = document.getElementById('adminUpdateAnnounceBtn');
-        const adminCancelAnnounceEdit = document.getElementById('adminCancelAnnounceEdit');
-        const adminAnnounceStatusEl = document.getElementById('adminAnnounceStatus');
-        const adminAnnounceList = document.getElementById('adminAnnounceList');
+// ========== AUTH STATE ==========
+auth.onAuthStateChanged((user) => {
+    authLoading.classList.add('hidden');
+    if (user) {
+        isAuthorized = true;
+        currentUser = user;
+        overlay.classList.add('hidden');
+        mainApp.style.display = 'block';
+        userEmail.textContent = user.email || 'User';
+        loadAllData();
+        loadUsers();
+        console.log('✅ Logged in:', user.email);
+    } else {
+        overlay.classList.remove('hidden');
+        mainApp.style.display = 'none';
+        isAuthorized = false;
+        currentUser = null;
+    }
+});
 
-        let isAuthorized = false;
-        let editingFileId = null;
-        let editingVideoId = null;
-        let editingAnnounceId = null;
+// ========== LOGIN ==========
+loginBtn.addEventListener('click', function() {
+    const email = emailInput.value.trim();
+    const password = passInput.value.trim();
+    if (!email || !password) {
+        passError.textContent = 'Please enter email and password.';
+        return;
+    }
+    loginBtn.disabled = true;
+    loaderContainer.style.display = 'block';
+    passError.textContent = '';
+    passSuccess.textContent = '⏳ Signing in...';
 
-        // ========== PASSWORD TOGGLE ==========
-        let passwordVisible = false;
-        togglePass.addEventListener('click', function() {
-            passwordVisible = !passwordVisible;
-            if (passwordVisible) {
-                passInput.type = 'text';
-                eyeIcon.className = 'fas fa-eye-slash';
-                eyeIcon.style.color = '#00ccff';
-            } else {
-                passInput.type = 'password';
-                eyeIcon.className = 'fas fa-eye';
-                eyeIcon.style.color = '#3a6a8a';
-            }
-        });
-
-        // ========== AUTH STATE ==========
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                isAuthorized = true;
-                overlay.classList.add('hidden');
-                dashboard.style.display = 'block';
-                loadAllData();
-                console.log('✅ Admin logged in:', user.email);
-            } else {
-                overlay.classList.remove('hidden');
-                dashboard.style.display = 'none';
-                isAuthorized = false;
-            }
-        });
-
-        // ========== LOGIN ==========
-        loginBtn.addEventListener('click', function() {
-            const email = emailInput.value.trim();
-            const password = passInput.value.trim();
-
-            if (!email || !password) {
-                passError.textContent = 'Please enter email and password.';
-                return;
-            }
-
-            loginBtn.disabled = true;
-            loaderContainer.style.display = 'block';
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            loaderContainer.style.display = 'none';
+            loginBtn.disabled = false;
+            passSuccess.textContent = '✅ Login successful!';
             passError.textContent = '';
-            passSuccess.textContent = '⏳ Signing in...';
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    loaderContainer.style.display = 'none';
-                    loginBtn.disabled = false;
-                    passSuccess.textContent = '✅ Login successful!';
-                    passError.textContent = '';
-                    emailInput.value = '';
-                    passInput.value = '';
-                    setTimeout(() => { passSuccess.textContent = ''; }, 3000);
-                })
-                .catch((error) => {
-                    loaderContainer.style.display = 'none';
-                    loginBtn.disabled = false;
-                    passError.textContent = '❌ ' + error.message;
-                    passSuccess.textContent = '';
-                });
+            emailInput.value = '';
+            passInput.value = '';
+            setTimeout(() => { passSuccess.textContent = ''; }, 3000);
+        })
+        .catch((error) => {
+            loaderContainer.style.display = 'none';
+            loginBtn.disabled = false;
+            passError.textContent = '❌ ' + error.message;
+            passSuccess.textContent = '';
         });
+});
 
-        passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
-        emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
 
-        // ========== LOGOUT ==========
-        logoutBtn.addEventListener('click', function() {
-            auth.signOut().then(() => {
-                overlay.classList.remove('hidden');
-                dashboard.style.display = 'none';
-                isAuthorized = false;
+logoutBtn.addEventListener('click', function() {
+    auth.signOut().then(() => {
+        overlay.classList.remove('hidden');
+        mainApp.style.display = 'none';
+        isAuthorized = false;
+    });
+});
+
+// ============================================================
+// ANNOUNCEMENT FUNCTIONS - WITH DELETE
+// ============================================================
+
+// Update Announcement
+adminUpdateAnnounce.addEventListener('click', function() {
+    const text = adminAnnounceInput.value.trim();
+    if (!text) {
+        adminAnnounceStatus.textContent = '⚠️ Please enter text.';
+        adminAnnounceStatus.className = 'admin-status error';
+        return;
+    }
+    
+    const announceData = { text: text, timestamp: Date.now() };
+    
+    if (currentAnnouncementId) {
+        // Update existing
+        db.collection('content').doc('announcement').update(announceData)
+            .then(() => {
+                adminAnnounceStatus.textContent = '✅ Announcement updated!';
+                adminAnnounceStatus.className = 'admin-status success';
+                adminAnnounceInput.value = '';
+                setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminAnnounceStatus.textContent = '❌ ' + err.message;
+                adminAnnounceStatus.className = 'admin-status error';
             });
-        });
-
-        // ========== TOAST & LOADING ==========
-        function showToast(message, isSuccess = true) {
-            toastMessage.textContent = message;
-            successToast.className = 'success-toast show';
-            if (!isSuccess) {
-                successToast.style.borderColor = 'rgba(255,107,107,0.4)';
-                successToast.querySelector('i').style.color = '#ff6b6b';
-                successToast.style.background = 'rgba(95,26,26,0.9)';
-            } else {
-                successToast.style.borderColor = 'rgba(42,139,58,0.4)';
-                successToast.querySelector('i').style.color = '#4ade80';
-                successToast.style.background = 'rgba(26,95,42,0.9)';
-            }
-            setTimeout(() => {
-                successToast.className = 'success-toast';
-            }, 3000);
-        }
-
-        function showLoading(message) {
-            loadingText.textContent = message;
-            loadingOverlay.classList.add('show');
-        }
-
-        function hideLoading() {
-            loadingOverlay.classList.remove('show');
-        }
-
-        // ============================================================
-        // USER MANAGEMENT (WORKING - UNCHANGED)
-        // ============================================================
-
-        function loadUsers() {
-            db.collection('users').orderBy('email').get()
-                .then((snapshot) => {
-                    adminUserList.innerHTML = '';
-                    let count = 0;
-                    if (snapshot.empty) {
-                        adminUserList.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>`;
-                        document.getElementById('totalUsers').textContent = '0';
-                        return;
-                    }
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        count++;
-                        const item = document.createElement('div');
-                        item.className = 'list-item';
-                        item.innerHTML = `
-                            <div class="item-info">
-                                <div class="title">${data.email || 'Unknown'}</div>
-                                <div class="meta">
-                                    <span>Created: ${data.createdAt ? new Date(data.createdAt).toLocaleDateString() : 'N/A'}</span>
-                                    <span class="status published">Active</span>
-                                </div>
-                            </div>
-                            <div class="item-actions">
-                                <button class="btn-sm delete" onclick="deleteUser('${doc.id}','${data.email || 'Unknown'}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        `;
-                        adminUserList.appendChild(item);
-                    });
-                    document.getElementById('totalUsers').textContent = count;
-                })
-                .catch(() => {
-                    adminUserList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error loading users</p></div>`;
-                });
-        }
-
-        function deleteUser(uid, email) {
-            if (!confirm(`Delete user "${email}"?`)) return;
-            showLoading('Deleting user...');
-            db.collection('users').doc(uid).delete()
-                .then(() => {
-                    hideLoading();
-                    showToast('✅ User deleted');
-                    loadUsers();
-                })
-                .catch((err) => {
-                    hideLoading();
-                    showToast('❌ Error: ' + err.message, false);
-                });
-        }
-
-        adminAddUser.addEventListener('click', function() {
-            const email = adminUserEmail.value.trim();
-            const password = adminUserPassword.value.trim();
-
-            if (!email || !password || password.length < 6) {
-                adminUserStatus.textContent = '⚠️ Valid email and password (min 6 chars) required.';
-                adminUserStatus.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Creating user...');
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    db.collection('users').doc(userCredential.user.uid).set({
-                        email: email,
-                        createdAt: Date.now()
-                    }).catch(() => {});
-                    hideLoading();
-                    showToast('✅ User created: ' + email);
-                    adminUserStatus.textContent = '✅ User created: ' + email;
-                    adminUserStatus.style.color = '#4ade80';
-                    adminUserEmail.value = '';
-                    adminUserPassword.value = '';
-                    loadUsers();
-                    setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
-                })
-                .catch((err) => {
-                    hideLoading();
-                    adminUserStatus.textContent = '❌ Error: ' + err.message;
-                    adminUserStatus.style.color = '#ff6b6b';
-                });
-        });
-
-        // ============================================================
-        // FILE MANAGEMENT (WORKING - UPGRADED UI)
-        // ============================================================
-
-        function loadFiles() {
-            db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-                adminFileList.innerHTML = '';
-                let count = 0;
-                if (snapshot.empty) {
-                    adminFileList.innerHTML = `<div class="empty-state"><i class="fas fa-file"></i><p>No files added yet</p></div>`;
-                    document.getElementById('totalFiles').textContent = '0';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const file = doc.data();
-                    count++;
-                    const item = document.createElement('div');
-                    item.className = 'list-item';
-                    item.innerHTML = `
-                        <div class="item-info">
-                            <div class="title">${file.title || 'Untitled'}</div>
-                            <div class="desc">${file.fileLink || 'No link'}</div>
-                            <div class="meta">
-                                <span><i class="fas fa-tag"></i> ${file.label || 'PREMIUM'}</span>
-                                <span><i class="fas fa-code-branch"></i> ${file.version || 'v1'}</span>
-                                <span>${file.category ? '<i class="fas fa-folder"></i> ' + file.category : ''}</span>
-                                <span><i class="fas fa-calendar-alt"></i> ${file.updated || file.date || 'new'}</span>
-                                <span><i class="fas fa-download"></i> ${file.downloads || 0}</span>
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-sm copy" onclick="copyFileLink('${file.fileLink || ''}')">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <button class="btn-sm edit" onclick="editFile('${doc.id}', ${JSON.stringify(file).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-sm delete" onclick="deleteFile('${doc.id}','${file.title || 'Untitled'}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    adminFileList.appendChild(item);
-                });
-                document.getElementById('totalFiles').textContent = count;
-            }, () => {});
-        }
-
-        function copyFileLink(link) {
-            if (!link) { showToast('⚠️ No link to copy', false); return; }
-            navigator.clipboard.writeText(link).then(() => {
-                showToast('✅ Link copied!');
-            }).catch(() => {
-                showToast('⚠️ Could not copy link', false);
+    } else {
+        // Create new
+        db.collection('content').doc('announcement').set(announceData)
+            .then(() => {
+                adminAnnounceStatus.textContent = '✅ Announcement created!';
+                adminAnnounceStatus.className = 'admin-status success';
+                adminAnnounceInput.value = '';
+                setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminAnnounceStatus.textContent = '❌ ' + err.message;
+                adminAnnounceStatus.className = 'admin-status error';
             });
-        }
+    }
+});
 
-        function editFile(id, data) {
-            editingFileId = id;
-            adminFileTitle.value = data.title || '';
-            adminFileLabel.value = data.label || 'PREMIUM';
-            adminFileLink.value = data.fileLink || '';
-            adminFileVersion.value = data.version || 'v1';
-            adminFileCategory.value = data.category || '';
-            adminAddFile.style.display = 'none';
-            adminUpdateFileBtn.style.display = 'inline-flex';
-            adminCancelFileEdit.style.display = 'inline-flex';
-            adminFileStatus.textContent = '✏️ Editing file...';
-            adminFileStatus.style.color = '#fbbf24';
-        }
-
-        function cancelFileEdit() {
-            editingFileId = null;
-            adminFileTitle.value = '';
-            adminFileLabel.value = 'PREMIUM';
-            adminFileLink.value = '';
-            adminFileVersion.value = 'v1';
-            adminFileCategory.value = '';
-            adminAddFile.style.display = 'inline-flex';
-            adminUpdateFileBtn.style.display = 'none';
-            adminCancelFileEdit.style.display = 'none';
-            adminFileStatus.textContent = '';
-        }
-
-        adminAddFile.addEventListener('click', function() {
-            const title = adminFileTitle.value.trim();
-            const label = adminFileLabel.value.trim() || 'PREMIUM';
-            const link = adminFileLink.value.trim();
-            const version = adminFileVersion.value.trim() || 'v1';
-            const category = adminFileCategory.value.trim();
-
-            if (!title || !link) {
-                adminFileStatus.textContent = '⚠️ Title and link required.';
-                adminFileStatus.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Adding file...');
-
-            db.collection('files').add({
-                title: title,
-                label: label,
-                fileLink: link,
-                version: version,
-                category: category || '',
-                downloads: 0,
-                timestamp: Date.now(),
-                updated: new Date().toLocaleDateString()
-            }).then(() => {
-                hideLoading();
-                showToast('✅ File added!');
-                adminFileStatus.textContent = '✅ File added!';
-                adminFileStatus.style.color = '#4ade80';
-                adminFileTitle.value = '';
-                adminFileLink.value = '';
-                adminFileCategory.value = '';
-                setTimeout(() => { adminFileStatus.textContent = ''; }, 3000);
-            }).catch((err) => {
-                hideLoading();
-                adminFileStatus.textContent = '❌ Error: ' + err.message;
-                adminFileStatus.style.color = '#ff6b6b';
-            });
+// Delete Announcement
+adminDeleteAnnounce.addEventListener('click', function() {
+    if (!currentAnnouncementId) {
+        adminAnnounceStatus.textContent = '⚠️ No announcement to delete.';
+        adminAnnounceStatus.className = 'admin-status error';
+        return;
+    }
+    
+    if (!confirm('Delete current announcement?')) return;
+    
+    db.collection('content').doc('announcement').delete()
+        .then(() => {
+            currentAnnouncementId = null;
+            adminAnnounceStatus.textContent = '✅ Announcement deleted!';
+            adminAnnounceStatus.className = 'admin-status success';
+            adminAnnounceInput.value = '';
+            document.getElementById('announceText').innerHTML = '<strong>📢</strong> No announcement';
+            setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminAnnounceStatus.textContent = '❌ ' + err.message;
+            adminAnnounceStatus.className = 'admin-status error';
         });
+});
 
-        adminUpdateFileBtn.addEventListener('click', function() {
-            if (!editingFileId) return;
-            const title = adminFileTitle.value.trim();
-            const label = adminFileLabel.value.trim() || 'PREMIUM';
-            const link = adminFileLink.value.trim();
-            const version = adminFileVersion.value.trim() || 'v1';
-            const category = adminFileCategory.value.trim();
+// ============================================================
+// USER FUNCTIONS
+// ============================================================
 
-            if (!title || !link) {
-                adminFileStatus.textContent = '⚠️ Title and link required.';
-                adminFileStatus.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Updating file...');
-
-            db.collection('files').doc(editingFileId).update({
-                title: title,
-                label: label,
-                fileLink: link,
-                version: version,
-                category: category || '',
-                updated: new Date().toLocaleDateString()
-            }).then(() => {
-                hideLoading();
-                showToast('✅ File updated!');
-                adminFileStatus.textContent = '✅ File updated!';
-                adminFileStatus.style.color = '#4ade80';
-                cancelFileEdit();
-                setTimeout(() => { adminFileStatus.textContent = ''; }, 3000);
-            }).catch((err) => {
-                hideLoading();
-                adminFileStatus.textContent = '❌ Error: ' + err.message;
-                adminFileStatus.style.color = '#ff6b6b';
-            });
-        });
-
-        adminCancelFileEdit.addEventListener('click', cancelFileEdit);
-
-        function deleteFile(id, title) {
-            if (!confirm(`Delete file "${title}"?`)) return;
-            showLoading('Deleting file...');
-            db.collection('files').doc(id).delete()
-                .then(() => {
-                    hideLoading();
-                    showToast('🗑️ File deleted!');
-                })
-                .catch((err) => {
-                    hideLoading();
-                    showToast('❌ Error: ' + err.message, false);
-                });
-        }
-
-        // ============================================================
-        // VIDEO MANAGEMENT (WORKING)
-        // ============================================================
-
-        function loadVideos() {
-            db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-                adminVideoList.innerHTML = '';
-                let count = 0;
-                if (snapshot.empty) {
-                    adminVideoList.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><p>No videos added yet</p></div>`;
-                    document.getElementById('totalVideos').textContent = '0';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const vid = doc.data();
-                    count++;
-                    const item = document.createElement('div');
-                    item.className = 'list-item';
-                    item.innerHTML = `
-                        <div class="item-info">
-                            <div class="title">${vid.title || 'Untitled'}</div>
-                            <div class="desc">${vid.description || ''}</div>
-                            <div class="meta">
-                                <span><i class="fas fa-tag"></i> ${vid.label || 'GAMING'}</span>
-                                <span>${vid.featured ? '⭐ Featured' : ''}</span>
-                                <span><i class="fas fa-eye"></i> ${vid.views || 0}</span>
-                                <span><i class="fas fa-calendar-alt"></i> ${vid.date || 'new'}</span>
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-sm edit" onclick="editVideo('${doc.id}', ${JSON.stringify(vid).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-sm delete" onclick="deleteVideo('${doc.id}','${vid.title || 'Untitled'}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            ${vid.featured ? 
-                                `<button class="btn-sm featured active" onclick="toggleVideoFeatured('${doc.id}', false)"><i class="fas fa-star"></i></button>` :
-                                `<button class="btn-sm featured" onclick="toggleVideoFeatured('${doc.id}', true)"><i class="fas fa-star"></i></button>`
-                            }
-                        </div>
-                    `;
-                    adminVideoList.appendChild(item);
-                });
-                document.getElementById('totalVideos').textContent = count;
-            }, () => {});
-        }
-
-        function editVideo(id, data) {
-            editingVideoId = id;
-            adminVideoTitle.value = data.title || '';
-            adminVideoDesc.value = data.description || '';
-            adminVideoLink.value = data.videoLink || '';
-            adminVideoLabel.value = data.label || 'GAMING';
-            adminVideoFeatured.value = data.featured ? 'true' : 'false';
-            adminAddVideo.style.display = 'none';
-            adminUpdateVideoBtn.style.display = 'inline-flex';
-            adminCancelVideoEdit.style.display = 'inline-flex';
-            adminVideoStatus.textContent = '✏️ Editing video...';
-            adminVideoStatus.style.color = '#fbbf24';
-        }
-
-        function cancelVideoEdit() {
-            editingVideoId = null;
-            adminVideoTitle.value = '';
-            adminVideoDesc.value = '';
-            adminVideoLink.value = '';
-            adminVideoLabel.value = 'GAMING';
-            adminVideoFeatured.value = 'false';
-            adminAddVideo.style.display = 'inline-flex';
-            adminUpdateVideoBtn.style.display = 'none';
-            adminCancelVideoEdit.style.display = 'none';
-            adminVideoStatus.textContent = '';
-        }
-
-        adminAddVideo.addEventListener('click', function() {
-            const title = adminVideoTitle.value.trim();
-            const desc = adminVideoDesc.value.trim();
-            const link = adminVideoLink.value.trim();
-            const label = adminVideoLabel.value.trim() || 'GAMING';
-            const featured = adminVideoFeatured.value === 'true';
-
-            if (!title || !link) {
-                adminVideoStatus.textContent = '⚠️ Title and link required.';
-                adminVideoStatus.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Adding video...');
-
-            db.collection('videos').add({
-                title: title,
-                description: desc || '',
-                videoLink: link,
-                label: label,
-                featured: featured,
-                views: 0,
-                timestamp: Date.now(),
-                date: new Date().toLocaleDateString()
-            }).then(() => {
-                hideLoading();
-                showToast('✅ Video added!');
-                adminVideoStatus.textContent = '✅ Video added!';
-                adminVideoStatus.style.color = '#4ade80';
-                adminVideoTitle.value = '';
-                adminVideoDesc.value = '';
-                adminVideoLink.value = '';
-                setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
-            }).catch((err) => {
-                hideLoading();
-                adminVideoStatus.textContent = '❌ Error: ' + err.message;
-                adminVideoStatus.style.color = '#ff6b6b';
-            });
-        });
-
-        adminUpdateVideoBtn.addEventListener('click', function() {
-            if (!editingVideoId) return;
-            const title = adminVideoTitle.value.trim();
-            const desc = adminVideoDesc.value.trim();
-            const link = adminVideoLink.value.trim();
-            const label = adminVideoLabel.value.trim() || 'GAMING';
-            const featured = adminVideoFeatured.value === 'true';
-
-            if (!title || !link) {
-                adminVideoStatus.textContent = '⚠️ Title and link required.';
-                adminVideoStatus.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Updating video...');
-
-            db.collection('videos').doc(editingVideoId).update({
-                title: title,
-                description: desc || '',
-                videoLink: link,
-                label: label,
-                featured: featured
-            }).then(() => {
-                hideLoading();
-                showToast('✅ Video updated!');
-                adminVideoStatus.textContent = '✅ Video updated!';
-                adminVideoStatus.style.color = '#4ade80';
-                cancelVideoEdit();
-                setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
-            }).catch((err) => {
-                hideLoading();
-                adminVideoStatus.textContent = '❌ Error: ' + err.message;
-                adminVideoStatus.style.color = '#ff6b6b';
-            });
-        });
-
-        adminCancelVideoEdit.addEventListener('click', cancelVideoEdit);
-
-        function deleteVideo(id, title) {
-            if (!confirm(`Delete video "${title}"?`)) return;
-            showLoading('Deleting video...');
-            db.collection('videos').doc(id).delete()
-                .then(() => {
-                    hideLoading();
-                    showToast('🗑️ Video deleted!');
-                })
-                .catch((err) => {
-                    hideLoading();
-                    showToast('❌ Error: ' + err.message, false);
-                });
-        }
-
-        function toggleVideoFeatured(id, featured) {
-            db.collection('videos').doc(id).update({ featured: featured })
-                .then(() => {
-                    showToast(featured ? '⭐ Video featured!' : '⭐ Feature removed');
-                })
-                .catch((err) => {
-                    showToast('❌ Error: ' + err.message, false);
-                });
-        }
-
-        // ============================================================
-        // ANNOUNCEMENT MANAGEMENT (WORKING)
-        // ============================================================
-
-        function loadAnnouncements() {
-            db.collection('announcements').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-                adminAnnounceList.innerHTML = '';
-                let count = 0;
-                if (snapshot.empty) {
-                    adminAnnounceList.innerHTML = `<div class="empty-state"><i class="fas fa-bullhorn"></i><p>No announcements yet</p></div>`;
-                    document.getElementById('totalAnnouncements').textContent = '0';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const ann = doc.data();
-                    count++;
-                    const priorityColor = ann.priority === 'urgent' ? '#ff6b6b' : 
-                                        ann.priority === 'high' ? '#fbbf24' : '#4ade80';
-                    const priorityLabel = ann.priority === 'urgent' ? '🔴 Urgent' : 
-                                        ann.priority === 'high' ? '🟡 High' : '🟢 Normal';
-
-                    const item = document.createElement('div');
-                    item.className = 'list-item';
-                    item.innerHTML = `
-                        <div class="item-info">
-                            <div class="title">${ann.text || 'Untitled'}</div>
-                            <div class="meta">
-                                <span style="color:${priorityColor};">${priorityLabel}</span>
-                                <span class="status ${ann.status === 'published' ? 'published' : 'draft'}">${ann.status || 'published'}</span>
-                                <span><i class="fas fa-calendar-alt"></i> ${ann.date || 'new'}</span>
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-sm edit" onclick="editAnnouncement('${doc.id}', ${JSON.stringify(ann).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-sm delete" onclick="deleteAnnouncement('${doc.id}','${ann.text || 'Untitled'}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    adminAnnounceList.appendChild(item);
-                });
-                document.getElementById('totalAnnouncements').textContent = count;
-            }, () => {});
-        }
-
-        function editAnnouncement(id, data) {
-            editingAnnounceId = id;
-            adminAnnounceText.value = data.text || '';
-            adminAnnouncePriority.value = data.priority || 'normal';
-            adminAnnounceStatus.value = data.status || 'published';
-            adminAddAnnounce.style.display = 'none';
-            adminUpdateAnnounceBtn.style.display = 'inline-flex';
-            adminCancelAnnounceEdit.style.display = 'inline-flex';
-            adminAnnounceStatusEl.textContent = '✏️ Editing announcement...';
-            adminAnnounceStatusEl.style.color = '#fbbf24';
-        }
-
-        function cancelAnnounceEdit() {
-            editingAnnounceId = null;
-            adminAnnounceText.value = '';
-            adminAnnouncePriority.value = 'normal';
-            adminAnnounceStatus.value = 'published';
-            adminAddAnnounce.style.display = 'inline-flex';
-            adminUpdateAnnounceBtn.style.display = 'none';
-            adminCancelAnnounceEdit.style.display = 'none';
-            adminAnnounceStatusEl.textContent = '';
-        }
-
-        adminAddAnnounce.addEventListener('click', function() {
-            const text = adminAnnounceText.value.trim();
-            const priority = adminAnnouncePriority.value;
-            const status = adminAnnounceStatus.value;
-
-            if (!text) {
-                adminAnnounceStatusEl.textContent = '⚠️ Please enter announcement text.';
-                adminAnnounceStatusEl.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Adding announcement...');
-
-            db.collection('announcements').add({
-                text: text,
-                priority: priority,
-                status: status,
-                timestamp: Date.now(),
-                date: new Date().toLocaleDateString()
-            }).then(() => {
-                hideLoading();
-                showToast('✅ Announcement added!');
-                adminAnnounceStatusEl.textContent = '✅ Announcement added!';
-                adminAnnounceStatusEl.style.color = '#4ade80';
-                adminAnnounceText.value = '';
-                setTimeout(() => { adminAnnounceStatusEl.textContent = ''; }, 3000);
-            }).catch((err) => {
-                hideLoading();
-                adminAnnounceStatusEl.textContent = '❌ Error: ' + err.message;
-                adminAnnounceStatusEl.style.color = '#ff6b6b';
-            });
-        });
-
-        adminUpdateAnnounceBtn.addEventListener('click', function() {
-            if (!editingAnnounceId) return;
-            const text = adminAnnounceText.value.trim();
-            const priority = adminAnnouncePriority.value;
-            const status = adminAnnounceStatus.value;
-
-            if (!text) {
-                adminAnnounceStatusEl.textContent = '⚠️ Please enter announcement text.';
-                adminAnnounceStatusEl.style.color = '#ff6b6b';
-                return;
-            }
-
-            showLoading('Updating announcement...');
-
-            db.collection('announcements').doc(editingAnnounceId).update({
-                text: text,
-                priority: priority,
-                status: status
-            }).then(() => {
-                hideLoading();
-                showToast('✅ Announcement updated!');
-                adminAnnounceStatusEl.textContent = '✅ Announcement updated!';
-                adminAnnounceStatusEl.style.color = '#4ade80';
-                cancelAnnounceEdit();
-                setTimeout(() => { adminAnnounceStatusEl.textContent = ''; }, 3000);
-            }).catch((err) => {
-                hideLoading();
-                adminAnnounceStatusEl.textContent = '❌ Error: ' + err.message;
-                adminAnnounceStatusEl.style.color = '#ff6b6b';
-            });
-        });
-
-        adminCancelAnnounceEdit.addEventListener('click', cancelAnnounceEdit);
-
-        function deleteAnnouncement(id, text) {
-            if (!confirm(`Delete announcement "${text}"?`)) return;
-            showLoading('Deleting announcement...');
-            db.collection('announcements').doc(id).delete()
-                .then(() => {
-                    hideLoading();
-                    showToast('🗑️ Announcement deleted!');
-                })
-                .catch((err) => {
-                    hideLoading();
-                    showToast('❌ Error: ' + err.message, false);
-                });
-        }
-
-        // ============================================================
-        // LOAD ALL DATA
-        // ============================================================
-        function loadAllData() {
+// Add User
+adminAddUser.addEventListener('click', function() {
+    const email = adminUserEmail.value.trim();
+    const password = adminUserPassword.value.trim();
+    if (!email || !password || password.length < 6) {
+        adminUserStatus.textContent = '⚠️ Email and password (min 6 chars) required.';
+        adminUserStatus.className = 'admin-status error';
+        return;
+    }
+    
+    adminUserStatus.textContent = '⏳ Creating user...';
+    adminUserStatus.className = 'admin-status';
+    
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            userPasswords[userCredential.user.uid] = password;
+            db.collection('users').doc(userCredential.user.uid).set({
+                email: email,
+                createdAt: Date.now()
+            }).catch(() => {});
+            
+            adminUserStatus.textContent = '✅ User created: ' + email;
+            adminUserStatus.className = 'admin-status success';
+            adminUserEmail.value = '';
+            adminUserPassword.value = '';
+            setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
             loadUsers();
-            loadFiles();
-            loadVideos();
-            loadAnnouncements();
+        })
+        .catch((err) => {
+            adminUserStatus.textContent = '❌ ' + err.message;
+            adminUserStatus.className = 'admin-status error';
+        });
+});
+
+// Delete User
+function deleteUser(uid, email) {
+    if (!confirm(`Delete user "${email}" permanently?`)) return;
+    
+    adminUserStatus.textContent = '⏳ Deleting user...';
+    adminUserStatus.className = 'admin-status';
+    
+    db.collection('users').doc(uid).delete()
+        .then(() => {
+            delete userPasswords[uid];
+            adminUserStatus.textContent = '✅ User deleted';
+            adminUserStatus.className = 'admin-status success';
+            loadUsers();
+            setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminUserStatus.textContent = '⚠️ ' + err.message;
+            adminUserStatus.className = 'admin-status error';
+            setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+        });
+}
+
+// View Password
+function viewPassword(uid, email) {
+    if (userPasswords[uid]) {
+        alert(`👤 User: ${email}\n🔑 Password: ${userPasswords[uid]}`);
+    } else {
+        alert(`👤 User: ${email}\n🔑 Password: (Not stored)`);
+    }
+}
+
+// Load Users
+function loadUsers() {
+    db.collection('users').orderBy('email').get()
+        .then((snapshot) => {
+            adminUserList.innerHTML = '';
+            if (snapshot.empty) {
+                adminUserList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No users found</div>`;
+                return;
+            }
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const uid = doc.id;
+                const email = data.email || 'Unknown';
+                const hasPass = userPasswords[uid] ? '🔑 ' + userPasswords[uid] : '';
+                
+                const div = document.createElement('div');
+                div.className = 'admin-list-item';
+                div.innerHTML = `
+                    <div class="item-text">
+                        <span style="color:#8bcbff;">${email}</span>
+                        ${hasPass ? `<span style="color:#fbbf24;font-family:monospace;background:#010a14;padding:0.05rem 0.5rem;border-radius:20px;font-size:0.6rem;margin-left:0.3rem;">${hasPass}</span>` : ''}
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#003759;border:1px solid #0080c0;" onclick="viewPassword('${uid}','${email}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteUser('${uid}','${email}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                adminUserList.appendChild(div);
+            });
+        })
+        .catch(() => {
+            adminUserList.innerHTML = `<div style="color:#ff6b6b;font-size:0.7rem;text-align:center;padding:0.5rem;">Error loading users</div>`;
+        });
+}
+
+// ============================================================
+// FILE & VIDEO FUNCTIONS
+// ============================================================
+
+// Add File
+adminAddFile.addEventListener('click', function() {
+    const title = adminFileTitle.value.trim();
+    const label = adminFileLabel.value.trim() || 'PREMIUM';
+    const link = adminFileLink.value.trim();
+    const version = adminFileVersion.value.trim() || 'v1';
+    
+    if (!title || !link) {
+        adminFileStatus.textContent = '⚠️ Title and link required.';
+        adminFileStatus.className = 'admin-status error';
+        return;
+    }
+    
+    db.collection('files').add({
+        title: title,
+        label: label,
+        fileLink: link,
+        version: version,
+        downloads: 0,
+        timestamp: Date.now(),
+        updated: new Date().toLocaleDateString()
+    }).then(() => {
+        adminFileStatus.textContent = '✅ File added!';
+        adminFileStatus.className = 'admin-status success';
+        adminFileTitle.value = '';
+        adminFileLink.value = '';
+        setTimeout(() => { adminFileStatus.textContent = ''; }, 3000);
+    }).catch((err) => {
+        adminFileStatus.textContent = '❌ ' + err.message;
+        adminFileStatus.className = 'admin-status error';
+    });
+});
+
+// Add Video
+adminAddVideo.addEventListener('click', function() {
+    const title = adminVideoTitle.value.trim();
+    const label = adminVideoLabel.value.trim() || 'GAMING';
+    const link = adminVideoLink.value.trim();
+    if (!title || !link) {
+        adminVideoStatus.textContent = '⚠️ Title and link required.';
+        adminVideoStatus.className = 'admin-status error';
+        return;
+    }
+    db.collection('videos').add({
+        title: title,
+        label: label,
+        videoLink: link,
+        views: 0,
+        timestamp: Date.now(),
+        date: new Date().toLocaleDateString()
+    }).then(() => {
+        adminVideoStatus.textContent = '✅ Video added!';
+        adminVideoStatus.className = 'admin-status success';
+        adminVideoTitle.value = '';
+        adminVideoLink.value = '';
+        setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
+    }).catch((err) => {
+        adminVideoStatus.textContent = '❌ ' + err.message;
+        adminVideoStatus.className = 'admin-status error';
+    });
+});
+
+// Delete File
+function deleteFile(id, title) {
+    if (confirm(`Delete "${title}"?`)) {
+        db.collection('files').doc(id).delete().catch(() => {});
+    }
+}
+
+// Delete Video
+function deleteVideo(id, title) {
+    if (confirm(`Delete "${title}"?`)) {
+        db.collection('videos').doc(id).delete().catch(() => {});
+    }
+}
+
+// Make functions global
+window.deleteUser = deleteUser;
+window.viewPassword = viewPassword;
+window.deleteFile = deleteFile;
+window.deleteVideo = deleteVideo;
+
+// ============================================================
+// LOAD DATA
+// ============================================================
+function loadAllData() {
+    // Announcement
+    db.collection('content').doc('announcement').onSnapshot((doc) => {
+        const el = document.getElementById('announceText');
+        if (doc.exists) {
+            const data = doc.data();
+            currentAnnouncementId = doc.id;
+            el.innerHTML = `<strong>📢</strong> ${data.text || 'Welcome!'}`;
+            adminAnnounceInput.value = data.text || '';
+        } else {
+            currentAnnouncementId = null;
+            el.innerHTML = '<strong>📢</strong> No announcement';
+            adminAnnounceInput.value = '';
         }
+    }, () => {});
 
-        // ============================================================
-        // MAKE FUNCTIONS GLOBAL
-        // ============================================================
-        window.deleteUser = deleteUser;
-        window.deleteFile = deleteFile;
-        window.editFile = editFile;
-        window.copyFileLink = copyFileLink;
-        window.deleteVideo = deleteVideo;
-        window.editVideo = editVideo;
-        window.toggleVideoFeatured = toggleVideoFeatured;
-        window.deleteAnnouncement = deleteAnnouncement;
-        window.editAnnouncement = editAnnouncement;
+    // Files
+    db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const grid = document.getElementById('fileGrid');
+        grid.innerHTML = '';
+        adminFileList.innerHTML = '';
+        let count = 0;
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const file = doc.data();
+                const id = doc.id;
+                count++;
+                
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.innerHTML = `
+                    <div class="file-label"><i class="fas fa-tag"></i> ${file.label || 'PREMIUM'}</div>
+                    <h4>${file.title || 'Untitled'}</h4>
+                    <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
+                    <div class="file-download-btn" data-id="${id}" data-link="${file.fileLink || '#'}">
+                        <i class="fas fa-download"></i> ${file.downloads || 0}
+                    </div>
+                    <button class="delete-btn" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                `;
+                grid.appendChild(card);
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="item-text">📄 ${file.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                adminFileList.appendChild(item);
+            });
+            document.getElementById('fileCount').textContent = count;
+            
+            document.querySelectorAll('.file-download-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!isAuthorized) { alert('⛔ Access denied.'); return; }
+                    const link = this.dataset.link;
+                    const id = this.dataset.id;
+                    if (id) db.collection('files').doc(id).update({ downloads: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
+                    db.collection('counters').doc('stats').update({ downloads: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
+                    if (link && link !== '#') window.open(link, '_blank');
+                    else alert('⬇️ Download started!');
+                });
+            });
+        } else {
+            document.getElementById('fileCount').textContent = '0';
+            adminFileList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No files</div>`;
+        }
+    }, () => {});
 
-        console.log('🔥 ABID SIR - Admin Panel Complete');
-        console.log('✅ User Management: Create + Delete');
-        console.log('✅ File Management: Add + Edit + Delete + Copy Link');
-        console.log('✅ Video Management: Add + Edit + Delete + Featured');
-        console.log('✅ Announcement Management: Add + Edit + Delete + Priority');
-        console.log('✨ All existing features working correctly!');
-    </script>
+    // Videos
+    db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const grid = document.getElementById('videoGrid');
+        grid.innerHTML = '';
+        adminVideoList.innerHTML = '';
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const vid = doc.data();
+                const id = doc.id;
+                const videoUrl = vid.videoLink || '';
+                const isEmbed = videoUrl.includes('youtube.com/embed');
+                
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-label"><i class="fas fa-play"></i> ${vid.label || 'GAMING'}</div>
+                    <h4>${vid.title || 'Video'}</h4>
+                    ${isEmbed ? `<div style="aspect-ratio:16/9;background:#000;border-radius:0.8rem;margin:0.3rem 0;"><iframe src="${videoUrl}" style="width:100%;height:100%;border:none;border-radius:0.8rem;" allowfullscreen loading="lazy"></iframe></div>` 
+                              : videoUrl ? `<div style="aspect-ratio:16/9;background:#0a1a2a;border-radius:0.8rem;margin:0.3rem 0;display:flex;align-items:center;justify-content:center;"><a href="${videoUrl}" target="_blank" style="color:#00ccff;"><i class="fas fa-play-circle" style="font-size:2rem;"></i></a></div>`
+                              : `<div style="aspect-ratio:16/9;background:#0a1a2a;border-radius:0.8rem;margin:0.3rem 0;display:flex;align-items:center;justify-content:center;color:#3d7a9a;"><i class="fas fa-film" style="font-size:1.5rem;"></i></div>`}
+                    <button class="delete-btn" onclick="deleteVideo('${id}','${vid.title}')"><i class="fas fa-trash"></i></button>
+                `;
+                grid.appendChild(card);
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="item-text">🎬 ${vid.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteVideo('${id}','${vid.title}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                adminVideoList.appendChild(item);
+            });
+        } else {
+            adminVideoList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No videos</div>`;
+        }
+    }, () => {});
+
+    // Counters
+    db.collection('counters').doc('stats').update({ visitors: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
+    db.collection('counters').doc('stats').onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            if (data.visitors) document.getElementById('visitorCounter').textContent = data.visitors.toLocaleString();
+            if (data.downloads) document.getElementById('downloadCounter').textContent = data.downloads.toLocaleString();
+        }
+    }, () => {});
+}
+
+console.log('🔥 ABID SIR - Complete Admin Panel');
+console.log('✅ Announcement: Update + Delete');
+console.log('✅ Users: Add + View Password + Delete');
+console.log('✅ Files: Add + Delete');
+console.log('✅ Videos: Add + Delete');
+</script>
 </body>
 </html>
