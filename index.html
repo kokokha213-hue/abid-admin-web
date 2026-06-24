@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ABID SIR · Admin Panel</title>
-    <meta name="description" content="ABID SIR – Admin Panel">
+    <title>ABID SIR · Premium Gaming</title>
+    <meta name="description" content="ABID SIR – premium gaming hub.">
+    <meta name="keywords" content="ABID SIR, gaming, premium, files">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
         body{background:#0b0d12;color:#e3e9f0;padding:1rem;min-height:100vh;}
         
+        #passwordOverlay{position:fixed;inset:0;z-index:9999;background:#080b12;display:flex;justify-content:center;align-items:center;transition:0.4s;}
+        #passwordOverlay.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+        .login-box{background:#0f1a2b;padding:2.5rem;border-radius:2.5rem;border:1px solid #0066aa;box-shadow:0 0 60px #002b55;text-align:center;max-width:400px;width:100%;}
+        .login-box h2{color:#b0daff;font-size:2rem;}
+        .login-box h2 i{color:#00ccff;}
+        .login-box input{width:100%;padding:0.8rem 1.2rem;margin:0.8rem 0;background:#010a14;border:1px solid #1f4a6b;border-radius:60px;color:white;font-size:1rem;outline:none;}
+        .login-box input:focus{border-color:#00a6ff;box-shadow:0 0 25px #0077ff40;}
+        .login-box .btn{background:linear-gradient(145deg,#005f9e,#0077cc);border:none;padding:0.8rem;border-radius:60px;font-weight:700;color:white;cursor:pointer;width:100%;font-size:1rem;border:1px solid #0088d0;}
+        .login-box .btn:hover{background:linear-gradient(145deg,#0077cc,#0099ee);transform:scale(1.02);}
+        .login-box .error-msg{color:#ff6b6b;margin-top:0.5rem;}
+        .login-box .success-msg{color:#4ade80;margin-top:0.5rem;}
+        
         .glass-container{max-width:1400px;width:100%;margin:0 auto;background:rgba(10,14,23,0.85);border-radius:2.5rem;padding:1.5rem;border:1px solid rgba(0,180,255,0.2);}
         .brand-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,200,255,0.15);padding-bottom:0.8rem;margin-bottom:1rem;}
         .logo h1{font-size:2.2rem;background:linear-gradient(145deg,#a0f0ff,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
         .logo i{color:#00ccff;-webkit-text-fill-color:#00ccff;}
-        .admin-badge{background:#0f1a2b;padding:0.3rem 1rem;border-radius:40px;border:1px solid #00ccff;color:#00ccff;font-size:0.8rem;}
+        .user-badge{background:#0f1a2b;padding:0.3rem 1rem;border-radius:40px;border:1px solid #4ade80;color:#4ade80;font-size:0.8rem;}
+        .logout-btn{background:transparent;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.3rem 1rem;border-radius:40px;cursor:pointer;font-size:0.75rem;}
+        .logout-btn:hover{background:#ff6b6b22;}
         
         .hero-banner{background:radial-gradient(circle at 20% 30%,#0b2a3f,#03080f);border-radius:2rem;padding:1.5rem 2rem;margin-bottom:1.5rem;border:1px solid #005f8a;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;}
         .hero-text h2{font-size:1.8rem;color:#ddf0ff;}
         .hero-text h2 span{color:#00dcff;}
-        .hero-text .admin-label{background:#003759;padding:0.2rem 1rem;border-radius:40px;font-size:0.7rem;color:#8bcbff;border:1px solid #0080c0;display:inline-block;}
         .cta-whatsapp{background:#1d2b3a;padding:0.5rem 1.5rem;border-radius:60px;border:1px solid #25d366;color:#25d366;text-decoration:none;display:inline-flex;align-items:center;gap:0.6rem;}
         .cta-whatsapp:hover{background:#25d366;color:#0b0d12;}
         
@@ -75,6 +90,14 @@
         .admin-list-item .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
         
         .footer-note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:#43647a;border-top:1px solid #162b3d;padding-top:1rem;}
+        .auth-loading{position:fixed;inset:0;z-index:10000;background:#080b12;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;}
+        .auth-loading.hidden{display:none;}
+        .loader-ring{width:40px;height:40px;border:4px solid #1a3850;border-top:4px solid #00ccff;border-radius:50%;animation:spin 0.7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        
+        .toggle-pass{background:transparent;border:none;color:#3a6a8a;cursor:pointer;padding:0.3rem;position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);}
+        .input-wrapper{position:relative;}
+        .input-wrapper input{padding-right:3rem !important;}
         
         @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}}
         @media(max-width:480px){.file-grid,.video-grid{grid-template-columns:1fr;}}
@@ -82,20 +105,43 @@
 </head>
 <body>
 
+<!-- ===== AUTH LOADING ===== -->
+<div class="auth-loading" id="authLoading">
+    <div class="loader-ring"></div>
+    <p>🔐 Verifying session...</p>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div id="passwordOverlay">
+    <div class="login-box">
+        <h2><i class="fas fa-crown"></i> ABID SIR</h2>
+        <p style="color:#6a8fa8;margin-bottom:1rem;">Premium Gaming Vault</p>
+        <input type="email" id="emailInput" placeholder="Email address">
+        <div class="input-wrapper">
+            <input type="password" id="passInput" placeholder="Password">
+            <button class="toggle-pass" id="togglePass"><i class="fas fa-eye" id="eyeIcon"></i></button>
+        </div>
+        <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+        <div id="loaderContainer" style="display:none;"><div class="loader-ring" style="width:30px;height:30px;margin:0.5rem auto;"></div></div>
+        <div class="error-msg" id="passError"></div>
+        <div class="success-msg" id="passSuccess"></div>
+    </div>
+</div>
+
 <!-- ===== MAIN APP ===== -->
-<div class="glass-container" id="mainApp">
+<div class="glass-container" id="mainApp" style="display:none;">
     <div class="brand-bar">
         <div class="logo"><h1><i class="fas fa-crown"></i> ABID SIR</h1></div>
         <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-            <div class="admin-badge"><i class="fas fa-shield-alt"></i> Admin Panel</div>
+            <div class="user-badge"><i class="fas fa-user-circle"></i> <span id="userEmail">User</span></div>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </div>
 
     <div class="hero-banner">
         <div class="hero-text">
-            <h2>🔥 <span>Admin</span> Dashboard</h2>
-            <p>Manage content · exclusive files · daily updates</p>
-            <span class="admin-label"><i class="fas fa-lock"></i> Secure Admin Area</span>
+            <h2>🔥 <span>Premium</span> Gaming Vault</h2>
+            <p>Exclusive files · daily updates</p>
         </div>
         <a href="#" class="cta-whatsapp"><i class="fab fa-whatsapp"></i> Contact</a>
     </div>
@@ -120,8 +166,8 @@
     <!-- ===== ADMIN PANEL ===== -->
     <div class="admin-panel">
         <div class="admin-header">
-            <h3><i class="fas fa-user-cog"></i> Admin Controls</h3>
-            <span style="background:#00ccff22;color:#00ccff;padding:0.2rem 1rem;border-radius:40px;font-size:0.7rem;"><i class="fas fa-shield-alt"></i> Full Access</span>
+            <h3><i class="fas fa-user-cog"></i> Admin Panel</h3>
+            <span style="background:#00ccff22;color:#00ccff;padding:0.2rem 1rem;border-radius:40px;font-size:0.7rem;"><i class="fas fa-shield-alt"></i> Secure</span>
         </div>
         <div class="admin-grid">
             <!-- Announcement -->
@@ -158,10 +204,25 @@
                 <div class="admin-status" id="adminVideoStatus"></div>
                 <div class="admin-list" id="adminVideoList"></div>
             </div>
+
+            <!-- Users -->
+            <div class="admin-card">
+                <div class="card-title"><i class="fas fa-users"></i> Manage Users</div>
+                <input type="email" id="adminUserEmail" placeholder="User email">
+                <div class="input-wrapper">
+                    <input type="password" id="adminUserPassword" placeholder="Password (min 6 chars)">
+                    <button class="toggle-pass" id="adminTogglePass"><i class="fas fa-eye" id="adminEyeIcon"></i></button>
+                </div>
+                <button class="btn-sm success" id="adminAddUser"><i class="fas fa-user-plus"></i> Add User</button>
+                <div class="admin-status" id="adminUserStatus"></div>
+                <div class="admin-list" id="adminUserList">
+                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">Loading users...</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · Admin Panel · Secure</div>
+    <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure</div>
 </div>
 
 <script>
@@ -178,14 +239,31 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
 // ========== DOM REFS ==========
+const overlay = document.getElementById('passwordOverlay');
+const mainApp = document.getElementById('mainApp');
+const authLoading = document.getElementById('authLoading');
+const emailInput = document.getElementById('emailInput');
+const passInput = document.getElementById('passInput');
+const loginBtn = document.getElementById('loginBtn');
+const passError = document.getElementById('passError');
+const passSuccess = document.getElementById('passSuccess');
+const loaderContainer = document.getElementById('loaderContainer');
+const userEmail = document.getElementById('userEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+const togglePass = document.getElementById('togglePass');
+const eyeIcon = document.getElementById('eyeIcon');
+
+// Admin
 const adminAnnounceInput = document.getElementById('adminAnnounceInput');
 const adminUpdateAnnounce = document.getElementById('adminUpdateAnnounce');
 const adminDeleteAnnounce = document.getElementById('adminDeleteAnnounce');
 const adminAnnounceStatus = document.getElementById('adminAnnounceStatus');
+const adminAnnounceList = document.getElementById('adminAnnounceList');
 
 const adminFileTitle = document.getElementById('adminFileTitle');
 const adminFileLabel = document.getElementById('adminFileLabel');
@@ -202,12 +280,103 @@ const adminAddVideo = document.getElementById('adminAddVideo');
 const adminVideoStatus = document.getElementById('adminVideoStatus');
 const adminVideoList = document.getElementById('adminVideoList');
 
+const adminUserEmail = document.getElementById('adminUserEmail');
+const adminUserPassword = document.getElementById('adminUserPassword');
+const adminAddUser = document.getElementById('adminAddUser');
+const adminUserStatus = document.getElementById('adminUserStatus');
+const adminUserList = document.getElementById('adminUserList');
+const adminTogglePass = document.getElementById('adminTogglePass');
+const adminEyeIcon = document.getElementById('adminEyeIcon');
+
+let isAuthorized = false;
+let currentUser = null;
+let userPasswords = {};
 let currentAnnouncementId = null;
 
+// ========== PASSWORD TOGGLES ==========
+let passVisible = false;
+togglePass.addEventListener('click', function() {
+    passVisible = !passVisible;
+    passInput.type = passVisible ? 'text' : 'password';
+    eyeIcon.className = passVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
+    eyeIcon.style.color = passVisible ? '#00ccff' : '#3a6a8a';
+});
+
+let adminPassVisible = false;
+adminTogglePass.addEventListener('click', function() {
+    adminPassVisible = !adminPassVisible;
+    adminUserPassword.type = adminPassVisible ? 'text' : 'password';
+    adminEyeIcon.className = adminPassVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
+    adminEyeIcon.style.color = adminPassVisible ? '#00ccff' : '#3a6a8a';
+});
+
+// ========== AUTH STATE ==========
+auth.onAuthStateChanged((user) => {
+    authLoading.classList.add('hidden');
+    if (user) {
+        isAuthorized = true;
+        currentUser = user;
+        overlay.classList.add('hidden');
+        mainApp.style.display = 'block';
+        userEmail.textContent = user.email || 'User';
+        loadAllData();
+        loadUsers();
+        console.log('✅ Logged in:', user.email);
+    } else {
+        overlay.classList.remove('hidden');
+        mainApp.style.display = 'none';
+        isAuthorized = false;
+        currentUser = null;
+    }
+});
+
+// ========== LOGIN ==========
+loginBtn.addEventListener('click', function() {
+    const email = emailInput.value.trim();
+    const password = passInput.value.trim();
+    if (!email || !password) {
+        passError.textContent = 'Please enter email and password.';
+        return;
+    }
+    loginBtn.disabled = true;
+    loaderContainer.style.display = 'block';
+    passError.textContent = '';
+    passSuccess.textContent = '⏳ Signing in...';
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            loaderContainer.style.display = 'none';
+            loginBtn.disabled = false;
+            passSuccess.textContent = '✅ Login successful!';
+            passError.textContent = '';
+            emailInput.value = '';
+            passInput.value = '';
+            setTimeout(() => { passSuccess.textContent = ''; }, 3000);
+        })
+        .catch((error) => {
+            loaderContainer.style.display = 'none';
+            loginBtn.disabled = false;
+            passError.textContent = '❌ ' + error.message;
+            passSuccess.textContent = '';
+        });
+});
+
+passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+
+logoutBtn.addEventListener('click', function() {
+    auth.signOut().then(() => {
+        overlay.classList.remove('hidden');
+        mainApp.style.display = 'none';
+        isAuthorized = false;
+    });
+});
+
 // ============================================================
-// ANNOUNCEMENT FUNCTIONS
+// ANNOUNCEMENT FUNCTIONS - WITH DELETE
 // ============================================================
 
+// Update Announcement
 adminUpdateAnnounce.addEventListener('click', function() {
     const text = adminAnnounceInput.value.trim();
     if (!text) {
@@ -219,6 +388,7 @@ adminUpdateAnnounce.addEventListener('click', function() {
     const announceData = { text: text, timestamp: Date.now() };
     
     if (currentAnnouncementId) {
+        // Update existing
         db.collection('content').doc('announcement').update(announceData)
             .then(() => {
                 adminAnnounceStatus.textContent = '✅ Announcement updated!';
@@ -231,6 +401,7 @@ adminUpdateAnnounce.addEventListener('click', function() {
                 adminAnnounceStatus.className = 'admin-status error';
             });
     } else {
+        // Create new
         db.collection('content').doc('announcement').set(announceData)
             .then(() => {
                 adminAnnounceStatus.textContent = '✅ Announcement created!';
@@ -245,6 +416,7 @@ adminUpdateAnnounce.addEventListener('click', function() {
     }
 });
 
+// Delete Announcement
 adminDeleteAnnounce.addEventListener('click', function() {
     if (!currentAnnouncementId) {
         adminAnnounceStatus.textContent = '⚠️ No announcement to delete.';
@@ -270,9 +442,119 @@ adminDeleteAnnounce.addEventListener('click', function() {
 });
 
 // ============================================================
+// USER FUNCTIONS
+// ============================================================
+
+// Add User
+adminAddUser.addEventListener('click', function() {
+    const email = adminUserEmail.value.trim();
+    const password = adminUserPassword.value.trim();
+    if (!email || !password || password.length < 6) {
+        adminUserStatus.textContent = '⚠️ Email and password (min 6 chars) required.';
+        adminUserStatus.className = 'admin-status error';
+        return;
+    }
+    
+    adminUserStatus.textContent = '⏳ Creating user...';
+    adminUserStatus.className = 'admin-status';
+    
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            userPasswords[userCredential.user.uid] = password;
+            db.collection('users').doc(userCredential.user.uid).set({
+                email: email,
+                createdAt: Date.now()
+            }).catch(() => {});
+            
+            adminUserStatus.textContent = '✅ User created: ' + email;
+            adminUserStatus.className = 'admin-status success';
+            adminUserEmail.value = '';
+            adminUserPassword.value = '';
+            setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+            loadUsers();
+        })
+        .catch((err) => {
+            adminUserStatus.textContent = '❌ ' + err.message;
+            adminUserStatus.className = 'admin-status error';
+        });
+});
+
+// Delete User
+function deleteUser(uid, email) {
+    if (!confirm(`Delete user "${email}" permanently?`)) return;
+    
+    adminUserStatus.textContent = '⏳ Deleting user...';
+    adminUserStatus.className = 'admin-status';
+    
+    db.collection('users').doc(uid).delete()
+        .then(() => {
+            delete userPasswords[uid];
+            adminUserStatus.textContent = '✅ User deleted';
+            adminUserStatus.className = 'admin-status success';
+            loadUsers();
+            setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminUserStatus.textContent = '⚠️ ' + err.message;
+            adminUserStatus.className = 'admin-status error';
+            setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
+        });
+}
+
+// View Password
+function viewPassword(uid, email) {
+    if (userPasswords[uid]) {
+        alert(`👤 User: ${email}\n🔑 Password: ${userPasswords[uid]}`);
+    } else {
+        alert(`👤 User: ${email}\n🔑 Password: (Not stored)`);
+    }
+}
+
+// Load Users
+function loadUsers() {
+    db.collection('users').orderBy('email').get()
+        .then((snapshot) => {
+            adminUserList.innerHTML = '';
+            if (snapshot.empty) {
+                adminUserList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No users found</div>`;
+                return;
+            }
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const uid = doc.id;
+                const email = data.email || 'Unknown';
+                const hasPass = userPasswords[uid] ? '🔑 ' + userPasswords[uid] : '';
+                
+                const div = document.createElement('div');
+                div.className = 'admin-list-item';
+                div.innerHTML = `
+                    <div class="item-text">
+                        <span style="color:#8bcbff;">${email}</span>
+                        ${hasPass ? `<span style="color:#fbbf24;font-family:monospace;background:#010a14;padding:0.05rem 0.5rem;border-radius:20px;font-size:0.6rem;margin-left:0.3rem;">${hasPass}</span>` : ''}
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#003759;border:1px solid #0080c0;" onclick="viewPassword('${uid}','${email}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteUser('${uid}','${email}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                adminUserList.appendChild(div);
+            });
+        })
+        .catch(() => {
+            adminUserList.innerHTML = `<div style="color:#ff6b6b;font-size:0.7rem;text-align:center;padding:0.5rem;">Error loading users</div>`;
+        });
+}
+
+// ============================================================
 // FILE & VIDEO FUNCTIONS
 // ============================================================
 
+// Add File
 adminAddFile.addEventListener('click', function() {
     const title = adminFileTitle.value.trim();
     const label = adminFileLabel.value.trim() || 'PREMIUM';
@@ -305,6 +587,7 @@ adminAddFile.addEventListener('click', function() {
     });
 });
 
+// Add Video
 adminAddVideo.addEventListener('click', function() {
     const title = adminVideoTitle.value.trim();
     const label = adminVideoLabel.value.trim() || 'GAMING';
@@ -333,18 +616,23 @@ adminAddVideo.addEventListener('click', function() {
     });
 });
 
+// Delete File
 function deleteFile(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('files').doc(id).delete().catch(() => {});
     }
 }
 
+// Delete Video
 function deleteVideo(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('videos').doc(id).delete().catch(() => {});
     }
 }
 
+// Make functions global
+window.deleteUser = deleteUser;
+window.viewPassword = viewPassword;
 window.deleteFile = deleteFile;
 window.deleteVideo = deleteVideo;
 
@@ -407,6 +695,7 @@ function loadAllData() {
             
             document.querySelectorAll('.file-download-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
+                    if (!isAuthorized) { alert('⛔ Access denied.'); return; }
                     const link = this.dataset.link;
                     const id = this.dataset.id;
                     if (id) db.collection('files').doc(id).update({ downloads: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
@@ -472,10 +761,9 @@ function loadAllData() {
     }, () => {});
 }
 
-// Initialize
-loadAllData();
-console.log('🔥 ABID SIR - Admin Panel (No Authentication)');
+console.log('🔥 ABID SIR - Complete Admin Panel');
 console.log('✅ Announcement: Update + Delete');
+console.log('✅ Users: Add + View Password + Delete');
 console.log('✅ Files: Add + Delete');
 console.log('✅ Videos: Add + Delete');
 </script>
