@@ -89,6 +89,22 @@
         .admin-list-item .item-actions{display:flex;gap:0.3rem;}
         .admin-list-item .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
         
+        /* FF Section Special Styles */
+        .ff-badge {
+            display: inline-block;
+            background:#ff6b0022;
+            border:1px solid #ff6b0044;
+            color:#ff8c00;
+            padding:0.1rem 0.6rem;
+            border-radius:40px;
+            font-size:0.5rem;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:1px;
+        }
+        .ff-badge.headshot { border-color:#ff2d0044; background:#ff2d0022; color:#ff4d2d; }
+        .ff-badge.location { border-color:#00ff8844; background:#00ff8822; color:#00ff88; }
+        
         .footer-note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:#43647a;border-top:1px solid #162b3d;padding-top:1rem;}
         .auth-loading{position:fixed;inset:0;z-index:10000;background:#080b12;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;}
         .auth-loading.hidden{display:none;}
@@ -160,6 +176,20 @@
     <div class="section-title"><h3><i class="fas fa-folder-open"></i> Game Files</h3></div>
     <div class="file-grid" id="fileGrid"></div>
 
+    <!-- ===== FF HEADSHOTS FILE - ADMIN SECTION ===== -->
+    <div class="section-title" style="margin-top:1.5rem;">
+        <h3><i class="fas fa-crosshairs" style="color:#ff4d2d;"></i> FF Headshots File</h3>
+        <span class="ff-badge headshot"><i class="fas fa-bolt"></i> Free Fire</span>
+    </div>
+    <div class="file-grid" id="ffHeadshotsGrid"></div>
+
+    <!-- ===== FF LOCATION FILE - ADMIN SECTION ===== -->
+    <div class="section-title" style="margin-top:1.5rem;">
+        <h3><i class="fas fa-map-marker-alt" style="color:#00ff88;"></i> FF Location File</h3>
+        <span class="ff-badge location"><i class="fas fa-map-pin"></i> Free Fire</span>
+    </div>
+    <div class="file-grid" id="ffLocationGrid"></div>
+
     <div class="section-title"><h3><i class="fas fa-video"></i> Gaming Videos</h3></div>
     <div class="video-grid" id="videoGrid"></div>
 
@@ -192,6 +222,28 @@
                 <button class="btn-sm success" id="adminAddFile"><i class="fas fa-plus"></i> Add File</button>
                 <div class="admin-status" id="adminFileStatus"></div>
                 <div class="admin-list" id="adminFileList"></div>
+            </div>
+
+            <!-- FF Headshots -->
+            <div class="admin-card" style="border-color:#ff4d2d44;">
+                <div class="card-title" style="color:#ff6b3d;"><i class="fas fa-crosshairs"></i> FF Headshots</div>
+                <input type="text" id="adminFFHeadshotTitle" placeholder="File title">
+                <input type="text" id="adminFFHeadshotLink" placeholder="File link (URL)">
+                <input type="text" id="adminFFHeadshotVersion" placeholder="Version" value="v1">
+                <button class="btn-sm success" id="adminAddFFHeadshot"><i class="fas fa-plus"></i> Add Headshot File</button>
+                <div class="admin-status" id="adminFFHeadshotStatus"></div>
+                <div class="admin-list" id="adminFFHeadshotList"></div>
+            </div>
+
+            <!-- FF Location -->
+            <div class="admin-card" style="border-color:#00ff8844;">
+                <div class="card-title" style="color:#00ff88;"><i class="fas fa-map-marker-alt"></i> FF Location</div>
+                <input type="text" id="adminFFLocationTitle" placeholder="File title">
+                <input type="text" id="adminFFLocationLink" placeholder="File link (URL)">
+                <input type="text" id="adminFFLocationVersion" placeholder="Version" value="v1">
+                <button class="btn-sm success" id="adminAddFFLocation"><i class="fas fa-plus"></i> Add Location File</button>
+                <div class="admin-status" id="adminFFLocationStatus"></div>
+                <div class="admin-list" id="adminFFLocationList"></div>
             </div>
 
             <!-- Videos -->
@@ -272,6 +324,22 @@ const adminFileVersion = document.getElementById('adminFileVersion');
 const adminAddFile = document.getElementById('adminAddFile');
 const adminFileStatus = document.getElementById('adminFileStatus');
 const adminFileList = document.getElementById('adminFileList');
+
+// FF Headshots
+const adminFFHeadshotTitle = document.getElementById('adminFFHeadshotTitle');
+const adminFFHeadshotLink = document.getElementById('adminFFHeadshotLink');
+const adminFFHeadshotVersion = document.getElementById('adminFFHeadshotVersion');
+const adminAddFFHeadshot = document.getElementById('adminAddFFHeadshot');
+const adminFFHeadshotStatus = document.getElementById('adminFFHeadshotStatus');
+const adminFFHeadshotList = document.getElementById('adminFFHeadshotList');
+
+// FF Location
+const adminFFLocationTitle = document.getElementById('adminFFLocationTitle');
+const adminFFLocationLink = document.getElementById('adminFFLocationLink');
+const adminFFLocationVersion = document.getElementById('adminFFLocationVersion');
+const adminAddFFLocation = document.getElementById('adminAddFFLocation');
+const adminFFLocationStatus = document.getElementById('adminFFLocationStatus');
+const adminFFLocationList = document.getElementById('adminFFLocationList');
 
 const adminVideoTitle = document.getElementById('adminVideoTitle');
 const adminVideoLabel = document.getElementById('adminVideoLabel');
@@ -376,7 +444,6 @@ logoutBtn.addEventListener('click', function() {
 // ANNOUNCEMENT FUNCTIONS - WITH DELETE
 // ============================================================
 
-// Update Announcement
 adminUpdateAnnounce.addEventListener('click', function() {
     const text = adminAnnounceInput.value.trim();
     if (!text) {
@@ -388,7 +455,6 @@ adminUpdateAnnounce.addEventListener('click', function() {
     const announceData = { text: text, timestamp: Date.now() };
     
     if (currentAnnouncementId) {
-        // Update existing
         db.collection('content').doc('announcement').update(announceData)
             .then(() => {
                 adminAnnounceStatus.textContent = '✅ Announcement updated!';
@@ -401,7 +467,6 @@ adminUpdateAnnounce.addEventListener('click', function() {
                 adminAnnounceStatus.className = 'admin-status error';
             });
     } else {
-        // Create new
         db.collection('content').doc('announcement').set(announceData)
             .then(() => {
                 adminAnnounceStatus.textContent = '✅ Announcement created!';
@@ -416,16 +481,13 @@ adminUpdateAnnounce.addEventListener('click', function() {
     }
 });
 
-// Delete Announcement
 adminDeleteAnnounce.addEventListener('click', function() {
     if (!currentAnnouncementId) {
         adminAnnounceStatus.textContent = '⚠️ No announcement to delete.';
         adminAnnounceStatus.className = 'admin-status error';
         return;
     }
-    
     if (!confirm('Delete current announcement?')) return;
-    
     db.collection('content').doc('announcement').delete()
         .then(() => {
             currentAnnouncementId = null;
@@ -445,7 +507,6 @@ adminDeleteAnnounce.addEventListener('click', function() {
 // USER FUNCTIONS
 // ============================================================
 
-// Add User
 adminAddUser.addEventListener('click', function() {
     const email = adminUserEmail.value.trim();
     const password = adminUserPassword.value.trim();
@@ -454,10 +515,8 @@ adminAddUser.addEventListener('click', function() {
         adminUserStatus.className = 'admin-status error';
         return;
     }
-    
     adminUserStatus.textContent = '⏳ Creating user...';
     adminUserStatus.className = 'admin-status';
-    
     auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             userPasswords[userCredential.user.uid] = password;
@@ -465,7 +524,6 @@ adminAddUser.addEventListener('click', function() {
                 email: email,
                 createdAt: Date.now()
             }).catch(() => {});
-            
             adminUserStatus.textContent = '✅ User created: ' + email;
             adminUserStatus.className = 'admin-status success';
             adminUserEmail.value = '';
@@ -479,13 +537,10 @@ adminAddUser.addEventListener('click', function() {
         });
 });
 
-// Delete User
 function deleteUser(uid, email) {
     if (!confirm(`Delete user "${email}" permanently?`)) return;
-    
     adminUserStatus.textContent = '⏳ Deleting user...';
     adminUserStatus.className = 'admin-status';
-    
     db.collection('users').doc(uid).delete()
         .then(() => {
             delete userPasswords[uid];
@@ -501,7 +556,6 @@ function deleteUser(uid, email) {
         });
 }
 
-// View Password
 function viewPassword(uid, email) {
     if (userPasswords[uid]) {
         alert(`👤 User: ${email}\n🔑 Password: ${userPasswords[uid]}`);
@@ -510,7 +564,6 @@ function viewPassword(uid, email) {
     }
 }
 
-// Load Users
 function loadUsers() {
     db.collection('users').orderBy('email').get()
         .then((snapshot) => {
@@ -519,13 +572,11 @@ function loadUsers() {
                 adminUserList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No users found</div>`;
                 return;
             }
-            
             snapshot.forEach(doc => {
                 const data = doc.data();
                 const uid = doc.id;
                 const email = data.email || 'Unknown';
                 const hasPass = userPasswords[uid] ? '🔑 ' + userPasswords[uid] : '';
-                
                 const div = document.createElement('div');
                 div.className = 'admin-list-item';
                 div.innerHTML = `
@@ -551,22 +602,101 @@ function loadUsers() {
 }
 
 // ============================================================
+// FF HEADSHOTS FUNCTIONS
+// ============================================================
+
+adminAddFFHeadshot.addEventListener('click', function() {
+    const title = adminFFHeadshotTitle.value.trim();
+    const link = adminFFHeadshotLink.value.trim();
+    const version = adminFFHeadshotVersion.value.trim() || 'v1';
+    
+    if (!title || !link) {
+        adminFFHeadshotStatus.textContent = '⚠️ Title and link required.';
+        adminFFHeadshotStatus.className = 'admin-status error';
+        return;
+    }
+    
+    db.collection('ffHeadshots').add({
+        title: title,
+        label: 'HEADSHOT',
+        fileLink: link,
+        version: version,
+        downloads: 0,
+        timestamp: Date.now(),
+        updated: new Date().toLocaleDateString()
+    }).then(() => {
+        adminFFHeadshotStatus.textContent = '✅ Headshot file added!';
+        adminFFHeadshotStatus.className = 'admin-status success';
+        adminFFHeadshotTitle.value = '';
+        adminFFHeadshotLink.value = '';
+        setTimeout(() => { adminFFHeadshotStatus.textContent = ''; }, 3000);
+    }).catch((err) => {
+        adminFFHeadshotStatus.textContent = '❌ ' + err.message;
+        adminFFHeadshotStatus.className = 'admin-status error';
+    });
+});
+
+function deleteFFHeadshot(id, title) {
+    if (confirm(`Delete "${title}"?`)) {
+        db.collection('ffHeadshots').doc(id).delete().catch(() => {});
+    }
+}
+
+// ============================================================
+// FF LOCATION FUNCTIONS
+// ============================================================
+
+adminAddFFLocation.addEventListener('click', function() {
+    const title = adminFFLocationTitle.value.trim();
+    const link = adminFFLocationLink.value.trim();
+    const version = adminFFLocationVersion.value.trim() || 'v1';
+    
+    if (!title || !link) {
+        adminFFLocationStatus.textContent = '⚠️ Title and link required.';
+        adminFFLocationStatus.className = 'admin-status error';
+        return;
+    }
+    
+    db.collection('ffLocation').add({
+        title: title,
+        label: 'LOCATION',
+        fileLink: link,
+        version: version,
+        downloads: 0,
+        timestamp: Date.now(),
+        updated: new Date().toLocaleDateString()
+    }).then(() => {
+        adminFFLocationStatus.textContent = '✅ Location file added!';
+        adminFFLocationStatus.className = 'admin-status success';
+        adminFFLocationTitle.value = '';
+        adminFFLocationLink.value = '';
+        setTimeout(() => { adminFFLocationStatus.textContent = ''; }, 3000);
+    }).catch((err) => {
+        adminFFLocationStatus.textContent = '❌ ' + err.message;
+        adminFFLocationStatus.className = 'admin-status error';
+    });
+});
+
+function deleteFFLocation(id, title) {
+    if (confirm(`Delete "${title}"?`)) {
+        db.collection('ffLocation').doc(id).delete().catch(() => {});
+    }
+}
+
+// ============================================================
 // FILE & VIDEO FUNCTIONS
 // ============================================================
 
-// Add File
 adminAddFile.addEventListener('click', function() {
     const title = adminFileTitle.value.trim();
     const label = adminFileLabel.value.trim() || 'PREMIUM';
     const link = adminFileLink.value.trim();
     const version = adminFileVersion.value.trim() || 'v1';
-    
     if (!title || !link) {
         adminFileStatus.textContent = '⚠️ Title and link required.';
         adminFileStatus.className = 'admin-status error';
         return;
     }
-    
     db.collection('files').add({
         title: title,
         label: label,
@@ -587,7 +717,6 @@ adminAddFile.addEventListener('click', function() {
     });
 });
 
-// Add Video
 adminAddVideo.addEventListener('click', function() {
     const title = adminVideoTitle.value.trim();
     const label = adminVideoLabel.value.trim() || 'GAMING';
@@ -616,14 +745,12 @@ adminAddVideo.addEventListener('click', function() {
     });
 });
 
-// Delete File
 function deleteFile(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('files').doc(id).delete().catch(() => {});
     }
 }
 
-// Delete Video
 function deleteVideo(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('videos').doc(id).delete().catch(() => {});
@@ -635,6 +762,8 @@ window.deleteUser = deleteUser;
 window.viewPassword = viewPassword;
 window.deleteFile = deleteFile;
 window.deleteVideo = deleteVideo;
+window.deleteFFHeadshot = deleteFFHeadshot;
+window.deleteFFLocation = deleteFFLocation;
 
 // ============================================================
 // LOAD DATA
@@ -667,7 +796,6 @@ function loadAllData() {
                 const file = doc.data();
                 const id = doc.id;
                 count++;
-                
                 const card = document.createElement('div');
                 card.className = 'file-card';
                 card.innerHTML = `
@@ -710,6 +838,84 @@ function loadAllData() {
         }
     }, () => {});
 
+    // FF Headshots
+    db.collection('ffHeadshots').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const grid = document.getElementById('ffHeadshotsGrid');
+        grid.innerHTML = '';
+        adminFFHeadshotList.innerHTML = '';
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const file = doc.data();
+                const id = doc.id;
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.style.borderColor = '#ff4d2d44';
+                card.innerHTML = `
+                    <div class="file-label" style="background:#ff2d0022;border-color:#ff4d2d;color:#ff6b3d;"><i class="fas fa-crosshairs"></i> HEADSHOT</div>
+                    <h4>${file.title || 'Untitled'}</h4>
+                    <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
+                    <div class="file-download-btn" style="border-color:#ff4d2d;background:#ff2d0022;color:#ff6b3d;" data-id="${id}" data-link="${file.fileLink || '#'}">
+                        <i class="fas fa-download"></i> ${file.downloads || 0}
+                    </div>
+                    <button class="delete-btn" onclick="deleteFFHeadshot('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                `;
+                grid.appendChild(card);
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="item-text">🎯 ${file.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFFHeadshot('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                adminFFHeadshotList.appendChild(item);
+            });
+        } else {
+            adminFFHeadshotList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No headshot files</div>`;
+        }
+    }, () => {});
+
+    // FF Location
+    db.collection('ffLocation').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const grid = document.getElementById('ffLocationGrid');
+        grid.innerHTML = '';
+        adminFFLocationList.innerHTML = '';
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const file = doc.data();
+                const id = doc.id;
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.style.borderColor = '#00ff8844';
+                card.innerHTML = `
+                    <div class="file-label" style="background:#00ff8822;border-color:#00ff88;color:#00ff88;"><i class="fas fa-map-marker-alt"></i> LOCATION</div>
+                    <h4>${file.title || 'Untitled'}</h4>
+                    <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
+                    <div class="file-download-btn" style="border-color:#00ff88;background:#00ff8822;color:#00ff88;" data-id="${id}" data-link="${file.fileLink || '#'}">
+                        <i class="fas fa-download"></i> ${file.downloads || 0}
+                    </div>
+                    <button class="delete-btn" onclick="deleteFFLocation('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                `;
+                grid.appendChild(card);
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="item-text">📍 ${file.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFFLocation('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                adminFFLocationList.appendChild(item);
+            });
+        } else {
+            adminFFLocationList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No location files</div>`;
+        }
+    }, () => {});
+
     // Videos
     db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('videoGrid');
@@ -722,7 +928,6 @@ function loadAllData() {
                 const id = doc.id;
                 const videoUrl = vid.videoLink || '';
                 const isEmbed = videoUrl.includes('youtube.com/embed');
-                
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.innerHTML = `
@@ -761,7 +966,9 @@ function loadAllData() {
     }, () => {});
 }
 
-console.log('🔥 ABID SIR - Complete Admin Panel');
+console.log('🔥 ABID SIR - Complete Admin Panel with FF Sections');
+console.log('✅ FF Headshots: Add + Delete (Firestore collection: ffHeadshots)');
+console.log('✅ FF Location: Add + Delete (Firestore collection: ffLocation)');
 console.log('✅ Announcement: Update + Delete');
 console.log('✅ Users: Add + View Password + Delete');
 console.log('✅ Files: Add + Delete');
