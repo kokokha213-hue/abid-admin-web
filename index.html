@@ -10,7 +10,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
         body{background:#0b0d12;color:#e3e9f0;padding:1rem;min-height:100vh;}
@@ -82,7 +81,6 @@
         .admin-card .btn-sm.danger{background:#5f1a1a;border-color:#8b2a2a;}
         .admin-card .btn-sm.warning{background:#5f5a1a;border-color:#8b8a2a;}
         .admin-card .btn-sm.info{background:#1a3a5f;border-color:#2a6a8b;}
-        .admin-card .btn-sm.notification{background:#6a1a5f;border-color:#8b2a7a;}
         .admin-status{font-size:0.75rem;margin-top:0.5rem;color:#6a8fa8;min-height:1.2rem;}
         .admin-status.success{color:#4ade80;}
         .admin-status.error{color:#ff6b6b;}
@@ -112,11 +110,25 @@
         .file-card:hover .edit-btn,.video-card:hover .edit-btn,.error-card:hover .edit-btn{opacity:1;}
         .edit-btn:hover{background:#1a3a5f44;}
         
-        /* Notification status indicator */
-        .notif-status-badge{display:inline-block;background:#00ccff22;border:1px solid #00ccff44;color:#00ccff;padding:0.1rem 0.6rem;border-radius:40px;font-size:0.5rem;font-weight:600;letter-spacing:1px;margin-left:0.5rem;}
-        .notif-status-badge.active{background:#4ade8022;border-color:#4ade8044;color:#4ade80;}
+        /* Notification status badge */
+        .notif-status-badge{display:inline-block;background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;padding:0.1rem 0.6rem;border-radius:40px;font-size:0.5rem;font-weight:600;letter-spacing:1px;margin-left:0.5rem;animation:pulseNotif 2s ease-in-out infinite;}
+        @keyframes pulseNotif{0%,100%{opacity:1;}50%{opacity:0.5;}}
         
-        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}}
+        /* In-app notification toast */
+        .toast-notification{position:fixed;bottom:20px;right:20px;z-index:99999;background:rgba(15,26,43,0.95);backdrop-filter:blur(10px);border-radius:1.2rem;padding:1rem 1.5rem;border:1px solid rgba(0,183,255,0.2);box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:380px;width:100%;transform:translateY(120px);opacity:0;transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);display:flex;gap:0.8rem;align-items:flex-start;pointer-events:none;}
+        .toast-notification.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+        .toast-notification .toast-icon{font-size:1.8rem;flex-shrink:0;}
+        .toast-notification .toast-content{flex:1;}
+        .toast-notification .toast-content h4{font-size:0.9rem;color:#ddf0ff;margin-bottom:0.2rem;}
+        .toast-notification .toast-content p{font-size:0.75rem;color:#6a8fa8;margin:0;}
+        .toast-notification .toast-close{background:transparent;border:none;color:#3a6a8a;cursor:pointer;font-size:0.8rem;padding:0.2rem;transition:0.3s;}
+        .toast-notification .toast-close:hover{color:#ff6b6b;}
+        .toast-notification.file-toast .toast-icon{color:#4ade80;}
+        .toast-notification.video-toast .toast-icon{color:#60a5fa;}
+        .toast-notification.announce-toast .toast-icon{color:#fbbf24;}
+        .toast-notification.error-toast .toast-icon{color:#ff6b6b;}
+        
+        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}.toast-notification{max-width:300px;bottom:10px;right:10px;padding:0.8rem 1rem;}}
         @media(max-width:480px){.file-grid,.video-grid,.error-grid{grid-template-columns:1fr;}}
     </style>
 </head>
@@ -126,6 +138,16 @@
 <div class="auth-loading" id="authLoading">
     <div class="loader-ring"></div>
     <p>🔐 Verifying session...</p>
+</div>
+
+<!-- ===== TOAST NOTIFICATION ===== -->
+<div class="toast-notification" id="toastNotification">
+    <div class="toast-icon" id="toastIcon"><i class="fas fa-bell"></i></div>
+    <div class="toast-content">
+        <h4 id="toastTitle">New Update!</h4>
+        <p id="toastMessage">Something new has been added.</p>
+    </div>
+    <button class="toast-close" id="toastClose"><i class="fas fa-times"></i></button>
 </div>
 
 <!-- ===== LOGIN ===== -->
@@ -151,6 +173,7 @@
         <div class="logo"><h1><i class="fas fa-crown"></i> ABID SIR</h1></div>
         <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
             <div class="user-badge"><i class="fas fa-user-circle"></i> <span id="userEmail">User</span></div>
+            <span class="notif-status-badge"><i class="fas fa-bell"></i> Realtime Notifications ON</span>
             <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </div>
@@ -158,7 +181,7 @@
     <div class="hero-banner">
         <div class="hero-text">
             <h2>🔥 <span>Premium</span> Gaming Vault</h2>
-            <p>Exclusive files · daily updates · <span style="color:#00ccff;"><i class="fas fa-bell"></i> Notifications Active</span></p>
+            <p>Exclusive files · daily updates · <span style="color:#4ade80;"><i class="fas fa-bell"></i> Live Notifications</span></p>
         </div>
         <a href="#" class="cta-whatsapp"><i class="fab fa-whatsapp"></i> Contact</a>
     </div>
@@ -168,7 +191,6 @@
         <div class="stat-item"><i class="fas fa-eye"></i> Visitors <span class="stat-number" id="visitorCounter">0</span></div>
         <div class="stat-item"><i class="fas fa-file-archive"></i> Files <span class="stat-number" id="fileCount">0</span></div>
         <div class="stat-item"><i class="fas fa-users"></i> Users <span class="stat-number" id="userCount">0</span></div>
-        <div class="stat-item"><i class="fas fa-bell"></i> Devices <span class="stat-number" id="deviceCount">0</span></div>
     </div>
 
     <div class="announce-box">
@@ -209,25 +231,10 @@
             <h3><i class="fas fa-user-cog"></i> Admin Panel</h3>
             <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
                 <span style="background:#00ccff22;color:#00ccff;padding:0.2rem 1rem;border-radius:40px;font-size:0.7rem;"><i class="fas fa-shield-alt"></i> Secure</span>
-                <span class="notif-status-badge active"><i class="fas fa-bell"></i> Notifications ON</span>
+                <span class="notif-status-badge"><i class="fas fa-bell"></i> Real-time Notifications</span>
             </div>
         </div>
         <div class="admin-grid">
-            <!-- ===== NOTIFICATION SENDER ===== -->
-            <div class="admin-card" style="border-color:#8b2a7a44;background:#1a0f1f;">
-                <div class="card-title" style="color:#c084fc;"><i class="fas fa-bell"></i> Send Notification</div>
-                <input type="text" id="adminNotifTitle" placeholder="Notification Title" style="border-color:#6a1a5f44;">
-                <textarea id="adminNotifBody" placeholder="Notification Message" style="min-height:70px;border-color:#6a1a5f44;"></textarea>
-                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                    <button class="btn-sm notification" id="adminSendNotif"><i class="fas fa-paper-plane"></i> Send to All</button>
-                    <button class="btn-sm info" id="adminTestNotif"><i class="fas fa-vial"></i> Test (Self)</button>
-                </div>
-                <div class="admin-status" id="adminNotifStatus"></div>
-                <div style="margin-top:0.5rem;font-size:0.65rem;color:#4a6a8a;">
-                    <i class="fas fa-info-circle"></i> Sends push notification to all registered devices
-                </div>
-            </div>
-
             <!-- ===== ANNOUNCEMENT ===== -->
             <div class="admin-card">
                 <div class="card-title"><i class="fas fa-bullhorn"></i> Announcement</div>
@@ -320,7 +327,7 @@
         </div>
     </div>
 
-    <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure · <i class="fas fa-bell"></i> Notifications Active</div>
+    <div class="footer-note"><i class="fas fa-shield-alt"></i> ABID SIR · premium gaming · secure · <i class="fas fa-bell"></i> Realtime Notifications Active</div>
 </div>
 
 <script>
@@ -339,41 +346,251 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const functions = firebase.functions();
 db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
 // ============================================================
-// NOTIFICATION HELPERS
+// TOAST NOTIFICATION SYSTEM - NEW
+// ============================================================
+const toast = document.getElementById('toastNotification');
+const toastIcon = document.getElementById('toastIcon');
+const toastTitle = document.getElementById('toastTitle');
+const toastMessage = document.getElementById('toastMessage');
+const toastClose = document.getElementById('toastClose');
+let toastTimeout = null;
+
+function showToast(title, message, type = 'info') {
+    // Update content
+    toastTitle.textContent = title;
+    toastMessage.textContent = message;
+    
+    // Set icon
+    toast.className = 'toast-notification';
+    if (type === 'file') {
+        toastIcon.innerHTML = '<i class="fas fa-file"></i>';
+        toast.classList.add('file-toast');
+    } else if (type === 'video') {
+        toastIcon.innerHTML = '<i class="fas fa-video"></i>';
+        toast.classList.add('video-toast');
+    } else if (type === 'announcement') {
+        toastIcon.innerHTML = '<i class="fas fa-bullhorn"></i>';
+        toast.classList.add('announce-toast');
+    } else if (type === 'error') {
+        toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        toast.classList.add('error-toast');
+    } else {
+        toastIcon.innerHTML = '<i class="fas fa-bell"></i>';
+    }
+    
+    // Show toast
+    toast.classList.add('show');
+    
+    // Clear existing timeout
+    if (toastTimeout) {
+        clearTimeout(toastTimeout);
+    }
+    
+    // Auto-hide after 6 seconds
+    toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 6000);
+}
+
+// Close button
+toastClose.addEventListener('click', () => {
+    toast.classList.remove('show');
+    if (toastTimeout) {
+        clearTimeout(toastTimeout);
+    }
+});
+
+// Click outside to close
+document.addEventListener('click', (e) => {
+    if (toast.classList.contains('show') && !toast.contains(e.target)) {
+        toast.classList.remove('show');
+        if (toastTimeout) {
+            clearTimeout(toastTimeout);
+        }
+    }
+});
+
+// ============================================================
+// BROWSER NOTIFICATION PERMISSION
+// ============================================================
+function requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+            console.log('📢 Notification permission:', permission);
+        });
+    }
+}
+
+// ============================================================
+// REALTIME NOTIFICATION LISTENERS - NEW
 // ============================================================
 
-async function sendNotificationToAll(title, body, type = 'info', link = null) {
-    try {
-        const result = await functions.httpsCallable('sendNotificationToAll')({
-            title: title,
-            body: body,
-            type: type,
-            link: link,
-            timestamp: Date.now()
-        });
-        return result.data;
-    } catch (error) {
-        console.error('❌ Failed to send notification:', error);
-        throw error;
+// Track previous state for detecting changes
+let previousFileCount = 0;
+let previousVideoCount = 0;
+let previousAnnouncementText = '';
+let previousHeadshotCount = 0;
+let previousLocationCount = 0;
+let previousErrorCount = 0;
+let isFirstLoad = true;
+
+// Store last notification time to prevent spam
+let lastNotifTime = 0;
+const NOTIF_COOLDOWN = 3000; // 3 seconds between notifications
+
+function canSendNotification() {
+    const now = Date.now();
+    if (now - lastNotifTime < NOTIF_COOLDOWN) {
+        return false;
     }
+    lastNotifTime = now;
+    return true;
 }
 
-async function sendTestNotification(title, body) {
-    try {
-        const result = await functions.httpsCallable('sendTestNotification')({
-            title: title || '🔔 Test Notification',
-            body: body || 'This is a test notification from ABID SIR Admin Panel.'
+// ===== FILES LISTENER - NEW FILE DETECTION =====
+db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+    if (!isFirstLoad && snapshot.size > previousFileCount && previousFileCount > 0) {
+        const newDocs = snapshot.docs.slice(0, snapshot.size - previousFileCount);
+        newDocs.forEach(doc => {
+            const data = doc.data();
+            if (data.title && canSendNotification()) {
+                const title = '🔥 New File Added';
+                const body = `${data.title} - A new premium file has been uploaded.`;
+                
+                // Show toast
+                showToast(title, body, 'file');
+                
+                // Show browser notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, {
+                        body: body,
+                        icon: '/favicon.ico',
+                        badge: '/badge-icon.png',
+                        vibrate: [200, 100, 200]
+                    });
+                }
+            }
         });
-        return result.data;
-    } catch (error) {
-        console.error('❌ Failed to send test notification:', error);
-        throw error;
     }
-}
+    previousFileCount = snapshot.size;
+}, () => {});
+
+// ===== VIDEOS LISTENER - NEW VIDEO DETECTION =====
+db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+    if (!isFirstLoad && snapshot.size > previousVideoCount && previousVideoCount > 0) {
+        const newDocs = snapshot.docs.slice(0, snapshot.size - previousVideoCount);
+        newDocs.forEach(doc => {
+            const data = doc.data();
+            if (data.title && canSendNotification()) {
+                const title = '🎥 New Video Added';
+                const body = `${data.title} - A new gaming video has been uploaded.`;
+                
+                showToast(title, body, 'video');
+                
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, {
+                        body: body,
+                        icon: '/favicon.ico',
+                        badge: '/badge-icon.png',
+                        vibrate: [200, 100, 200]
+                    });
+                }
+            }
+        });
+    }
+    previousVideoCount = snapshot.size;
+}, () => {});
+
+// ===== FF HEADSHOTS LISTENER =====
+db.collection('ffHeadshots').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+    if (!isFirstLoad && snapshot.size > previousHeadshotCount && previousHeadshotCount > 0) {
+        const newDocs = snapshot.docs.slice(0, snapshot.size - previousHeadshotCount);
+        newDocs.forEach(doc => {
+            const data = doc.data();
+            if (data.title && canSendNotification()) {
+                const title = '🔥 New Headshot File Added';
+                const body = `${data.title} - Download now!`;
+                showToast(title, body, 'file');
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, { body: body, icon: '/favicon.ico', vibrate: [200, 100, 200] });
+                }
+            }
+        });
+    }
+    previousHeadshotCount = snapshot.size;
+}, () => {});
+
+// ===== FF LOCATION LISTENER =====
+db.collection('ffLocation').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+    if (!isFirstLoad && snapshot.size > previousLocationCount && previousLocationCount > 0) {
+        const newDocs = snapshot.docs.slice(0, snapshot.size - previousLocationCount);
+        newDocs.forEach(doc => {
+            const data = doc.data();
+            if (data.title && canSendNotification()) {
+                const title = '📍 New Location File Added';
+                const body = `${data.title} - Download now!`;
+                showToast(title, body, 'file');
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, { body: body, icon: '/favicon.ico', vibrate: [200, 100, 200] });
+                }
+            }
+        });
+    }
+    previousLocationCount = snapshot.size;
+}, () => {});
+
+// ===== ERROR FIXES LISTENER =====
+db.collection('errorFixes').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+    if (!isFirstLoad && snapshot.size > previousErrorCount && previousErrorCount > 0) {
+        const newDocs = snapshot.docs.slice(0, snapshot.size - previousErrorCount);
+        newDocs.forEach(doc => {
+            const data = doc.data();
+            if (data.title && canSendNotification()) {
+                const title = '🛠️ New Error Fix Added';
+                const body = `${data.title} - Check the solution now!`;
+                showToast(title, body, 'error');
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, { body: body, icon: '/favicon.ico', vibrate: [200, 100, 200] });
+                }
+            }
+        });
+    }
+    previousErrorCount = snapshot.size;
+}, () => {});
+
+// ===== ANNOUNCEMENT LISTENER - NEW ANNOUNCEMENT DETECTION =====
+db.collection('content').doc('announcement').onSnapshot((doc) => {
+    const el = document.getElementById('announceText');
+    let currentText = '';
+    if (doc.exists) {
+        const data = doc.data();
+        currentText = data.text || 'Welcome!';
+        el.innerHTML = `<strong>📢</strong> ${currentText}`;
+        adminAnnounceInput.value = data.text || '';
+    } else {
+        el.innerHTML = '<strong>📢</strong> No announcement';
+        adminAnnounceInput.value = '';
+    }
+    
+    // Detect changes
+    if (!isFirstLoad && currentText && previousAnnouncementText && currentText !== previousAnnouncementText && canSendNotification()) {
+        const title = '📢 New Announcement';
+        const body = currentText;
+        showToast(title, body, 'announcement');
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, {
+                body: body,
+                icon: '/favicon.ico',
+                badge: '/badge-icon.png',
+                vibrate: [200, 100, 200]
+            });
+        }
+    }
+    previousAnnouncementText = currentText;
+}, () => {});
 
 // ============================================================
 // DOM REFS
@@ -451,13 +668,6 @@ const adminUserList = document.getElementById('adminUserList');
 const adminTogglePass = document.getElementById('adminTogglePass');
 const adminEyeIcon = document.getElementById('adminEyeIcon');
 
-// Notification
-const adminNotifTitle = document.getElementById('adminNotifTitle');
-const adminNotifBody = document.getElementById('adminNotifBody');
-const adminSendNotif = document.getElementById('adminSendNotif');
-const adminTestNotif = document.getElementById('adminTestNotif');
-const adminNotifStatus = document.getElementById('adminNotifStatus');
-
 let isAuthorized = false;
 let currentUser = null;
 let userPasswords = {};
@@ -495,7 +705,9 @@ auth.onAuthStateChanged((user) => {
         userEmail.textContent = user.email || 'User';
         loadAllData();
         loadUsers();
-        loadDeviceCount();
+        requestNotificationPermission();
+        // Mark first load complete after initial data loads
+        setTimeout(() => { isFirstLoad = false; }, 5000);
         console.log('✅ Logged in:', user.email);
     } else {
         overlay.classList.remove('hidden');
@@ -548,61 +760,7 @@ logoutBtn.addEventListener('click', function() {
 });
 
 // ============================================================
-// NOTIFICATION FUNCTIONS
-// ============================================================
-
-// Send custom notification
-adminSendNotif.addEventListener('click', async function() {
-    const title = adminNotifTitle.value.trim();
-    const body = adminNotifBody.value.trim();
-    
-    if (!title || !body) {
-        adminNotifStatus.textContent = '⚠️ Please enter both title and message.';
-        adminNotifStatus.className = 'admin-status error';
-        return;
-    }
-    
-    adminNotifStatus.textContent = '⏳ Sending notification to all users...';
-    adminNotifStatus.className = 'admin-status';
-    adminSendNotif.disabled = true;
-    
-    try {
-        const result = await sendNotificationToAll(title, body, 'custom');
-        adminNotifStatus.textContent = `✅ Notification sent to ${result.devicesSent || 0} devices!`;
-        adminNotifStatus.className = 'admin-status success';
-        adminNotifTitle.value = '';
-        adminNotifBody.value = '';
-        setTimeout(() => { adminNotifStatus.textContent = ''; }, 5000);
-    } catch (error) {
-        adminNotifStatus.textContent = '❌ ' + (error.message || 'Failed to send notification');
-        adminNotifStatus.className = 'admin-status error';
-    }
-    adminSendNotif.disabled = false;
-});
-
-// Send test notification
-adminTestNotif.addEventListener('click', async function() {
-    adminNotifStatus.textContent = '⏳ Sending test notification...';
-    adminNotifStatus.className = 'admin-status';
-    adminTestNotif.disabled = true;
-    
-    try {
-        const result = await sendTestNotification(
-            '🔔 Test Notification',
-            'This is a test notification from ABID SIR Admin Panel.'
-        );
-        adminNotifStatus.textContent = '✅ Test notification sent successfully!';
-        adminNotifStatus.className = 'admin-status success';
-        setTimeout(() => { adminNotifStatus.textContent = ''; }, 5000);
-    } catch (error) {
-        adminNotifStatus.textContent = '❌ ' + (error.message || 'Failed to send test notification');
-        adminNotifStatus.className = 'admin-status error';
-    }
-    adminTestNotif.disabled = false;
-});
-
-// ============================================================
-// ANNOUNCEMENT FUNCTIONS - WITH NOTIFICATION
+// ANNOUNCEMENT FUNCTIONS
 // ============================================================
 
 adminUpdateAnnounce.addEventListener('click', function() {
@@ -613,29 +771,16 @@ adminUpdateAnnounce.addEventListener('click', function() {
         return;
     }
     const announceData = { text: text, timestamp: Date.now() };
-    
     const savePromise = currentAnnouncementId 
         ? db.collection('content').doc('announcement').update(announceData)
         : db.collection('content').doc('announcement').set(announceData);
     
     savePromise
-        .then(async () => {
+        .then(() => {
             adminAnnounceStatus.textContent = '✅ Announcement updated!';
             adminAnnounceStatus.className = 'admin-status success';
             adminAnnounceInput.value = '';
-            
-            // Send notification
-            try {
-                await sendNotificationToAll(
-                    '📢 New Announcement',
-                    text,
-                    'announcement'
-                );
-                adminAnnounceStatus.textContent = '✅ Announcement updated & notification sent!';
-            } catch (notifError) {
-                adminAnnounceStatus.textContent = '✅ Announcement updated (notification failed: ' + notifError.message + ')';
-            }
-            setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 4000);
+            setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
         })
         .catch((err) => {
             adminAnnounceStatus.textContent = '❌ ' + err.message;
@@ -765,20 +910,7 @@ function loadUsers() {
 }
 
 // ============================================================
-// DEVICE COUNTER
-// ============================================================
-function loadDeviceCount() {
-    db.collection('tokens').get()
-        .then((snapshot) => {
-            document.getElementById('deviceCount').textContent = snapshot.size;
-        })
-        .catch(() => {
-            document.getElementById('deviceCount').textContent = '0';
-        });
-}
-
-// ============================================================
-// FF HEADSHOTS FUNCTIONS - WITH NOTIFICATION
+// FF HEADSHOTS FUNCTIONS
 // ============================================================
 
 adminAddFFHeadshot.addEventListener('click', function() {
@@ -798,24 +930,12 @@ adminAddFFHeadshot.addEventListener('click', function() {
         downloads: 0,
         timestamp: Date.now(),
         updated: new Date().toLocaleDateString()
-    }).then(async () => {
+    }).then(() => {
         adminFFHeadshotStatus.textContent = '✅ Headshot file added!';
         adminFFHeadshotStatus.className = 'admin-status success';
         adminFFHeadshotTitle.value = '';
         adminFFHeadshotLink.value = '';
-        
-        // Send notification
-        try {
-            await sendNotificationToAll(
-                '🔥 New Headshot File Added',
-                `${title} - Download now!`,
-                'file'
-            );
-            adminFFHeadshotStatus.textContent = '✅ Headshot added & notification sent!';
-        } catch (notifError) {
-            adminFFHeadshotStatus.textContent = '✅ Headshot added (notification failed)';
-        }
-        setTimeout(() => { adminFFHeadshotStatus.textContent = ''; }, 4000);
+        setTimeout(() => { adminFFHeadshotStatus.textContent = ''; }, 3000);
     }).catch((err) => {
         adminFFHeadshotStatus.textContent = '❌ ' + err.message;
         adminFFHeadshotStatus.className = 'admin-status error';
@@ -829,7 +949,7 @@ function deleteFFHeadshot(id, title) {
 }
 
 // ============================================================
-// FF LOCATION FUNCTIONS - WITH NOTIFICATION
+// FF LOCATION FUNCTIONS
 // ============================================================
 
 adminAddFFLocation.addEventListener('click', function() {
@@ -849,24 +969,12 @@ adminAddFFLocation.addEventListener('click', function() {
         downloads: 0,
         timestamp: Date.now(),
         updated: new Date().toLocaleDateString()
-    }).then(async () => {
+    }).then(() => {
         adminFFLocationStatus.textContent = '✅ Location file added!';
         adminFFLocationStatus.className = 'admin-status success';
         adminFFLocationTitle.value = '';
         adminFFLocationLink.value = '';
-        
-        // Send notification
-        try {
-            await sendNotificationToAll(
-                '📍 New Location File Added',
-                `${title} - Download now!`,
-                'file'
-            );
-            adminFFLocationStatus.textContent = '✅ Location added & notification sent!';
-        } catch (notifError) {
-            adminFFLocationStatus.textContent = '✅ Location added (notification failed)';
-        }
-        setTimeout(() => { adminFFLocationStatus.textContent = ''; }, 4000);
+        setTimeout(() => { adminFFLocationStatus.textContent = ''; }, 3000);
     }).catch((err) => {
         adminFFLocationStatus.textContent = '❌ ' + err.message;
         adminFFLocationStatus.className = 'admin-status error';
@@ -880,7 +988,7 @@ function deleteFFLocation(id, title) {
 }
 
 // ============================================================
-// ERROR FIR FUNCTIONS - WITH NOTIFICATION
+// ERROR FIR FUNCTIONS
 // ============================================================
 
 function resetErrorForm() {
@@ -930,7 +1038,7 @@ adminAddError.addEventListener('click', function() {
 
     if (editingErrorId) {
         db.collection('errorFixes').doc(editingErrorId).update(data)
-            .then(async () => {
+            .then(() => {
                 adminErrorStatus.textContent = '✅ Video updated!';
                 adminErrorStatus.className = 'admin-status success';
                 resetErrorForm();
@@ -942,23 +1050,11 @@ adminAddError.addEventListener('click', function() {
             });
     } else {
         db.collection('errorFixes').add(data)
-            .then(async () => {
+            .then(() => {
                 adminErrorStatus.textContent = '✅ Video added!';
                 adminErrorStatus.className = 'admin-status success';
                 resetErrorForm();
-                
-                // Send notification
-                try {
-                    await sendNotificationToAll(
-                        '🛠️ New Error Fix Added',
-                        `${title} - Check the solution now!`,
-                        'error'
-                    );
-                    adminErrorStatus.textContent = '✅ Video added & notification sent!';
-                } catch (notifError) {
-                    adminErrorStatus.textContent = '✅ Video added (notification failed)';
-                }
-                setTimeout(() => { adminErrorStatus.textContent = ''; }, 4000);
+                setTimeout(() => { adminErrorStatus.textContent = ''; }, 3000);
             })
             .catch((err) => {
                 adminErrorStatus.textContent = '❌ ' + err.message;
@@ -982,7 +1078,7 @@ function deleteError(id, title) {
 }
 
 // ============================================================
-// VIDEO FUNCTIONS - WITH NOTIFICATION
+// VIDEO FUNCTIONS
 // ============================================================
 
 function resetVideoForm() {
@@ -1040,23 +1136,11 @@ adminAddVideo.addEventListener('click', function() {
             });
     } else {
         db.collection('videos').add(data)
-            .then(async () => {
+            .then(() => {
                 adminVideoStatus.textContent = '✅ Video added!';
                 adminVideoStatus.className = 'admin-status success';
                 resetVideoForm();
-                
-                // Send notification
-                try {
-                    await sendNotificationToAll(
-                        '🎥 New Video Added',
-                        `${title} - Watch now!`,
-                        'video'
-                    );
-                    adminVideoStatus.textContent = '✅ Video added & notification sent!';
-                } catch (notifError) {
-                    adminVideoStatus.textContent = '✅ Video added (notification failed)';
-                }
-                setTimeout(() => { adminVideoStatus.textContent = ''; }, 4000);
+                setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
             })
             .catch((err) => {
                 adminVideoStatus.textContent = '❌ ' + err.message;
@@ -1073,7 +1157,7 @@ adminCancelVideoEdit.addEventListener('click', function() {
 });
 
 // ============================================================
-// FILE FUNCTIONS - WITH NOTIFICATION
+// FILE FUNCTIONS
 // ============================================================
 
 adminAddFile.addEventListener('click', function() {
@@ -1094,24 +1178,12 @@ adminAddFile.addEventListener('click', function() {
         downloads: 0,
         timestamp: Date.now(),
         updated: new Date().toLocaleDateString()
-    }).then(async () => {
+    }).then(() => {
         adminFileStatus.textContent = '✅ File added!';
         adminFileStatus.className = 'admin-status success';
         adminFileTitle.value = '';
         adminFileLink.value = '';
-        
-        // Send notification
-        try {
-            await sendNotificationToAll(
-                '🔥 New File Added',
-                `${title} - A new premium file has been uploaded.`,
-                'file'
-            );
-            adminFileStatus.textContent = '✅ File added & notification sent!';
-        } catch (notifError) {
-            adminFileStatus.textContent = '✅ File added (notification failed)';
-        }
-        setTimeout(() => { adminFileStatus.textContent = ''; }, 4000);
+        setTimeout(() => { adminFileStatus.textContent = ''; }, 3000);
     }).catch((err) => {
         adminFileStatus.textContent = '❌ ' + err.message;
         adminFileStatus.className = 'admin-status error';
@@ -1146,21 +1218,6 @@ window.editVideo = editVideo;
 // LOAD DATA
 // ============================================================
 function loadAllData() {
-    // Announcement
-    db.collection('content').doc('announcement').onSnapshot((doc) => {
-        const el = document.getElementById('announceText');
-        if (doc.exists) {
-            const data = doc.data();
-            currentAnnouncementId = doc.id;
-            el.innerHTML = `<strong>📢</strong> ${data.text || 'Welcome!'}`;
-            adminAnnounceInput.value = data.text || '';
-        } else {
-            currentAnnouncementId = null;
-            el.innerHTML = '<strong>📢</strong> No announcement';
-            adminAnnounceInput.value = '';
-        }
-    }, () => {});
-
     // Files
     db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('fileGrid');
@@ -1441,14 +1498,17 @@ function loadAllData() {
     }, () => {});
 }
 
-console.log('🔥 ABID SIR - Complete Admin Panel with FCM Notifications');
+console.log('🔥 ABID SIR - Admin Panel with FREE Realtime Notifications');
 console.log('✅ All existing features 100% intact');
-console.log('✅ FCM Notification System:');
-console.log('   - Auto-notify on new files');
-console.log('   - Auto-notify on new videos');
-console.log('   - Auto-notify on announcement updates');
-console.log('   - Custom notification sender');
-console.log('   - Test notification button');
+console.log('🔔 Realtime Notification System:');
+console.log('   - New Files → 🔥 New File Added');
+console.log('   - New Videos → 🎥 New Video Added');
+console.log('   - New Announcement → 📢 New Announcement');
+console.log('   - New Headshots → 🔥 New Headshot Added');
+console.log('   - New Location → 📍 New Location Added');
+console.log('   - New Error Fix → 🛠️ New Error Fix Added');
+console.log('💡 No Cloud Functions required - Works on Spark Plan!');
+console.log('📢 Browser Notifications + In-App Toasts');
 </script>
 </body>
 </html>
