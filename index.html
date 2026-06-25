@@ -52,56 +52,49 @@
         .section-title{margin:1rem 0 0.6rem 0;}
         .section-title h3{color:#b0d5ff;border-bottom:2px solid #006b9e;padding-bottom:0.2rem;display:inline-block;}
         
-        .file-grid,.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.5rem;}
-        .file-card,.video-card{background:#0f1a26;border-radius:1.5rem;padding:1rem;border:1px solid #1c3f59;transition:0.3s;position:relative;}
-        .file-card:hover,.video-card:hover{transform:translateY(-4px);border-color:#00a6ff;box-shadow:0 0 30px #004c7a70;}
-        .file-label,.video-label{background:#002a44;padding:0.1rem 0.8rem;border-radius:40px;display:inline-block;font-size:0.6rem;color:#8bcbff;border:1px solid #0077be;}
-        .file-card h4,.video-card h4{font-size:1rem;color:#d8edff;margin:0.3rem 0;}
-        .file-meta,.video-meta{display:flex;justify-content:space-between;font-size:0.7rem;color:#7797b0;}
+        .file-grid,.video-grid,.error-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.5rem;}
+        .file-card,.video-card,.error-card{background:#0f1a26;border-radius:1.5rem;padding:1rem;border:1px solid #1c3f59;transition:0.3s;position:relative;}
+        .file-card:hover,.video-card:hover,.error-card:hover{transform:translateY(-4px);border-color:#00a6ff;box-shadow:0 0 30px #004c7a70;}
+        .file-label,.video-label,.error-label{background:#002a44;padding:0.1rem 0.8rem;border-radius:40px;display:inline-block;font-size:0.6rem;color:#8bcbff;border:1px solid #0077be;}
+        .file-card h4,.video-card h4,.error-card h4{font-size:1rem;color:#d8edff;margin:0.3rem 0;}
+        .file-meta,.video-meta,.error-meta{display:flex;justify-content:space-between;font-size:0.7rem;color:#7797b0;}
         .file-download-btn{background:#003759;border:1px solid #0080c0;padding:0.2rem 0.8rem;border-radius:60px;font-size:0.75rem;color:#b0e0ff;cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;}
         .file-download-btn:hover{background:#0073b0;}
         
-        .action-btns{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.3rem;}
-        .action-btns .btn-sm{font-size:0.55rem;padding:0.1rem 0.5rem;}
-        
         .delete-btn{position:absolute;top:0.3rem;right:0.3rem;background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.1rem 0.4rem;border-radius:40px;cursor:pointer;font-size:0.5rem;opacity:0;transition:0.3s;}
-        .file-card:hover .delete-btn,.video-card:hover .delete-btn{opacity:1;}
+        .file-card:hover .delete-btn,.video-card:hover .delete-btn,.error-card:hover .delete-btn{opacity:1;}
         .delete-btn:hover{background:#ff6b6b44;}
         
         .admin-panel{margin-top:2rem;background:#0d1c2b;border-radius:2rem;padding:1.5rem;border:1px solid #1f4a6b;}
         .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;}
         .admin-header h3{color:#00ccff;}
-        .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
+        .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
         .admin-card{background:#0f1a2b;border-radius:1.5rem;padding:1.2rem;border:1px solid #1f4a6b;}
         .admin-card .card-title{color:#8bcbff;font-size:0.8rem;font-weight:600;margin-bottom:0.8rem;}
         .admin-card .card-title i{color:#00ccff;}
-        .admin-card input{width:100%;padding:0.6rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;margin-bottom:0.6rem;}
-        .admin-card input:focus{border-color:#00a6ff;}
-        .admin-card .btn-sm{background:#005f9e;border:none;padding:0.4rem 1.2rem;border-radius:40px;color:white;cursor:pointer;font-size:0.75rem;font-weight:600;border:1px solid #0088d0;}
+        .admin-card input, .admin-card textarea{width:100%;padding:0.6rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;margin-bottom:0.6rem;}
+        .admin-card textarea{min-height:60px;border-radius:20px;resize:vertical;font-family:inherit;}
+        .admin-card input:focus, .admin-card textarea:focus{border-color:#00a6ff;}
+        .admin-card .btn-sm{background:#005f9e;border:none;padding:0.4rem 1.2rem;border-radius:40px;color:white;cursor:pointer;font-size:0.8rem;font-weight:600;border:1px solid #0088d0;}
         .admin-card .btn-sm:hover{background:#0080cc;}
         .admin-card .btn-sm.success{background:#1a5f2a;border-color:#2a8b3a;}
         .admin-card .btn-sm.danger{background:#5f1a1a;border-color:#8b2a2a;}
         .admin-card .btn-sm.warning{background:#5f5a1a;border-color:#8b8a2a;}
-        .admin-card .btn-sm.info{background:#1a3a5f;border-color:#2a5a8b;}
+        .admin-card .btn-sm.info{background:#1a3a5f;border-color:#2a6a8b;}
         .admin-status{font-size:0.75rem;margin-top:0.5rem;color:#6a8fa8;min-height:1.2rem;}
         .admin-status.success{color:#4ade80;}
         .admin-status.error{color:#ff6b6b;}
         
-        .admin-list{max-height:300px;overflow-y:auto;margin-top:0.5rem;border-top:1px solid #1f4a6b;padding-top:0.5rem;}
-        .admin-list-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0.5rem;border-radius:30px;font-size:0.75rem;color:#b8d0e5;border-bottom:1px solid #1f4a6b22;flex-wrap:wrap;gap:0.3rem;}
+        .admin-list{max-height:250px;overflow-y:auto;margin-top:0.5rem;border-top:1px solid #1f4a6b;padding-top:0.5rem;}
+        .admin-list-item{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-radius:30px;font-size:0.75rem;color:#b8d0e5;border-bottom:1px solid #1f4a6b22;flex-wrap:wrap;gap:0.3rem;}
         .admin-list-item .item-text{flex:1;min-width:80px;}
-        .admin-list-item .item-actions{display:flex;gap:0.3rem;flex-wrap:wrap;}
-        .admin-list-item .btn-sm{font-size:0.55rem;padding:0.1rem 0.5rem;}
-        
-        .edit-form{display:none;margin-top:0.5rem;padding:0.5rem;background:#0a1520;border-radius:1rem;border:1px solid #1f4a6b;}
-        .edit-form.active{display:block;}
-        .edit-form input{width:100%;padding:0.4rem 0.8rem;margin-bottom:0.3rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.8rem;outline:none;}
-        .edit-form input:focus{border-color:#00a6ff;}
-        .edit-form .btn-sm{font-size:0.65rem;padding:0.2rem 0.8rem;}
+        .admin-list-item .item-actions{display:flex;gap:0.3rem;}
+        .admin-list-item .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
         
         .ff-badge{display:inline-block;background:#ff6b0022;border:1px solid #ff6b0044;color:#ff8c00;padding:0.1rem 0.6rem;border-radius:40px;font-size:0.5rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
         .ff-badge.headshot{border-color:#ff2d0044;background:#ff2d0022;color:#ff4d2d;}
         .ff-badge.location{border-color:#00ff8844;background:#00ff8822;color:#00ff88;}
+        .ff-badge.errorfix{border-color:#ff6b6b44;background:#ff6b6b22;color:#ff6b6b;}
         
         .footer-note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:#43647a;border-top:1px solid #162b3d;padding-top:1rem;}
         .auth-loading{position:fixed;inset:0;z-index:10000;background:#080b12;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;}
@@ -113,8 +106,12 @@
         .input-wrapper{position:relative;}
         .input-wrapper input{padding-right:3rem !important;}
         
-        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}}
-        @media(max-width:480px){.file-grid,.video-grid{grid-template-columns:1fr;}}
+        .edit-btn{background:#1a3a5f22;border:1px solid #2a6a8b44;color:#60a5fa;padding:0.1rem 0.5rem;border-radius:40px;cursor:pointer;font-size:0.5rem;opacity:0;transition:0.3s;}
+        .file-card:hover .edit-btn,.video-card:hover .edit-btn,.error-card:hover .edit-btn{opacity:1;}
+        .edit-btn:hover{background:#1a3a5f44;}
+        
+        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}}
+        @media(max-width:480px){.file-grid,.video-grid,.error-grid{grid-template-columns:1fr;}}
     </style>
 </head>
 <body>
@@ -188,6 +185,13 @@
     </div>
     <div class="file-grid" id="ffLocationGrid"></div>
 
+    <!-- ===== ERROR FIR YA PROBLEM FIX ===== -->
+    <div class="section-title" style="margin-top:1.5rem;">
+        <h3><i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i> ERROR FIR YA PROBLEM FIX</h3>
+        <span class="ff-badge errorfix"><i class="fas fa-tools"></i> Fix & Solutions</span>
+    </div>
+    <div class="error-grid" id="errorGrid"></div>
+
     <div class="section-title"><h3><i class="fas fa-video"></i> Gaming Videos</h3></div>
     <div class="video-grid" id="videoGrid"></div>
 
@@ -228,7 +232,7 @@
                 <input type="text" id="adminFFHeadshotTitle" placeholder="File title">
                 <input type="text" id="adminFFHeadshotLink" placeholder="File link (URL)">
                 <input type="text" id="adminFFHeadshotVersion" placeholder="Version" value="v1">
-                <button class="btn-sm success" id="adminAddFFHeadshot"><i class="fas fa-plus"></i> Add Headshot</button>
+                <button class="btn-sm success" id="adminAddFFHeadshot"><i class="fas fa-plus"></i> Add Headshot File</button>
                 <div class="admin-status" id="adminFFHeadshotStatus"></div>
                 <div class="admin-list" id="adminFFHeadshotList"></div>
             </div>
@@ -239,9 +243,24 @@
                 <input type="text" id="adminFFLocationTitle" placeholder="File title">
                 <input type="text" id="adminFFLocationLink" placeholder="File link (URL)">
                 <input type="text" id="adminFFLocationVersion" placeholder="Version" value="v1">
-                <button class="btn-sm success" id="adminAddFFLocation"><i class="fas fa-plus"></i> Add Location</button>
+                <button class="btn-sm success" id="adminAddFFLocation"><i class="fas fa-plus"></i> Add Location File</button>
                 <div class="admin-status" id="adminFFLocationStatus"></div>
                 <div class="admin-list" id="adminFFLocationList"></div>
+            </div>
+
+            <!-- ERROR FIR YA PROBLEM FIX -->
+            <div class="admin-card" style="border-color:#ff6b6b44;">
+                <div class="card-title" style="color:#ff6b6b;"><i class="fas fa-exclamation-triangle"></i> ERROR FIR / PROBLEM FIX</div>
+                <input type="text" id="adminErrorTitle" placeholder="Video title (e.g., Error 505 Fix)">
+                <input type="text" id="adminErrorLink" placeholder="YouTube embed URL">
+                <input type="text" id="adminErrorLabel" placeholder="Label" value="ERROR FIX">
+                <textarea id="adminErrorDesc" placeholder="Description (optional)"></textarea>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminAddError"><i class="fas fa-plus"></i> Add Video</button>
+                    <button class="btn-sm info" id="adminCancelErrorEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+                <div class="admin-status" id="adminErrorStatus"></div>
+                <div class="admin-list" id="adminErrorList"></div>
             </div>
 
             <!-- Videos -->
@@ -250,7 +269,10 @@
                 <input type="text" id="adminVideoTitle" placeholder="Video title">
                 <input type="text" id="adminVideoLabel" placeholder="Label" value="GAMING">
                 <input type="text" id="adminVideoLink" placeholder="YouTube embed URL">
-                <button class="btn-sm success" id="adminAddVideo"><i class="fas fa-plus"></i> Add Video</button>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminAddVideo"><i class="fas fa-plus"></i> Add Video</button>
+                    <button class="btn-sm info" id="adminCancelVideoEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
+                </div>
                 <div class="admin-status" id="adminVideoStatus"></div>
                 <div class="admin-list" id="adminVideoList"></div>
             </div>
@@ -323,6 +345,7 @@ const adminAddFile = document.getElementById('adminAddFile');
 const adminFileStatus = document.getElementById('adminFileStatus');
 const adminFileList = document.getElementById('adminFileList');
 
+// FF Headshots
 const adminFFHeadshotTitle = document.getElementById('adminFFHeadshotTitle');
 const adminFFHeadshotLink = document.getElementById('adminFFHeadshotLink');
 const adminFFHeadshotVersion = document.getElementById('adminFFHeadshotVersion');
@@ -330,6 +353,7 @@ const adminAddFFHeadshot = document.getElementById('adminAddFFHeadshot');
 const adminFFHeadshotStatus = document.getElementById('adminFFHeadshotStatus');
 const adminFFHeadshotList = document.getElementById('adminFFHeadshotList');
 
+// FF Location
 const adminFFLocationTitle = document.getElementById('adminFFLocationTitle');
 const adminFFLocationLink = document.getElementById('adminFFLocationLink');
 const adminFFLocationVersion = document.getElementById('adminFFLocationVersion');
@@ -337,10 +361,21 @@ const adminAddFFLocation = document.getElementById('adminAddFFLocation');
 const adminFFLocationStatus = document.getElementById('adminFFLocationStatus');
 const adminFFLocationList = document.getElementById('adminFFLocationList');
 
+// ERROR FIR
+const adminErrorTitle = document.getElementById('adminErrorTitle');
+const adminErrorLink = document.getElementById('adminErrorLink');
+const adminErrorLabel = document.getElementById('adminErrorLabel');
+const adminErrorDesc = document.getElementById('adminErrorDesc');
+const adminAddError = document.getElementById('adminAddError');
+const adminCancelErrorEdit = document.getElementById('adminCancelErrorEdit');
+const adminErrorStatus = document.getElementById('adminErrorStatus');
+const adminErrorList = document.getElementById('adminErrorList');
+
 const adminVideoTitle = document.getElementById('adminVideoTitle');
 const adminVideoLabel = document.getElementById('adminVideoLabel');
 const adminVideoLink = document.getElementById('adminVideoLink');
 const adminAddVideo = document.getElementById('adminAddVideo');
+const adminCancelVideoEdit = document.getElementById('adminCancelVideoEdit');
 const adminVideoStatus = document.getElementById('adminVideoStatus');
 const adminVideoList = document.getElementById('adminVideoList');
 
@@ -356,6 +391,10 @@ let isAuthorized = false;
 let currentUser = null;
 let userPasswords = {};
 let currentAnnouncementId = null;
+
+// Edit state
+let editingErrorId = null;
+let editingVideoId = null;
 
 // ========== PASSWORD TOGGLES ==========
 let passVisible = false;
@@ -498,10 +537,9 @@ adminDeleteAnnounce.addEventListener('click', function() {
 });
 
 // ============================================================
-// USER FUNCTIONS - ADD, DELETE, EDIT
+// USER FUNCTIONS
 // ============================================================
 
-// Add User
 adminAddUser.addEventListener('click', function() {
     const email = adminUserEmail.value.trim();
     const password = adminUserPassword.value.trim();
@@ -532,7 +570,6 @@ adminAddUser.addEventListener('click', function() {
         });
 });
 
-// Delete User
 function deleteUser(uid, email) {
     if (!confirm(`Delete user "${email}" permanently?`)) return;
     adminUserStatus.textContent = '⏳ Deleting user...';
@@ -540,9 +577,7 @@ function deleteUser(uid, email) {
     db.collection('users').doc(uid).delete()
         .then(() => {
             delete userPasswords[uid];
-            // Also delete from Firebase Auth (if possible)
-            // Note: Can't delete auth user from client side
-            adminUserStatus.textContent = '✅ User deleted from Firestore';
+            adminUserStatus.textContent = '✅ User deleted';
             adminUserStatus.className = 'admin-status success';
             loadUsers();
             setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
@@ -554,53 +589,6 @@ function deleteUser(uid, email) {
         });
 }
 
-// Edit User - Update Email
-function editUser(uid, currentEmail) {
-    const newEmail = prompt('Enter new email for ' + currentEmail + ':', currentEmail);
-    if (!newEmail || newEmail === currentEmail) return;
-    if (!confirm('Update email for "' + currentEmail + '" to "' + newEmail + '"?')) return;
-    
-    adminUserStatus.textContent = '⏳ Updating email...';
-    adminUserStatus.className = 'admin-status';
-    
-    db.collection('users').doc(uid).update({
-        email: newEmail
-    }).then(() => {
-        adminUserStatus.textContent = '✅ Email updated to: ' + newEmail;
-        adminUserStatus.className = 'admin-status success';
-        loadUsers();
-        setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
-    }).catch((err) => {
-        adminUserStatus.textContent = '⚠️ ' + err.message;
-        adminUserStatus.className = 'admin-status error';
-        setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
-    });
-}
-
-// Edit User - Change Password
-function changeUserPassword(uid, email) {
-    const newPass = prompt('Enter new password for "' + email + '" (min 6 chars):');
-    if (!newPass || newPass.length < 6) {
-        alert('Password must be at least 6 characters.');
-        return;
-    }
-    if (!confirm('Change password for "' + email + '"?')) return;
-    
-    adminUserStatus.textContent = '⏳ Changing password...';
-    adminUserStatus.className = 'admin-status';
-    
-    // Store new password locally
-    userPasswords[uid] = newPass;
-    
-    // Try to update auth user (requires re-authentication, may not work)
-    // We'll just update local storage and show message
-    adminUserStatus.textContent = '✅ Password changed locally: ' + newPass;
-    adminUserStatus.className = 'admin-status success';
-    loadUsers();
-    setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
-}
-
-// View Password
 function viewPassword(uid, email) {
     if (userPasswords[uid]) {
         alert(`👤 User: ${email}\n🔑 Password: ${userPasswords[uid]}`);
@@ -630,10 +618,12 @@ function loadUsers() {
                         ${hasPass ? `<span style="color:#fbbf24;font-family:monospace;background:#010a14;padding:0.05rem 0.5rem;border-radius:20px;font-size:0.6rem;margin-left:0.3rem;">${hasPass}</span>` : ''}
                     </div>
                     <div class="item-actions">
-                        <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="editUser('${uid}','${email}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-sm warning" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="changeUserPassword('${uid}','${email}')"><i class="fas fa-key"></i></button>
-                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.55rem;background:#003759;border:1px solid #0080c0;" onclick="viewPassword('${uid}','${email}')"><i class="fas fa-eye"></i></button>
-                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="deleteUser('${uid}','${email}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#003759;border:1px solid #0080c0;" onclick="viewPassword('${uid}','${email}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteUser('${uid}','${email}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 adminUserList.appendChild(div);
@@ -645,7 +635,7 @@ function loadUsers() {
 }
 
 // ============================================================
-// FF HEADSHOTS FUNCTIONS - ADD, DELETE, EDIT
+// FF HEADSHOTS FUNCTIONS
 // ============================================================
 
 adminAddFFHeadshot.addEventListener('click', function() {
@@ -683,24 +673,8 @@ function deleteFFHeadshot(id, title) {
     }
 }
 
-function editFFHeadshot(id, currentTitle, currentLink, currentVersion) {
-    const newTitle = prompt('Edit title:', currentTitle);
-    if (newTitle === null) return;
-    const newLink = prompt('Edit link (URL):', currentLink);
-    if (newLink === null) return;
-    const newVersion = prompt('Edit version:', currentVersion || 'v1');
-    if (newVersion === null) return;
-    
-    db.collection('ffHeadshots').doc(id).update({
-        title: newTitle.trim() || currentTitle,
-        fileLink: newLink.trim() || currentLink,
-        version: newVersion.trim() || 'v1',
-        updated: new Date().toLocaleDateString()
-    }).catch(() => {});
-}
-
 // ============================================================
-// FF LOCATION FUNCTIONS - ADD, DELETE, EDIT
+// FF LOCATION FUNCTIONS
 // ============================================================
 
 adminAddFFLocation.addEventListener('click', function() {
@@ -738,24 +712,177 @@ function deleteFFLocation(id, title) {
     }
 }
 
-function editFFLocation(id, currentTitle, currentLink, currentVersion) {
-    const newTitle = prompt('Edit title:', currentTitle);
-    if (newTitle === null) return;
-    const newLink = prompt('Edit link (URL):', currentLink);
-    if (newLink === null) return;
-    const newVersion = prompt('Edit version:', currentVersion || 'v1');
-    if (newVersion === null) return;
+// ============================================================
+// ERROR FIR YA PROBLEM FIX FUNCTIONS
+// ============================================================
+
+function resetErrorForm() {
+    adminErrorTitle.value = '';
+    adminErrorLink.value = '';
+    adminErrorLabel.value = 'ERROR FIX';
+    adminErrorDesc.value = '';
+    editingErrorId = null;
+    adminAddError.textContent = '<i class="fas fa-plus"></i> Add Video';
+    adminAddError.className = 'btn-sm success';
+    adminCancelErrorEdit.style.display = 'none';
+}
+
+function editError(id, title, link, label, desc) {
+    editingErrorId = id;
+    adminErrorTitle.value = title || '';
+    adminErrorLink.value = link || '';
+    adminErrorLabel.value = label || 'ERROR FIX';
+    adminErrorDesc.value = desc || '';
+    adminAddError.textContent = '<i class="fas fa-save"></i> Update Video';
+    adminAddError.className = 'btn-sm warning';
+    adminCancelErrorEdit.style.display = 'inline-block';
+    adminErrorStatus.textContent = '✏️ Editing: ' + title;
+    adminErrorStatus.className = 'admin-status';
+}
+
+adminAddError.addEventListener('click', function() {
+    const title = adminErrorTitle.value.trim();
+    const link = adminErrorLink.value.trim();
+    const label = adminErrorLabel.value.trim() || 'ERROR FIX';
+    const desc = adminErrorDesc.value.trim();
     
-    db.collection('ffLocation').doc(id).update({
-        title: newTitle.trim() || currentTitle,
-        fileLink: newLink.trim() || currentLink,
-        version: newVersion.trim() || 'v1',
-        updated: new Date().toLocaleDateString()
-    }).catch(() => {});
+    if (!title || !link) {
+        adminErrorStatus.textContent = '⚠️ Title and link required.';
+        adminErrorStatus.className = 'admin-status error';
+        return;
+    }
+
+    const data = {
+        title: title,
+        videoLink: link,
+        label: label,
+        description: desc || '',
+        timestamp: Date.now(),
+        date: new Date().toLocaleDateString()
+    };
+
+    if (editingErrorId) {
+        db.collection('errorFixes').doc(editingErrorId).update(data)
+            .then(() => {
+                adminErrorStatus.textContent = '✅ Video updated!';
+                adminErrorStatus.className = 'admin-status success';
+                resetErrorForm();
+                setTimeout(() => { adminErrorStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminErrorStatus.textContent = '❌ ' + err.message;
+                adminErrorStatus.className = 'admin-status error';
+            });
+    } else {
+        db.collection('errorFixes').add(data)
+            .then(() => {
+                adminErrorStatus.textContent = '✅ Video added!';
+                adminErrorStatus.className = 'admin-status success';
+                resetErrorForm();
+                setTimeout(() => { adminErrorStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminErrorStatus.textContent = '❌ ' + err.message;
+                adminErrorStatus.className = 'admin-status error';
+            });
+    }
+});
+
+adminCancelErrorEdit.addEventListener('click', function() {
+    resetErrorForm();
+    adminErrorStatus.textContent = '❌ Edit cancelled';
+    adminErrorStatus.className = 'admin-status';
+    setTimeout(() => { adminErrorStatus.textContent = ''; }, 2000);
+});
+
+function deleteError(id, title) {
+    if (confirm(`Delete "${title}"?`)) {
+        db.collection('errorFixes').doc(id).delete().catch(() => {});
+        if (editingErrorId === id) resetErrorForm();
+    }
 }
 
 // ============================================================
-// FILE FUNCTIONS - ADD, DELETE, EDIT
+// VIDEO FUNCTIONS WITH EDIT
+// ============================================================
+
+function resetVideoForm() {
+    adminVideoTitle.value = '';
+    adminVideoLink.value = '';
+    adminVideoLabel.value = 'GAMING';
+    editingVideoId = null;
+    adminAddVideo.textContent = '<i class="fas fa-plus"></i> Add Video';
+    adminAddVideo.className = 'btn-sm success';
+    adminCancelVideoEdit.style.display = 'none';
+}
+
+function editVideo(id, title, link, label) {
+    editingVideoId = id;
+    adminVideoTitle.value = title || '';
+    adminVideoLink.value = link || '';
+    adminVideoLabel.value = label || 'GAMING';
+    adminAddVideo.textContent = '<i class="fas fa-save"></i> Update Video';
+    adminAddVideo.className = 'btn-sm warning';
+    adminCancelVideoEdit.style.display = 'inline-block';
+    adminVideoStatus.textContent = '✏️ Editing: ' + title;
+    adminVideoStatus.className = 'admin-status';
+}
+
+adminAddVideo.addEventListener('click', function() {
+    const title = adminVideoTitle.value.trim();
+    const label = adminVideoLabel.value.trim() || 'GAMING';
+    const link = adminVideoLink.value.trim();
+    if (!title || !link) {
+        adminVideoStatus.textContent = '⚠️ Title and link required.';
+        adminVideoStatus.className = 'admin-status error';
+        return;
+    }
+
+    const data = {
+        title: title,
+        label: label,
+        videoLink: link,
+        views: 0,
+        timestamp: Date.now(),
+        date: new Date().toLocaleDateString()
+    };
+
+    if (editingVideoId) {
+        db.collection('videos').doc(editingVideoId).update(data)
+            .then(() => {
+                adminVideoStatus.textContent = '✅ Video updated!';
+                adminVideoStatus.className = 'admin-status success';
+                resetVideoForm();
+                setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminVideoStatus.textContent = '❌ ' + err.message;
+                adminVideoStatus.className = 'admin-status error';
+            });
+    } else {
+        db.collection('videos').add(data)
+            .then(() => {
+                adminVideoStatus.textContent = '✅ Video added!';
+                adminVideoStatus.className = 'admin-status success';
+                resetVideoForm();
+                setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminVideoStatus.textContent = '❌ ' + err.message;
+                adminVideoStatus.className = 'admin-status error';
+            });
+    }
+});
+
+adminCancelVideoEdit.addEventListener('click', function() {
+    resetVideoForm();
+    adminVideoStatus.textContent = '❌ Edit cancelled';
+    adminVideoStatus.className = 'admin-status';
+    setTimeout(() => { adminVideoStatus.textContent = ''; }, 2000);
+});
+
+// ============================================================
+// FILE FUNCTIONS
 // ============================================================
 
 adminAddFile.addEventListener('click', function() {
@@ -794,91 +921,23 @@ function deleteFile(id, title) {
     }
 }
 
-function editFile(id, currentTitle, currentLabel, currentLink, currentVersion) {
-    const newTitle = prompt('Edit title:', currentTitle);
-    if (newTitle === null) return;
-    const newLabel = prompt('Edit label:', currentLabel || 'PREMIUM');
-    if (newLabel === null) return;
-    const newLink = prompt('Edit link (URL):', currentLink);
-    if (newLink === null) return;
-    const newVersion = prompt('Edit version:', currentVersion || 'v1');
-    if (newVersion === null) return;
-    
-    db.collection('files').doc(id).update({
-        title: newTitle.trim() || currentTitle,
-        label: newLabel.trim() || 'PREMIUM',
-        fileLink: newLink.trim() || currentLink,
-        version: newVersion.trim() || 'v1',
-        updated: new Date().toLocaleDateString()
-    }).catch(() => {});
-}
-
-// ============================================================
-// VIDEO FUNCTIONS - ADD, DELETE, EDIT
-// ============================================================
-
-adminAddVideo.addEventListener('click', function() {
-    const title = adminVideoTitle.value.trim();
-    const label = adminVideoLabel.value.trim() || 'GAMING';
-    const link = adminVideoLink.value.trim();
-    if (!title || !link) {
-        adminVideoStatus.textContent = '⚠️ Title and link required.';
-        adminVideoStatus.className = 'admin-status error';
-        return;
-    }
-    db.collection('videos').add({
-        title: title,
-        label: label,
-        videoLink: link,
-        views: 0,
-        timestamp: Date.now(),
-        date: new Date().toLocaleDateString()
-    }).then(() => {
-        adminVideoStatus.textContent = '✅ Video added!';
-        adminVideoStatus.className = 'admin-status success';
-        adminVideoTitle.value = '';
-        adminVideoLink.value = '';
-        setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
-    }).catch((err) => {
-        adminVideoStatus.textContent = '❌ ' + err.message;
-        adminVideoStatus.className = 'admin-status error';
-    });
-});
-
 function deleteVideo(id, title) {
     if (confirm(`Delete "${title}"?`)) {
         db.collection('videos').doc(id).delete().catch(() => {});
+        if (editingVideoId === id) resetVideoForm();
     }
-}
-
-function editVideo(id, currentTitle, currentLabel, currentLink) {
-    const newTitle = prompt('Edit title:', currentTitle);
-    if (newTitle === null) return;
-    const newLabel = prompt('Edit label:', currentLabel || 'GAMING');
-    if (newLabel === null) return;
-    const newLink = prompt('Edit video link (URL):', currentLink);
-    if (newLink === null) return;
-    
-    db.collection('videos').doc(id).update({
-        title: newTitle.trim() || currentTitle,
-        label: newLabel.trim() || 'GAMING',
-        videoLink: newLink.trim() || currentLink
-    }).catch(() => {});
 }
 
 // Make functions global
 window.deleteUser = deleteUser;
-window.editUser = editUser;
-window.changeUserPassword = changeUserPassword;
 window.viewPassword = viewPassword;
 window.deleteFile = deleteFile;
-window.editFile = editFile;
 window.deleteVideo = deleteVideo;
-window.editVideo = editVideo;
 window.deleteFFHeadshot = deleteFFHeadshot;
-window.editFFHeadshot = editFFHeadshot;
 window.deleteFFLocation = deleteFFLocation;
-window.editFFLocation = editFFLocation;
+window.deleteError = deleteError;
+window.editError = editError;
+window.editVideo = editVideo;
 
 // ============================================================
 // LOAD DATA
@@ -917,7 +976,7 @@ function loadAllData() {
                     <div class="file-label"><i class="fas fa-tag"></i> ${file.label || 'PREMIUM'}</div>
                     <h4>${file.title || 'Untitled'}</h4>
                     <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
-                    <div class="file-download-btn" data-id="${id}" data-link="${file.fileLink || '#'}">
+                    <div class="file-download-btn" data-id="${id}" data-link="${file.fileLink || '#'}" data-collection="files">
                         <i class="fas fa-download"></i> ${file.downloads || 0}
                     </div>
                     <button class="delete-btn" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
@@ -929,21 +988,27 @@ function loadAllData() {
                 item.innerHTML = `
                     <div class="item-text">📄 ${file.title || 'Untitled'}</div>
                     <div class="item-actions">
-                        <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="editFile('${id}','${file.title}','${file.label}','${file.fileLink}','${file.version}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFile('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
                 adminFileList.appendChild(item);
             });
             document.getElementById('fileCount').textContent = count;
             
-            document.querySelectorAll('.file-download-btn').forEach(btn => {
+            grid.querySelectorAll('.file-download-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (!isAuthorized) { alert('⛔ Access denied.'); return; }
                     const link = this.dataset.link;
                     const id = this.dataset.id;
-                    if (id) db.collection('files').doc(id).update({ downloads: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
-                    db.collection('counters').doc('stats').update({ downloads: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
+                    const collection = this.dataset.collection || 'files';
+                    if (id) {
+                        db.collection(collection).doc(id).update({
+                            downloads: firebase.firestore.FieldValue.increment(1)
+                        }).catch(() => {});
+                    }
+                    db.collection('counters').doc('stats').update({
+                        downloads: firebase.firestore.FieldValue.increment(1)
+                    }).catch(() => {});
                     if (link && link !== '#') window.open(link, '_blank');
                     else alert('⬇️ Download started!');
                 });
@@ -971,7 +1036,7 @@ function loadAllData() {
                     <div class="file-label" style="background:#ff2d0022;border-color:#ff4d2d;color:#ff6b3d;"><i class="fas fa-crosshairs"></i> HEADSHOT</div>
                     <h4>${file.title || 'Untitled'}</h4>
                     <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
-                    <div class="file-download-btn" style="border-color:#ff4d2d;background:#ff2d0022;color:#ff6b3d;" data-id="${id}" data-link="${file.fileLink || '#'}">
+                    <div class="file-download-btn" style="border-color:#ff4d2d;background:#ff2d0022;color:#ff6b3d;" data-id="${id}" data-link="${file.fileLink || '#'}" data-collection="ffHeadshots">
                         <i class="fas fa-download"></i> ${file.downloads || 0}
                     </div>
                     <button class="delete-btn" onclick="deleteFFHeadshot('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
@@ -983,11 +1048,29 @@ function loadAllData() {
                 item.innerHTML = `
                     <div class="item-text">🎯 ${file.title || 'Untitled'}</div>
                     <div class="item-actions">
-                        <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="editFFHeadshot('${id}','${file.title}','${file.fileLink}','${file.version}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="deleteFFHeadshot('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFFHeadshot('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
                 adminFFHeadshotList.appendChild(item);
+            });
+
+            grid.querySelectorAll('.file-download-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!isAuthorized) { alert('⛔ Access denied.'); return; }
+                    const link = this.dataset.link;
+                    const id = this.dataset.id;
+                    const collection = this.dataset.collection || 'files';
+                    if (id) {
+                        db.collection(collection).doc(id).update({
+                            downloads: firebase.firestore.FieldValue.increment(1)
+                        }).catch(() => {});
+                    }
+                    db.collection('counters').doc('stats').update({
+                        downloads: firebase.firestore.FieldValue.increment(1)
+                    }).catch(() => {});
+                    if (link && link !== '#') window.open(link, '_blank');
+                    else alert('⬇️ Download started!');
+                });
             });
         } else {
             adminFFHeadshotList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No headshot files</div>`;
@@ -1011,7 +1094,7 @@ function loadAllData() {
                     <div class="file-label" style="background:#00ff8822;border-color:#00ff88;color:#00ff88;"><i class="fas fa-map-marker-alt"></i> LOCATION</div>
                     <h4>${file.title || 'Untitled'}</h4>
                     <div class="file-meta"><span>${file.version || 'v1'}</span> <span>${file.size || '—'}</span></div>
-                    <div class="file-download-btn" style="border-color:#00ff88;background:#00ff8822;color:#00ff88;" data-id="${id}" data-link="${file.fileLink || '#'}">
+                    <div class="file-download-btn" style="border-color:#00ff88;background:#00ff8822;color:#00ff88;" data-id="${id}" data-link="${file.fileLink || '#'}" data-collection="ffLocation">
                         <i class="fas fa-download"></i> ${file.downloads || 0}
                     </div>
                     <button class="delete-btn" onclick="deleteFFLocation('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
@@ -1023,18 +1106,84 @@ function loadAllData() {
                 item.innerHTML = `
                     <div class="item-text">📍 ${file.title || 'Untitled'}</div>
                     <div class="item-actions">
-                        <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="editFFLocation('${id}','${file.title}','${file.fileLink}','${file.version}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="deleteFFLocation('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteFFLocation('${id}','${file.title}')"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
                 adminFFLocationList.appendChild(item);
+            });
+
+            grid.querySelectorAll('.file-download-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!isAuthorized) { alert('⛔ Access denied.'); return; }
+                    const link = this.dataset.link;
+                    const id = this.dataset.id;
+                    const collection = this.dataset.collection || 'files';
+                    if (id) {
+                        db.collection(collection).doc(id).update({
+                            downloads: firebase.firestore.FieldValue.increment(1)
+                        }).catch(() => {});
+                    }
+                    db.collection('counters').doc('stats').update({
+                        downloads: firebase.firestore.FieldValue.increment(1)
+                    }).catch(() => {});
+                    if (link && link !== '#') window.open(link, '_blank');
+                    else alert('⬇️ Download started!');
+                });
             });
         } else {
             adminFFLocationList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No location files</div>`;
         }
     }, () => {});
 
-    // Videos
+    // ERROR FIR YA PROBLEM FIX
+    db.collection('errorFixes').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const grid = document.getElementById('errorGrid');
+        grid.innerHTML = '';
+        adminErrorList.innerHTML = '';
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const id = doc.id;
+                const videoUrl = data.videoLink || '';
+                const isEmbed = videoUrl.includes('youtube.com/embed');
+                
+                const card = document.createElement('div');
+                card.className = 'error-card';
+                card.style.borderColor = '#ff6b6b44';
+                card.innerHTML = `
+                    <div class="error-label" style="background:#ff6b6b22;border-color:#ff6b6b;color:#ff6b6b;"><i class="fas fa-exclamation-triangle"></i> ${data.label || 'ERROR FIX'}</div>
+                    <h4>${data.title || 'Untitled'}</h4>
+                    ${data.description ? `<div style="font-size:0.7rem;color:#7797b0;margin:0.2rem 0;">${data.description}</div>` : ''}
+                    ${isEmbed ? `<div style="aspect-ratio:16/9;background:#000;border-radius:0.8rem;margin:0.5rem 0;"><iframe src="${videoUrl}" style="width:100%;height:100%;border:none;border-radius:0.8rem;" allowfullscreen loading="lazy"></iframe></div>` 
+                              : videoUrl ? `<div style="aspect-ratio:16/9;background:#0a1a2a;border-radius:0.8rem;margin:0.5rem 0;display:flex;align-items:center;justify-content:center;"><a href="${videoUrl}" target="_blank" style="color:#ff6b6b;"><i class="fas fa-play-circle" style="font-size:2rem;"></i></a></div>`
+                              : `<div style="aspect-ratio:16/9;background:#0a1a2a;border-radius:0.8rem;margin:0.5rem 0;display:flex;align-items:center;justify-content:center;color:#3d7a9a;"><i class="fas fa-film" style="font-size:1.5rem;"></i></div>`}
+                    <div style="font-size:0.6rem;color:#3d6e8a;margin-top:0.2rem;">📅 ${data.date || 'new'}</div>
+                    <button class="delete-btn" onclick="deleteError('${id}','${data.title}')"><i class="fas fa-trash"></i></button>
+                `;
+                grid.appendChild(card);
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="item-text">🔧 ${data.title || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="editError('${id}','${data.title || ''}','${data.videoLink || ''}','${data.label || 'ERROR FIX'}','${data.description || ''}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteError('${id}','${data.title}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                adminErrorList.appendChild(item);
+            });
+        } else {
+            adminErrorList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No error fix videos</div>`;
+        }
+    }, () => {});
+
+    // Videos with Edit
     db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('videoGrid');
         grid.innerHTML = '';
@@ -1042,29 +1191,33 @@ function loadAllData() {
         
         if (!snapshot.empty) {
             snapshot.forEach(doc => {
-                const vid = doc.data();
+                const data = doc.data();
                 const id = doc.id;
-                const videoUrl = vid.videoLink || '';
+                const videoUrl = data.videoLink || '';
                 const isEmbed = videoUrl.includes('youtube.com/embed');
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.innerHTML = `
-                    <div class="video-label"><i class="fas fa-play"></i> ${vid.label || 'GAMING'}</div>
-                    <h4>${vid.title || 'Video'}</h4>
+                    <div class="video-label"><i class="fas fa-play"></i> ${data.label || 'GAMING'}</div>
+                    <h4>${data.title || 'Video'}</h4>
                     ${isEmbed ? `<div style="aspect-ratio:16/9;background:#000;border-radius:0.8rem;margin:0.3rem 0;"><iframe src="${videoUrl}" style="width:100%;height:100%;border:none;border-radius:0.8rem;" allowfullscreen loading="lazy"></iframe></div>` 
                               : videoUrl ? `<div style="aspect-ratio:16/9;background:#0a1a2a;border-radius:0.8rem;margin:0.3rem 0;display:flex;align-items:center;justify-content:center;"><a href="${videoUrl}" target="_blank" style="color:#00ccff;"><i class="fas fa-play-circle" style="font-size:2rem;"></i></a></div>`
                               : `<div style="aspect-ratio:16/9;background:#0a1a2a;border-radius:0.8rem;margin:0.3rem 0;display:flex;align-items:center;justify-content:center;color:#3d7a9a;"><i class="fas fa-film" style="font-size:1.5rem;"></i></div>`}
-                    <button class="delete-btn" onclick="deleteVideo('${id}','${vid.title}')"><i class="fas fa-trash"></i></button>
+                    <button class="delete-btn" onclick="deleteVideo('${id}','${data.title}')"><i class="fas fa-trash"></i></button>
                 `;
                 grid.appendChild(card);
                 
                 const item = document.createElement('div');
                 item.className = 'admin-list-item';
                 item.innerHTML = `
-                    <div class="item-text">🎬 ${vid.title || 'Untitled'}</div>
+                    <div class="item-text">🎬 ${data.title || 'Untitled'}</div>
                     <div class="item-actions">
-                        <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="editVideo('${id}','${vid.title}','${vid.label}','${vid.videoLink}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.55rem;" onclick="deleteVideo('${id}','${vid.title}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="editVideo('${id}','${data.title || ''}','${data.videoLink || ''}','${data.label || 'GAMING'}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteVideo('${id}','${data.title}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 adminVideoList.appendChild(item);
@@ -1085,13 +1238,12 @@ function loadAllData() {
     }, () => {});
 }
 
-console.log('🔥 ABID SIR - Complete Admin Panel with EDIT & DELETE');
+console.log('🔥 ABID SIR - Complete Admin Panel with ERROR FIR Section');
+console.log('✅ ERROR FIR: Add + Edit + Delete (Firestore collection: errorFixes)');
 console.log('✅ Videos: Add + Edit + Delete');
-console.log('✅ Files: Add + Edit + Delete');
-console.log('✅ FF Headshots: Add + Edit + Delete');
-console.log('✅ FF Location: Add + Edit + Delete');
-console.log('✅ Users: Add + Edit Email + Edit Password + View Password + Delete');
-console.log('✅ Announcement: Update + Delete');
+console.log('✅ FF Headshots: Add + Delete');
+console.log('✅ FF Location: Add + Delete');
+console.log('✅ All sections working properly');
 </script>
 </body>
 </html>
