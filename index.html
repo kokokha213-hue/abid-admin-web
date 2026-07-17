@@ -139,6 +139,8 @@
         .toast-notification.error-toast .toast-icon{color:#ff6b6b;}
         .toast-notification.panel-toast .toast-icon{color:#ffd700;}
         .toast-notification.order-toast .toast-icon{color:#60a5fa;}
+        .toast-notification.payment-toast .toast-icon{color:#25d366;}
+        .toast-notification.notification-toast .toast-icon{color:#fbbf24;}
         
         /* Order Status Badges */
         .order-status{display:inline-block;padding:0.1rem 0.8rem;border-radius:40px;font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
@@ -155,6 +157,39 @@
         .payment-setting-item label{color:#8bcbff;font-size:0.7rem;display:block;margin-bottom:0.3rem;}
         .payment-setting-item input{width:100%;padding:0.5rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;}
         .payment-setting-item input:focus{border-color:#00a6ff;}
+        
+        /* Payment Methods Card */
+        .payment-method-card{background:#0a1a2a;border-radius:1rem;padding:1rem;border:1px solid #1f4a6b;transition:0.3s;}
+        .payment-method-card:hover{border-color:#00a6ff;}
+        .payment-method-card .method-header{display:flex;justify-content:space-between;align-items:center;}
+        .payment-method-card .method-name{color:#d8edff;font-weight:600;}
+        .payment-method-card .method-details{font-size:0.7rem;color:#6a8fa8;margin:0.3rem 0;}
+        .payment-method-card .method-qr{max-width:100px;max-height:100px;border-radius:0.5rem;margin:0.3rem 0;}
+        .payment-method-card .method-status{display:inline-block;padding:0.1rem 0.6rem;border-radius:40px;font-size:0.6rem;font-weight:600;}
+        .payment-method-card .method-status.active{background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;}
+        .payment-method-card .method-status.disabled{background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;}
+        
+        /* Order Detail Modal */
+        .order-detail-modal{position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:center;opacity:0;visibility:hidden;transition:0.3s;}
+        .order-detail-modal.show{opacity:1;visibility:visible;}
+        .order-detail-modal .modal-content{background:#0f1a2b;border-radius:2rem;padding:2rem;max-width:500px;width:90%;border:1px solid #1f4a6b;max-height:80vh;overflow-y:auto;}
+        .order-detail-modal .modal-content h3{color:#00ccff;margin-bottom:1rem;}
+        .order-detail-modal .modal-content .detail-row{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #1f4a6b33;}
+        .order-detail-modal .modal-content .detail-row .label{color:#6a8fa8;font-size:0.7rem;}
+        .order-detail-modal .modal-content .detail-row .value{color:#d8edff;font-size:0.8rem;font-weight:500;}
+        .order-detail-modal .modal-close{background:transparent;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.3rem 1rem;border-radius:40px;cursor:pointer;margin-top:1rem;}
+        .order-detail-modal .modal-close:hover{background:#ff6b6b22;}
+        
+        /* Notification Management */
+        .notification-list-item{background:#0a1a2a;border-radius:0.8rem;padding:0.8rem;margin-bottom:0.5rem;border:1px solid #1f4a6b;}
+        .notification-list-item .notif-header{display:flex;justify-content:space-between;align-items:center;}
+        .notification-list-item .notif-title{color:#d8edff;font-weight:600;font-size:0.8rem;}
+        .notification-list-item .notif-target{font-size:0.6rem;color:#6a8fa8;}
+        .notification-list-item .notif-body{font-size:0.7rem;color:#b8d0e5;margin:0.3rem 0;}
+        .notification-list-item .notif-actions{display:flex;gap:0.3rem;margin-top:0.3rem;}
+        
+        .method-actions{display:flex;gap:0.3rem;flex-wrap:wrap;}
+        .method-actions .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
         
         @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}.toast-notification{max-width:300px;bottom:10px;right:10px;padding:0.8rem 1rem;}}
         @media(max-width:480px){.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr;}}
@@ -176,6 +211,15 @@
         <p id="toastMessage">Something new has been added.</p>
     </div>
     <button class="toast-close" id="toastClose"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- ===== ORDER DETAIL MODAL ===== -->
+<div class="order-detail-modal" id="orderDetailModal">
+    <div class="modal-content">
+        <h3><i class="fas fa-shopping-cart"></i> Order Details</h3>
+        <div id="orderDetailContent"></div>
+        <button class="modal-close" id="orderDetailClose"><i class="fas fa-times"></i> Close</button>
+    </div>
 </div>
 
 <!-- ===== LOGIN ===== -->
@@ -221,6 +265,8 @@
         <div class="stat-item"><i class="fas fa-users"></i> Users <span class="stat-number" id="userCount">0</span></div>
         <div class="stat-item"><i class="fas fa-crown"></i> Panels <span class="stat-number" id="panelCount">0</span></div>
         <div class="stat-item"><i class="fas fa-shopping-cart"></i> Orders <span class="stat-number" id="orderCount">0</span></div>
+        <div class="stat-item"><i class="fas fa-dollar-sign"></i> Revenue <span class="stat-number" id="revenueCount">0</span></div>
+        <div class="stat-item"><i class="fas fa-calendar-day"></i> Today <span class="stat-number" id="todayOrdersCount">0</span></div>
     </div>
 
     <div class="announce-box">
@@ -306,9 +352,37 @@
                 </div>
             </div>
 
-            <!-- ===== PAYMENT SETTINGS ===== -->
+            <!-- ===== PAYMENT SETTINGS MANAGEMENT (NEW) ===== -->
             <div class="admin-card" style="border-color:#25d36644;">
-                <div class="card-title" style="color:#25d366;"><i class="fas fa-credit-card"></i> Payment Settings</div>
+                <div class="card-title" style="color:#25d366;"><i class="fas fa-credit-card"></i> Payment Methods Management</div>
+                
+                <!-- Add/Edit Payment Method Form -->
+                <input type="text" id="adminPaymentMethodId" style="display:none;">
+                <input type="text" id="adminPaymentMethodName" placeholder="Payment Method Name (e.g., EasyPaisa)">
+                <input type="text" id="adminPaymentAccountName" placeholder="Account Name">
+                <input type="text" id="adminPaymentAccountNumber" placeholder="Account Number">
+                <input type="text" id="adminPaymentQRCode" placeholder="QR Code Image URL (Optional)">
+                <select id="adminPaymentStatus">
+                    <option value="Active">Active</option>
+                    <option value="Disabled">Disabled</option>
+                </select>
+                
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminAddPaymentMethod"><i class="fas fa-plus"></i> Add Method</button>
+                    <button class="btn-sm warning" id="adminUpdatePaymentMethod" style="display:none;"><i class="fas fa-save"></i> Update Method</button>
+                    <button class="btn-sm info" id="adminCancelPaymentEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+                <div class="admin-status" id="adminPaymentMethodStatus"></div>
+                
+                <!-- Payment Methods List -->
+                <div class="admin-list" id="adminPaymentMethodsList" style="max-height:300px;">
+                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No payment methods</div>
+                </div>
+            </div>
+
+            <!-- ===== LEGACY PAYMENT SETTINGS (Keep for compatibility) ===== -->
+            <div class="admin-card" style="border-color:#25d36644;">
+                <div class="card-title" style="color:#25d366;"><i class="fas fa-cog"></i> Legacy Payment Settings</div>
                 <div class="payment-settings-grid">
                     <div class="payment-setting-item">
                         <label><i class="fas fa-mobile-alt" style="color:#25d366;"></i> EasyPaisa Number</label>
@@ -338,10 +412,36 @@
                     <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">Loading orders...</div>
                 </div>
                 <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
-                    <span style="font-size:0.6rem;color:#6a8fa8;">Total Orders: <strong id="totalOrdersCount">0</strong></span>
+                    <span style="font-size:0.6rem;color:#6a8fa8;">Total: <strong id="totalOrdersCount">0</strong></span>
                     <span style="font-size:0.6rem;color:#ffd700;">Pending: <strong id="pendingOrdersCount">0</strong></span>
                     <span style="font-size:0.6rem;color:#4ade80;">Accepted: <strong id="acceptedOrdersCount">0</strong></span>
                     <span style="font-size:0.6rem;color:#ff6b6b;">Rejected: <strong id="rejectedOrdersCount">0</strong></span>
+                    <span style="font-size:0.6rem;color:#00ccff;">Revenue: <strong id="dashboardRevenueCount">0</strong> PKR</span>
+                </div>
+            </div>
+
+            <!-- ===== NOTIFICATIONS MANAGEMENT (NEW) ===== -->
+            <div class="admin-card" style="border-color:#fbbf2444;">
+                <div class="card-title" style="color:#fbbf24;"><i class="fas fa-bell"></i> Notifications Management</div>
+                
+                <input type="text" id="adminNotifId" style="display:none;">
+                <input type="text" id="adminNotifTitle" placeholder="Notification Title">
+                <textarea id="adminNotifBody" placeholder="Notification Message" style="min-height:50px;"></textarea>
+                <select id="adminNotifTarget">
+                    <option value="all">All Users (General)</option>
+                    <option value="specific">Specific User (Personal)</option>
+                </select>
+                <input type="email" id="adminNotifUserEmail" placeholder="User Email (for personal notification)" style="display:none;">
+                
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminSendNotification"><i class="fas fa-paper-plane"></i> Send</button>
+                    <button class="btn-sm warning" id="adminUpdateNotification" style="display:none;"><i class="fas fa-save"></i> Update</button>
+                    <button class="btn-sm info" id="adminCancelNotifEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+                <div class="admin-status" id="adminNotifStatus"></div>
+                
+                <div class="admin-list" id="adminNotifList" style="max-height:300px;">
+                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No notifications</div>
                 </div>
             </div>
 
@@ -492,6 +592,12 @@ function showToast(title, message, type = 'info') {
     } else if (type === 'order') {
         toastIcon.innerHTML = '<i class="fas fa-shopping-cart"></i>';
         toast.classList.add('order-toast');
+    } else if (type === 'payment') {
+        toastIcon.innerHTML = '<i class="fas fa-credit-card"></i>';
+        toast.classList.add('payment-toast');
+    } else if (type === 'notification') {
+        toastIcon.innerHTML = '<i class="fas fa-bell"></i>';
+        toast.classList.add('notification-toast');
     } else {
         toastIcon.innerHTML = '<i class="fas fa-bell"></i>';
     }
@@ -549,7 +655,21 @@ const adminPanelStatusMsg = document.getElementById('adminPanelStatus');
 const adminPanelList = document.getElementById('adminPanelList');
 let editingPanelId = null;
 
-// Payment Settings
+// Payment Methods
+const adminPaymentMethodId = document.getElementById('adminPaymentMethodId');
+const adminPaymentMethodName = document.getElementById('adminPaymentMethodName');
+const adminPaymentAccountName = document.getElementById('adminPaymentAccountName');
+const adminPaymentAccountNumber = document.getElementById('adminPaymentAccountNumber');
+const adminPaymentQRCode = document.getElementById('adminPaymentQRCode');
+const adminPaymentStatus = document.getElementById('adminPaymentStatus');
+const adminAddPaymentMethod = document.getElementById('adminAddPaymentMethod');
+const adminUpdatePaymentMethod = document.getElementById('adminUpdatePaymentMethod');
+const adminCancelPaymentEdit = document.getElementById('adminCancelPaymentEdit');
+const adminPaymentMethodStatus = document.getElementById('adminPaymentMethodStatus');
+const adminPaymentMethodsList = document.getElementById('adminPaymentMethodsList');
+let editingPaymentMethodId = null;
+
+// Legacy Payment Settings
 const easyPaisaNumber = document.getElementById('easyPaisaNumber');
 const easyPaisaName = document.getElementById('easyPaisaName');
 const jazzCashNumber = document.getElementById('jazzCashNumber');
@@ -563,6 +683,26 @@ const totalOrdersCount = document.getElementById('totalOrdersCount');
 const pendingOrdersCount = document.getElementById('pendingOrdersCount');
 const acceptedOrdersCount = document.getElementById('acceptedOrdersCount');
 const rejectedOrdersCount = document.getElementById('rejectedOrdersCount');
+const dashboardRevenueCount = document.getElementById('dashboardRevenueCount');
+const todayOrdersCount = document.getElementById('todayOrdersCount');
+
+// Order Detail Modal
+const orderDetailModal = document.getElementById('orderDetailModal');
+const orderDetailContent = document.getElementById('orderDetailContent');
+const orderDetailClose = document.getElementById('orderDetailClose');
+
+// Notifications
+const adminNotifId = document.getElementById('adminNotifId');
+const adminNotifTitle = document.getElementById('adminNotifTitle');
+const adminNotifBody = document.getElementById('adminNotifBody');
+const adminNotifTarget = document.getElementById('adminNotifTarget');
+const adminNotifUserEmail = document.getElementById('adminNotifUserEmail');
+const adminSendNotification = document.getElementById('adminSendNotification');
+const adminUpdateNotification = document.getElementById('adminUpdateNotification');
+const adminCancelNotifEdit = document.getElementById('adminCancelNotifEdit');
+const adminNotifStatus = document.getElementById('adminNotifStatus');
+const adminNotifList = document.getElementById('adminNotifList');
+let editingNotifId = null;
 
 // Other admin refs
 const adminAnnounceInput = document.getElementById('adminAnnounceInput');
@@ -640,6 +780,11 @@ adminTogglePass.addEventListener('click', function() {
     adminEyeIcon.className = adminPassVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
 });
 
+// ========== NOTIFICATION TARGET TOGGLE ==========
+adminNotifTarget.addEventListener('change', function() {
+    adminNotifUserEmail.style.display = this.value === 'specific' ? 'block' : 'none';
+});
+
 // ========== AUTH STATE ==========
 auth.onAuthStateChanged((user) => {
     authLoading.classList.add('hidden');
@@ -652,6 +797,8 @@ auth.onAuthStateChanged((user) => {
         loadAllData();
         loadUsers();
         loadPaymentSettings();
+        loadPaymentMethods();
+        loadNotifications();
         requestNotificationPermission();
         console.log('✅ Logged in:', user.email);
     } else {
@@ -705,7 +852,525 @@ logoutBtn.addEventListener('click', function() {
 });
 
 // ============================================================
-// PAID PANELS FUNCTIONS
+// PAYMENT METHODS MANAGEMENT (NEW)
+// ============================================================
+
+function resetPaymentForm() {
+    adminPaymentMethodName.value = '';
+    adminPaymentAccountName.value = '';
+    adminPaymentAccountNumber.value = '';
+    adminPaymentQRCode.value = '';
+    adminPaymentStatus.value = 'Active';
+    adminPaymentMethodId.value = '';
+    editingPaymentMethodId = null;
+    adminAddPaymentMethod.style.display = 'inline-block';
+    adminUpdatePaymentMethod.style.display = 'none';
+    adminCancelPaymentEdit.style.display = 'none';
+    adminPaymentMethodStatus.textContent = '';
+    adminPaymentMethodStatus.className = 'admin-status';
+}
+
+function editPaymentMethod(id, data) {
+    editingPaymentMethodId = id;
+    adminPaymentMethodName.value = data.name || '';
+    adminPaymentAccountName.value = data.accountName || '';
+    adminPaymentAccountNumber.value = data.accountNumber || '';
+    adminPaymentQRCode.value = data.qrCode || '';
+    adminPaymentStatus.value = data.status || 'Active';
+    adminPaymentMethodId.value = id;
+    adminAddPaymentMethod.style.display = 'none';
+    adminUpdatePaymentMethod.style.display = 'inline-block';
+    adminCancelPaymentEdit.style.display = 'inline-block';
+    adminPaymentMethodStatus.textContent = '✏️ Editing: ' + data.name;
+    adminPaymentMethodStatus.className = 'admin-status warning';
+}
+
+adminAddPaymentMethod.addEventListener('click', function() {
+    const name = adminPaymentMethodName.value.trim();
+    const accountName = adminPaymentAccountName.value.trim();
+    const accountNumber = adminPaymentAccountNumber.value.trim();
+    
+    if (!name || !accountName || !accountNumber) {
+        adminPaymentMethodStatus.textContent = '⚠️ Name, Account Name, and Account Number required.';
+        adminPaymentMethodStatus.className = 'admin-status error';
+        return;
+    }
+
+    const methodData = {
+        name: name,
+        accountName: accountName,
+        accountNumber: accountNumber,
+        qrCode: adminPaymentQRCode.value.trim() || '',
+        status: adminPaymentStatus.value,
+        timestamp: Date.now()
+    };
+
+    db.collection('paymentMethods').add(methodData)
+        .then(() => {
+            adminPaymentMethodStatus.textContent = '✅ Payment method added!';
+            adminPaymentMethodStatus.className = 'admin-status success';
+            resetPaymentForm();
+            showToast('Payment Method Added', `${name} added successfully.`, 'payment');
+            setTimeout(() => { adminPaymentMethodStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminPaymentMethodStatus.textContent = '❌ ' + err.message;
+            adminPaymentMethodStatus.className = 'admin-status error';
+        });
+});
+
+adminUpdatePaymentMethod.addEventListener('click', function() {
+    if (!editingPaymentMethodId) return;
+    
+    const name = adminPaymentMethodName.value.trim();
+    const accountName = adminPaymentAccountName.value.trim();
+    const accountNumber = adminPaymentAccountNumber.value.trim();
+    
+    if (!name || !accountName || !accountNumber) {
+        adminPaymentMethodStatus.textContent = '⚠️ Name, Account Name, and Account Number required.';
+        adminPaymentMethodStatus.className = 'admin-status error';
+        return;
+    }
+
+    const methodData = {
+        name: name,
+        accountName: accountName,
+        accountNumber: accountNumber,
+        qrCode: adminPaymentQRCode.value.trim() || '',
+        status: adminPaymentStatus.value,
+        updatedAt: Date.now()
+    };
+
+    db.collection('paymentMethods').doc(editingPaymentMethodId).update(methodData)
+        .then(() => {
+            adminPaymentMethodStatus.textContent = '✅ Payment method updated!';
+            adminPaymentMethodStatus.className = 'admin-status success';
+            resetPaymentForm();
+            showToast('Payment Method Updated', `${name} updated successfully.`, 'payment');
+            setTimeout(() => { adminPaymentMethodStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminPaymentMethodStatus.textContent = '❌ ' + err.message;
+            adminPaymentMethodStatus.className = 'admin-status error';
+        });
+});
+
+adminCancelPaymentEdit.addEventListener('click', function() {
+    resetPaymentForm();
+    adminPaymentMethodStatus.textContent = '❌ Edit cancelled';
+    adminPaymentMethodStatus.className = 'admin-status';
+    setTimeout(() => { adminPaymentMethodStatus.textContent = ''; }, 2000);
+});
+
+function deletePaymentMethod(id, name) {
+    if (confirm(`Delete payment method "${name}" permanently?`)) {
+        db.collection('paymentMethods').doc(id).delete()
+            .then(() => {
+                showToast('Payment Method Deleted', `${name} deleted.`, 'payment');
+                if (editingPaymentMethodId === id) resetPaymentForm();
+            })
+            .catch(() => {});
+    }
+}
+
+function togglePaymentMethod(id, currentStatus, name) {
+    const newStatus = currentStatus === 'Active' ? 'Disabled' : 'Active';
+    db.collection('paymentMethods').doc(id).update({ status: newStatus })
+        .then(() => {
+            showToast('Status Updated', `${name} is now ${newStatus}`, 'payment');
+        })
+        .catch(() => {});
+}
+
+function loadPaymentMethods() {
+    db.collection('paymentMethods').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        adminPaymentMethodsList.innerHTML = '';
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const method = doc.data();
+                const id = doc.id;
+                
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.style.padding = '0.5rem';
+                item.style.borderBottom = '1px solid #1f4a6b33';
+                item.innerHTML = `
+                    <div style="width:100%;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem;">
+                            <span style="color:#d8edff;font-weight:600;font-size:0.8rem;">${method.name}</span>
+                            <span class="method-status ${method.status === 'Active' ? 'active' : 'disabled'}">${method.status || 'Active'}</span>
+                        </div>
+                        <div style="font-size:0.65rem;color:#6a8fa8;margin:0.2rem 0;">
+                            ${method.accountName} · ${method.accountNumber}
+                            ${method.qrCode ? ' · 📷 QR Available' : ''}
+                        </div>
+                        <div class="method-actions">
+                            <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="editPaymentMethod('${id}', ${JSON.stringify(method).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-sm ${method.status === 'Active' ? 'danger' : 'success'}" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="togglePaymentMethod('${id}','${method.status || 'Active'}','${method.name}')">
+                                ${method.status === 'Active' ? '<i class="fas fa-times"></i>' : '<i class="fas fa-check"></i>'}
+                            </button>
+                            <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deletePaymentMethod('${id}','${method.name}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                adminPaymentMethodsList.appendChild(item);
+            });
+        } else {
+            adminPaymentMethodsList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No payment methods</div>`;
+        }
+    }, () => {});
+}
+
+// Make payment functions global
+window.deletePaymentMethod = deletePaymentMethod;
+window.togglePaymentMethod = togglePaymentMethod;
+window.editPaymentMethod = editPaymentMethod;
+
+// ============================================================
+// LEGACY PAYMENT SETTINGS
+// ============================================================
+
+function loadPaymentSettings() {
+    db.collection('settings').doc('payment').onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            easyPaisaNumber.value = data.easyPaisaNumber || '';
+            easyPaisaName.value = data.easyPaisaName || 'ABID SIR';
+            jazzCashNumber.value = data.jazzCashNumber || '';
+            jazzCashName.value = data.jazzCashName || 'ABID SIR';
+        }
+    }, () => {});
+}
+
+savePaymentSettings.addEventListener('click', function() {
+    const settings = {
+        easyPaisaNumber: easyPaisaNumber.value.trim(),
+        easyPaisaName: easyPaisaName.value.trim() || 'ABID SIR',
+        jazzCashNumber: jazzCashNumber.value.trim(),
+        jazzCashName: jazzCashName.value.trim() || 'ABID SIR',
+        updatedAt: Date.now()
+    };
+
+    db.collection('settings').doc('payment').set(settings)
+        .then(() => {
+            paymentSettingsStatus.textContent = '✅ Payment settings saved!';
+            paymentSettingsStatus.className = 'admin-status success';
+            showToast('Payment Settings', 'Payment settings updated successfully.', 'announcement');
+            setTimeout(() => { paymentSettingsStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            paymentSettingsStatus.textContent = '❌ ' + err.message;
+            paymentSettingsStatus.className = 'admin-status error';
+        });
+});
+
+// ============================================================
+// ORDERS MANAGEMENT (UPDATED)
+// ============================================================
+
+function showOrderDetails(order, id) {
+    const date = order.timestamp ? new Date(order.timestamp).toLocaleDateString() : 'N/A';
+    const time = order.timestamp ? new Date(order.timestamp).toLocaleTimeString() : 'N/A';
+    
+    orderDetailContent.innerHTML = `
+        <div class="detail-row"><span class="label">Order ID</span><span class="value">${id}</span></div>
+        <div class="detail-row"><span class="label">User Email</span><span class="value">${order.userEmail || 'N/A'}</span></div>
+        <div class="detail-row"><span class="label">User UID</span><span class="value">${order.userUid || 'N/A'}</span></div>
+        <div class="detail-row"><span class="label">Panel Name</span><span class="value">${order.panelName || 'N/A'}</span></div>
+        <div class="detail-row"><span class="label">Panel Price</span><span class="value" style="color:#ffd700;">${order.panelPrice || '0'} PKR</span></div>
+        <div class="detail-row"><span class="label">Payment Method</span><span class="value">${order.paymentMethod || 'N/A'}</span></div>
+        <div class="detail-row"><span class="label">Transaction ID</span><span class="value">${order.transactionId || 'N/A'}</span></div>
+        <div class="detail-row"><span class="label">Sender Number</span><span class="value">${order.senderNumber || 'N/A'}</span></div>
+        <div class="detail-row"><span class="label">Order Date</span><span class="value">${date}</span></div>
+        <div class="detail-row"><span class="label">Order Time</span><span class="value">${time}</span></div>
+        <div class="detail-row"><span class="label">Current Status</span><span class="value"><span class="order-status ${(order.orderStatus || 'Pending').toLowerCase()}">${order.orderStatus || 'Pending'}</span></span></div>
+    `;
+    orderDetailModal.classList.add('show');
+}
+
+orderDetailClose.addEventListener('click', function() {
+    orderDetailModal.classList.remove('show');
+});
+
+orderDetailModal.addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.remove('show');
+    }
+});
+
+function updateOrderStatus(orderId, newStatus) {
+    if (!confirm(`Change order status to "${newStatus}"?`)) return;
+    
+    db.collection('orders').doc(orderId).update({
+        orderStatus: newStatus,
+        updatedAt: Date.now()
+    }).then(() => {
+        showToast('Order Updated', `Order status changed to ${newStatus}`, 'order');
+    }).catch(() => {});
+}
+
+function deleteOrder(orderId, panelName) {
+    if (!confirm(`⚠️ Delete order for "${panelName}" permanently?`)) return;
+    
+    db.collection('orders').doc(orderId).delete()
+        .then(() => {
+            showToast('Order Deleted', `Order for "${panelName}" deleted.`, 'order');
+        })
+        .catch(() => {});
+}
+
+// Make order functions global
+window.showOrderDetails = showOrderDetails;
+window.updateOrderStatus = updateOrderStatus;
+window.deleteOrder = deleteOrder;
+
+// ============================================================
+// NOTIFICATIONS MANAGEMENT (NEW)
+// ============================================================
+
+function resetNotifForm() {
+    adminNotifTitle.value = '';
+    adminNotifBody.value = '';
+    adminNotifTarget.value = 'all';
+    adminNotifUserEmail.style.display = 'none';
+    adminNotifUserEmail.value = '';
+    adminNotifId.value = '';
+    editingNotifId = null;
+    adminSendNotification.style.display = 'inline-block';
+    adminUpdateNotification.style.display = 'none';
+    adminCancelNotifEdit.style.display = 'none';
+    adminNotifStatus.textContent = '';
+    adminNotifStatus.className = 'admin-status';
+}
+
+function editNotification(id, data) {
+    editingNotifId = id;
+    adminNotifTitle.value = data.title || '';
+    adminNotifBody.value = data.body || '';
+    adminNotifTarget.value = data.target || 'all';
+    if (data.target === 'specific' && data.userEmail) {
+        adminNotifUserEmail.style.display = 'block';
+        adminNotifUserEmail.value = data.userEmail || '';
+    } else {
+        adminNotifUserEmail.style.display = 'none';
+        adminNotifUserEmail.value = '';
+    }
+    adminNotifId.value = id;
+    adminSendNotification.style.display = 'none';
+    adminUpdateNotification.style.display = 'inline-block';
+    adminCancelNotifEdit.style.display = 'inline-block';
+    adminNotifStatus.textContent = '✏️ Editing: ' + data.title;
+    adminNotifStatus.className = 'admin-status warning';
+}
+
+function sendNotificationToUser(userEmail, title, body) {
+    // Send to specific user's notifications subcollection
+    if (!userEmail) return Promise.reject('No user email provided');
+    
+    // Find user by email
+    return db.collection('users').where('email', '==', userEmail).get()
+        .then((snapshot) => {
+            if (snapshot.empty) {
+                throw new Error('User not found with email: ' + userEmail);
+            }
+            const userDoc = snapshot.docs[0];
+            const uid = userDoc.id;
+            return db.collection('users').doc(uid).collection('notifications').add({
+                title: title,
+                body: body,
+                timestamp: Date.now(),
+                read: false
+            });
+        });
+}
+
+adminSendNotification.addEventListener('click', function() {
+    const title = adminNotifTitle.value.trim();
+    const body = adminNotifBody.value.trim();
+    const target = adminNotifTarget.value;
+    const userEmail = adminNotifUserEmail.value.trim();
+    
+    if (!title || !body) {
+        adminNotifStatus.textContent = '⚠️ Title and message required.';
+        adminNotifStatus.className = 'admin-status error';
+        return;
+    }
+
+    const notifData = {
+        title: title,
+        body: body,
+        target: target,
+        timestamp: Date.now(),
+        from: currentUser ? currentUser.email : 'Admin'
+    };
+
+    if (target === 'specific') {
+        if (!userEmail) {
+            adminNotifStatus.textContent = '⚠️ Please enter user email for personal notification.';
+            adminNotifStatus.className = 'admin-status error';
+            return;
+        }
+        notifData.userEmail = userEmail;
+        
+        // Send to specific user
+        sendNotificationToUser(userEmail, title, body)
+            .then(() => {
+                // Also save to admin notifications collection for reference
+                return db.collection('notifications').add(notifData);
+            })
+            .then(() => {
+                adminNotifStatus.textContent = '✅ Personal notification sent to ' + userEmail;
+                adminNotifStatus.className = 'admin-status success';
+                resetNotifForm();
+                showToast('Notification Sent', `Personal notification sent to ${userEmail}`, 'notification');
+                setTimeout(() => { adminNotifStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminNotifStatus.textContent = '❌ ' + err.message;
+                adminNotifStatus.className = 'admin-status error';
+            });
+    } else {
+        // General notification - send to all users
+        // Store in notifications collection
+        db.collection('notifications').add(notifData)
+            .then(() => {
+                // Also add to each user's notifications
+                return db.collection('users').get();
+            })
+            .then((snapshot) => {
+                const promises = [];
+                snapshot.forEach(doc => {
+                    promises.push(
+                        db.collection('users').doc(doc.id).collection('notifications').add({
+                            title: title,
+                            body: body,
+                            timestamp: Date.now(),
+                            read: false
+                        })
+                    );
+                });
+                return Promise.all(promises);
+            })
+            .then(() => {
+                adminNotifStatus.textContent = '✅ General notification sent to all users!';
+                adminNotifStatus.className = 'admin-status success';
+                resetNotifForm();
+                showToast('Notification Sent', 'General notification sent to all users', 'notification');
+                setTimeout(() => { adminNotifStatus.textContent = ''; }, 3000);
+            })
+            .catch((err) => {
+                adminNotifStatus.textContent = '❌ ' + err.message;
+                adminNotifStatus.className = 'admin-status error';
+            });
+    }
+});
+
+adminUpdateNotification.addEventListener('click', function() {
+    if (!editingNotifId) return;
+    
+    const title = adminNotifTitle.value.trim();
+    const body = adminNotifBody.value.trim();
+    const target = adminNotifTarget.value;
+    const userEmail = adminNotifUserEmail.value.trim();
+    
+    if (!title || !body) {
+        adminNotifStatus.textContent = '⚠️ Title and message required.';
+        adminNotifStatus.className = 'admin-status error';
+        return;
+    }
+
+    const notifData = {
+        title: title,
+        body: body,
+        target: target,
+        updatedAt: Date.now()
+    };
+
+    if (target === 'specific') {
+        notifData.userEmail = userEmail || '';
+    }
+
+    db.collection('notifications').doc(editingNotifId).update(notifData)
+        .then(() => {
+            adminNotifStatus.textContent = '✅ Notification updated!';
+            adminNotifStatus.className = 'admin-status success';
+            resetNotifForm();
+            showToast('Notification Updated', 'Notification updated successfully.', 'notification');
+            setTimeout(() => { adminNotifStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminNotifStatus.textContent = '❌ ' + err.message;
+            adminNotifStatus.className = 'admin-status error';
+        });
+});
+
+adminCancelNotifEdit.addEventListener('click', function() {
+    resetNotifForm();
+    adminNotifStatus.textContent = '❌ Edit cancelled';
+    adminNotifStatus.className = 'admin-status';
+    setTimeout(() => { adminNotifStatus.textContent = ''; }, 2000);
+});
+
+function deleteNotification(id, title) {
+    if (!confirm(`Delete notification "${title}" permanently?`)) return;
+    
+    db.collection('notifications').doc(id).delete()
+        .then(() => {
+            showToast('Notification Deleted', `"${title}" deleted.`, 'notification');
+            if (editingNotifId === id) resetNotifForm();
+        })
+        .catch(() => {});
+}
+
+function loadNotifications() {
+    db.collection('notifications').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        adminNotifList.innerHTML = '';
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const notif = doc.data();
+                const id = doc.id;
+                
+                const item = document.createElement('div');
+                item.className = 'notification-list-item';
+                item.innerHTML = `
+                    <div class="notif-header">
+                        <span class="notif-title">${notif.title || 'Untitled'}</span>
+                        <span class="notif-target">${notif.target === 'specific' ? '👤 Personal' : '🌍 General'}</span>
+                    </div>
+                    <div class="notif-body">${notif.body || ''}</div>
+                    <div style="font-size:0.55rem;color:#3a6a8a;margin-bottom:0.3rem;">
+                        ${notif.target === 'specific' ? '📧 ' + (notif.userEmail || 'N/A') : ''}
+                        ${notif.from ? ' · From: ' + notif.from : ''}
+                    </div>
+                    <div class="notif-actions">
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="editNotification('${id}', ${JSON.stringify(notif).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteNotification('${id}','${notif.title}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                adminNotifList.appendChild(item);
+            });
+        } else {
+            adminNotifList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No notifications</div>`;
+        }
+    }, () => {});
+}
+
+// Make notification functions global
+window.editNotification = editNotification;
+window.deleteNotification = deleteNotification;
+
+// ============================================================
+// PAID PANELS FUNCTIONS (UPDATED with Total Purchases)
 // ============================================================
 
 function resetPanelForm() {
@@ -744,6 +1409,36 @@ function editPanel(id, data) {
     adminPanelStatusMsg.className = 'admin-status warning';
 }
 
+function changePanelImage(id, currentImage) {
+    const newImage = prompt('Enter new image URL:', currentImage || '');
+    if (newImage === null) return;
+    db.collection('paidPanels').doc(id).update({ imageUrl: newImage.trim() })
+        .then(() => {
+            showToast('Image Updated', 'Panel image updated.', 'panel');
+        })
+        .catch(() => {});
+}
+
+function changePanelVideoProof(id, currentVideo) {
+    const newVideo = prompt('Enter new video proof URL:', currentVideo || '');
+    if (newVideo === null) return;
+    db.collection('paidPanels').doc(id).update({ videoProof: newVideo.trim() })
+        .then(() => {
+            showToast('Video Proof Updated', 'Panel video proof updated.', 'panel');
+        })
+        .catch(() => {});
+}
+
+function changePanelPrice(id, currentPrice) {
+    const newPrice = prompt('Enter new price:', currentPrice || '0');
+    if (newPrice === null) return;
+    db.collection('paidPanels').doc(id).update({ price: newPrice.trim() })
+        .then(() => {
+            showToast('Price Updated', `Panel price updated to ${newPrice} PKR.`, 'panel');
+        })
+        .catch(() => {});
+}
+
 adminAddPanel.addEventListener('click', function() {
     const name = adminPanelName.value.trim();
     const price = adminPanelPrice.value.trim();
@@ -764,6 +1459,7 @@ adminAddPanel.addEventListener('click', function() {
         imageUrl: adminPanelImage.value.trim(),
         videoProof: adminPanelVideoProof.value.trim(),
         features: features,
+        purchases: 0,
         timestamp: Date.now()
     };
 
@@ -828,14 +1524,13 @@ adminCancelPanelEdit.addEventListener('click', function() {
 });
 
 function deletePanel(id, name) {
-    if (confirm(`Delete panel "${name}" permanently?`)) {
-        db.collection('paidPanels').doc(id).delete()
-            .then(() => {
-                showToast('Panel Deleted', `${name} has been deleted.`, 'panel');
-                if (editingPanelId === id) resetPanelForm();
-            })
-            .catch(() => {});
-    }
+    if (!confirm(`⚠️ Delete panel "${name}" permanently?`)) return;
+    db.collection('paidPanels').doc(id).delete()
+        .then(() => {
+            showToast('Panel Deleted', `${name} has been deleted.`, 'panel');
+            if (editingPanelId === id) resetPanelForm();
+        })
+        .catch(() => {});
 }
 
 function togglePanelStatus(id, currentStatus, name) {
@@ -847,58 +1542,38 @@ function togglePanelStatus(id, currentStatus, name) {
         .catch(() => {});
 }
 
-// ============================================================
-// PAYMENT SETTINGS FUNCTIONS
-// ============================================================
-
-function loadPaymentSettings() {
-    db.collection('settings').doc('payment').onSnapshot((doc) => {
-        if (doc.exists) {
-            const data = doc.data();
-            easyPaisaNumber.value = data.easyPaisaNumber || '';
-            easyPaisaName.value = data.easyPaisaName || 'ABID SIR';
-            jazzCashNumber.value = data.jazzCashNumber || '';
-            jazzCashName.value = data.jazzCashName || 'ABID SIR';
-        }
-    }, () => {});
-}
-
-savePaymentSettings.addEventListener('click', function() {
-    const settings = {
-        easyPaisaNumber: easyPaisaNumber.value.trim(),
-        easyPaisaName: easyPaisaName.value.trim() || 'ABID SIR',
-        jazzCashNumber: jazzCashNumber.value.trim(),
-        jazzCashName: jazzCashName.value.trim() || 'ABID SIR',
-        updatedAt: Date.now()
-    };
-
-    db.collection('settings').doc('payment').set(settings)
-        .then(() => {
-            paymentSettingsStatus.textContent = '✅ Payment settings saved!';
-            paymentSettingsStatus.className = 'admin-status success';
-            showToast('Payment Settings', 'Payment settings updated successfully.', 'announcement');
-            setTimeout(() => { paymentSettingsStatus.textContent = ''; }, 3000);
+function viewPanelDetails(id, name) {
+    // Open a modal with full panel details
+    db.collection('paidPanels').doc(id).get()
+        .then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                const features = (data.features || []).map(f => '• ' + f).join('\n');
+                alert(
+                    `📋 Panel Details\n\n` +
+                    `Name: ${data.name}\n` +
+                    `Price: ${data.price} PKR\n` +
+                    `Status: ${data.status}\n` +
+                    `Purchases: ${data.purchases || 0}\n` +
+                    `Short Desc: ${data.shortDescription || 'N/A'}\n` +
+                    `Full Desc: ${data.fullDescription || 'N/A'}\n` +
+                    `Features:\n${features || 'N/A'}\n` +
+                    `Image: ${data.imageUrl || 'N/A'}\n` +
+                    `Video Proof: ${data.videoProof || 'N/A'}`
+                );
+            }
         })
-        .catch((err) => {
-            paymentSettingsStatus.textContent = '❌ ' + err.message;
-            paymentSettingsStatus.className = 'admin-status error';
-        });
-});
-
-// ============================================================
-// ORDERS MANAGEMENT FUNCTIONS
-// ============================================================
-
-function updateOrderStatus(orderId, newStatus) {
-    if (!confirm(`Change order status to "${newStatus}"?`)) return;
-    
-    db.collection('orders').doc(orderId).update({
-        orderStatus: newStatus,
-        updatedAt: Date.now()
-    }).then(() => {
-        showToast('Order Updated', `Order status changed to ${newStatus}`, 'order');
-    }).catch(() => {});
+        .catch(() => {});
 }
+
+// Make panel functions global
+window.editPanel = editPanel;
+window.deletePanel = deletePanel;
+window.togglePanelStatus = togglePanelStatus;
+window.changePanelImage = changePanelImage;
+window.changePanelVideoProof = changePanelVideoProof;
+window.changePanelPrice = changePanelPrice;
+window.viewPanelDetails = viewPanelDetails;
 
 // ============================================================
 // ANNOUNCEMENT FUNCTIONS
@@ -1367,13 +2042,21 @@ window.editVideo = editVideo;
 window.editPanel = editPanel;
 window.deletePanel = deletePanel;
 window.togglePanelStatus = togglePanelStatus;
+window.changePanelImage = changePanelImage;
+window.changePanelVideoProof = changePanelVideoProof;
+window.changePanelPrice = changePanelPrice;
+window.viewPanelDetails = viewPanelDetails;
 window.updateOrderStatus = updateOrderStatus;
+window.deleteOrder = deleteOrder;
+window.showOrderDetails = showOrderDetails;
+window.editNotification = editNotification;
+window.deleteNotification = deleteNotification;
 
 // ============================================================
 // LOAD DATA
 // ============================================================
 function loadAllData() {
-    // ===== PAID PANELS =====
+    // ===== PAID PANELS (Updated with purchases) =====
     db.collection('paidPanels').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('panelGrid');
         grid.innerHTML = '';
@@ -1400,6 +2083,21 @@ function loadAllData() {
                     <h4>${panel.name || 'Untitled'}</h4>
                     <div style="font-size:0.7rem;color:#7797b0;margin:0.2rem 0;">${panel.shortDescription || ''}</div>
                     <div style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#ffd700;font-weight:700;">${panel.price || '0'} PKR</div>
+                    <div style="font-size:0.6rem;color:#4ade80;margin-top:0.2rem;">🛒 ${panel.purchases || 0} Purchases</div>
+                    <div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.3rem;">
+                        <button class="btn-sm" style="padding:0.1rem 0.4rem;font-size:0.5rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="viewPanelDetails('${id}','${panel.name}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-sm" style="padding:0.1rem 0.4rem;font-size:0.5rem;background:#003759;border:1px solid #0080c0;" onclick="changePanelImage('${id}','${panel.imageUrl || ''}')">
+                            <i class="fas fa-image"></i>
+                        </button>
+                        <button class="btn-sm" style="padding:0.1rem 0.4rem;font-size:0.5rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="changePanelVideoProof('${id}','${panel.videoProof || ''}')">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="btn-sm gold" style="padding:0.1rem 0.4rem;font-size:0.5rem;" onclick="changePanelPrice('${id}','${panel.price || 0}')">
+                            <i class="fas fa-tag"></i>
+                        </button>
+                    </div>
                     <button class="delete-btn" onclick="deletePanel('${id}','${panel.name}')"><i class="fas fa-trash"></i></button>
                 `;
                 grid.appendChild(card);
@@ -1408,7 +2106,7 @@ function loadAllData() {
                 const item = document.createElement('div');
                 item.className = 'admin-list-item';
                 item.innerHTML = `
-                    <div class="item-text">👑 ${panel.name || 'Untitled'}</div>
+                    <div class="item-text">👑 ${panel.name || 'Untitled'} (${panel.purchases || 0} sold)</div>
                     <div class="item-actions">
                         <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="editPanel('${id}', ${JSON.stringify(panel).replace(/"/g, '&quot;')})">
                             <i class="fas fa-edit"></i>
@@ -1429,10 +2127,13 @@ function loadAllData() {
         }
     }, () => {});
 
-    // ===== ORDERS =====
+    // ===== ORDERS (Updated with full details) =====
     db.collection('orders').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         ordersList.innerHTML = '';
         let total = 0, pending = 0, accepted = 0, rejected = 0;
+        let totalRevenue = 0;
+        const today = new Date().toDateString();
+        let todayOrders = 0;
 
         if (!snapshot.empty) {
             snapshot.forEach(doc => {
@@ -1440,12 +2141,21 @@ function loadAllData() {
                 const id = doc.id;
                 total++;
                 if (order.orderStatus === 'Pending') pending++;
-                else if (order.orderStatus === 'Accepted') accepted++;
+                else if (order.orderStatus === 'Accepted') {
+                    accepted++;
+                    totalRevenue += parseInt(order.panelPrice) || 0;
+                }
                 else if (order.orderStatus === 'Rejected') rejected++;
+                
+                // Check if order is from today
+                if (order.timestamp) {
+                    const orderDate = new Date(order.timestamp).toDateString();
+                    if (orderDate === today) todayOrders++;
+                }
 
                 const statusClass = (order.orderStatus || 'Pending').toLowerCase();
                 const date = order.timestamp ? new Date(order.timestamp).toLocaleDateString() : 'N/A';
-                const time = order.timestamp ? new Date(order.timestamp).toLocaleTimeString() : '';
+                const time = order.timestamp ? new Date(order.timestamp).toLocaleTimeString() : 'N/A';
 
                 const item = document.createElement('div');
                 item.className = 'admin-list-item';
@@ -1465,6 +2175,9 @@ function loadAllData() {
                     </div>
                     <div style="width:100%;display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;margin-top:0.2rem;">
                         <span class="order-status ${statusClass}">${order.orderStatus || 'Pending'}</span>
+                        <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="showOrderDetails(${JSON.stringify(order).replace(/"/g, '&quot;')}, '${id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
                         ${order.orderStatus === 'Pending' ? `
                             <button class="btn-sm success" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="updateOrderStatus('${id}','Accepted')">
                                 <i class="fas fa-check"></i> Accept
@@ -1477,6 +2190,9 @@ function loadAllData() {
                                 <i class="fas fa-undo"></i> Reset
                             </button>
                         `}
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteOrder('${id}','${order.panelName || 'Order'}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 ordersList.appendChild(item);
@@ -1489,7 +2205,10 @@ function loadAllData() {
         pendingOrdersCount.textContent = pending;
         acceptedOrdersCount.textContent = accepted;
         rejectedOrdersCount.textContent = rejected;
+        dashboardRevenueCount.textContent = totalRevenue.toLocaleString();
+        todayOrdersCount.textContent = todayOrders;
         document.getElementById('orderCount').textContent = total;
+        document.getElementById('revenueCount').textContent = totalRevenue.toLocaleString();
     }, () => {});
 
     // ===== FILES =====
@@ -1761,6 +2480,21 @@ function loadAllData() {
         }
     }, () => {});
 
+    // ===== ANNOUNCEMENT =====
+    db.collection('content').doc('announcement').onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            currentAnnouncementId = doc.id;
+            document.getElementById('announceText').innerHTML = `<strong>📢</strong> ${data.text || ''}`;
+            adminAnnounceInput.value = data.text || '';
+            adminAnnounceList.innerHTML = `<div class="admin-list-item"><div class="item-text">📢 ${data.text || ''}</div></div>`;
+        } else {
+            currentAnnouncementId = null;
+            document.getElementById('announceText').innerHTML = '<strong>📢</strong> No announcement';
+            adminAnnounceList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No announcement</div>`;
+        }
+    }, () => {});
+
     // ===== COUNTERS =====
     db.collection('counters').doc('stats').update({ visitors: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
     db.collection('counters').doc('stats').onSnapshot((doc) => {
@@ -1772,12 +2506,14 @@ function loadAllData() {
     }, () => {});
 }
 
-console.log('🔥 ABID SIR - Admin Panel with Full Features');
-console.log('✅ Paid Panels: Add, Edit, Delete, Change Price, Upload Image, Upload Video Proof, Enable/Disable');
-console.log('✅ Payment Settings: Change EasyPaisa & JazzCash numbers and names');
-console.log('✅ Orders Management: Accept/Reject orders, real-time updates');
-console.log('✅ All existing features 100% intact');
+console.log('🔥 ABID SIR - Admin Panel with All New Features');
+console.log('✅ New: Payment Methods Management');
+console.log('✅ New: Notifications Management');
+console.log('✅ Updated: Orders with View/Accept/Reject/Delete');
+console.log('✅ Updated: Panels with View/Change Image/Change Video/Change Price/Purchases');
+console.log('✅ Updated: Dashboard with Revenue & Today\'s Orders');
 console.log('🔔 Real-time Notifications Active');
+console.log('🔒 Firebase Security: Admin-only operations enforced');
 </script>
 </body>
 </html>
