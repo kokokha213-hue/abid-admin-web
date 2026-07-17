@@ -52,17 +52,17 @@
         .section-title{margin:1rem 0 0.6rem 0;}
         .section-title h3{color:#b0d5ff;border-bottom:2px solid #006b9e;padding-bottom:0.2rem;display:inline-block;}
         
-        .file-grid,.video-grid,.error-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.5rem;}
-        .file-card,.video-card,.error-card{background:#0f1a26;border-radius:1.5rem;padding:1rem;border:1px solid #1c3f59;transition:0.3s;position:relative;}
-        .file-card:hover,.video-card:hover,.error-card:hover{transform:translateY(-4px);border-color:#00a6ff;box-shadow:0 0 30px #004c7a70;}
-        .file-label,.video-label,.error-label{background:#002a44;padding:0.1rem 0.8rem;border-radius:40px;display:inline-block;font-size:0.6rem;color:#8bcbff;border:1px solid #0077be;}
-        .file-card h4,.video-card h4,.error-card h4{font-size:1rem;color:#d8edff;margin:0.3rem 0;}
-        .file-meta,.video-meta,.error-meta{display:flex;justify-content:space-between;font-size:0.7rem;color:#7797b0;}
+        .file-grid,.video-grid,.error-grid,.panel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.5rem;}
+        .file-card,.video-card,.error-card,.panel-card{background:#0f1a26;border-radius:1.5rem;padding:1rem;border:1px solid #1c3f59;transition:0.3s;position:relative;}
+        .file-card:hover,.video-card:hover,.error-card:hover,.panel-card:hover{transform:translateY(-4px);border-color:#00a6ff;box-shadow:0 0 30px #004c7a70;}
+        .file-label,.video-label,.error-label,.panel-label{background:#002a44;padding:0.1rem 0.8rem;border-radius:40px;display:inline-block;font-size:0.6rem;color:#8bcbff;border:1px solid #0077be;}
+        .file-card h4,.video-card h4,.error-card h4,.panel-card h4{font-size:1rem;color:#d8edff;margin:0.3rem 0;}
+        .file-meta,.video-meta,.error-meta,.panel-meta{display:flex;justify-content:space-between;font-size:0.7rem;color:#7797b0;}
         .file-download-btn{background:#003759;border:1px solid #0080c0;padding:0.2rem 0.8rem;border-radius:60px;font-size:0.75rem;color:#b0e0ff;cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;}
         .file-download-btn:hover{background:#0073b0;}
         
         .delete-btn{position:absolute;top:0.3rem;right:0.3rem;background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.1rem 0.4rem;border-radius:40px;cursor:pointer;font-size:0.5rem;opacity:0;transition:0.3s;}
-        .file-card:hover .delete-btn,.video-card:hover .delete-btn,.error-card:hover .delete-btn{opacity:1;}
+        .file-card:hover .delete-btn,.video-card:hover .delete-btn,.error-card:hover .delete-btn,.panel-card:hover .delete-btn{opacity:1;}
         .delete-btn:hover{background:#ff6b6b44;}
         
         .admin-panel{margin-top:2rem;background:#0d1c2b;border-radius:2rem;padding:1.5rem;border:1px solid #1f4a6b;}
@@ -72,20 +72,31 @@
         .admin-card{background:#0f1a2b;border-radius:1.5rem;padding:1.2rem;border:1px solid #1f4a6b;}
         .admin-card .card-title{color:#8bcbff;font-size:0.8rem;font-weight:600;margin-bottom:0.8rem;}
         .admin-card .card-title i{color:#00ccff;}
-        .admin-card input, .admin-card textarea{width:100%;padding:0.6rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;margin-bottom:0.6rem;}
+        .admin-card input, .admin-card textarea, .admin-card select{width:100%;padding:0.6rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;margin-bottom:0.6rem;}
         .admin-card textarea{min-height:60px;border-radius:20px;resize:vertical;font-family:inherit;}
-        .admin-card input:focus, .admin-card textarea:focus{border-color:#00a6ff;}
+        .admin-card input:focus, .admin-card textarea:focus, .admin-card select:focus{border-color:#00a6ff;}
+        .admin-card select option{background:#0f1a2b;color:white;}
         .admin-card .btn-sm{background:#005f9e;border:none;padding:0.4rem 1.2rem;border-radius:40px;color:white;cursor:pointer;font-size:0.8rem;font-weight:600;border:1px solid #0088d0;}
         .admin-card .btn-sm:hover{background:#0080cc;}
         .admin-card .btn-sm.success{background:#1a5f2a;border-color:#2a8b3a;}
+        .admin-card .btn-sm.success:hover{background:#2a7a3a;}
         .admin-card .btn-sm.danger{background:#5f1a1a;border-color:#8b2a2a;}
+        .admin-card .btn-sm.danger:hover{background:#7a2a2a;}
         .admin-card .btn-sm.warning{background:#5f5a1a;border-color:#8b8a2a;}
+        .admin-card .btn-sm.warning:hover{background:#7a7a2a;}
         .admin-card .btn-sm.info{background:#1a3a5f;border-color:#2a6a8b;}
+        .admin-card .btn-sm.info:hover{background:#2a4a7a;}
+        .admin-card .btn-sm.gold{background:#5f5a1a;border-color:#ffd70044;color:#ffd700;}
+        .admin-card .btn-sm.gold:hover{background:#7a7a2a;}
         .admin-status{font-size:0.75rem;margin-top:0.5rem;color:#6a8fa8;min-height:1.2rem;}
         .admin-status.success{color:#4ade80;}
         .admin-status.error{color:#ff6b6b;}
+        .admin-status.warning{color:#ffd700;}
         
         .admin-list{max-height:250px;overflow-y:auto;margin-top:0.5rem;border-top:1px solid #1f4a6b;padding-top:0.5rem;}
+        .admin-list::-webkit-scrollbar{width:4px;}
+        .admin-list::-webkit-scrollbar-track{background:transparent;}
+        .admin-list::-webkit-scrollbar-thumb{background:#1f4a6b;border-radius:10px;}
         .admin-list-item{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-radius:30px;font-size:0.75rem;color:#b8d0e5;border-bottom:1px solid #1f4a6b22;flex-wrap:wrap;gap:0.3rem;}
         .admin-list-item .item-text{flex:1;min-width:80px;}
         .admin-list-item .item-actions{display:flex;gap:0.3rem;}
@@ -95,6 +106,7 @@
         .ff-badge.headshot{border-color:#ff2d0044;background:#ff2d0022;color:#ff4d2d;}
         .ff-badge.location{border-color:#00ff8844;background:#00ff8822;color:#00ff88;}
         .ff-badge.errorfix{border-color:#ff6b6b44;background:#ff6b6b22;color:#ff6b6b;}
+        .ff-badge.panel{border-color:#ffd70044;background:#ffd70022;color:#ffd700;}
         
         .footer-note{margin-top:1.5rem;text-align:center;font-size:0.75rem;color:#43647a;border-top:1px solid #162b3d;padding-top:1rem;}
         .auth-loading{position:fixed;inset:0;z-index:10000;background:#080b12;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;}
@@ -110,11 +122,9 @@
         .file-card:hover .edit-btn,.video-card:hover .edit-btn,.error-card:hover .edit-btn{opacity:1;}
         .edit-btn:hover{background:#1a3a5f44;}
         
-        /* Notification status badge */
         .notif-status-badge{display:inline-block;background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;padding:0.1rem 0.6rem;border-radius:40px;font-size:0.5rem;font-weight:600;letter-spacing:1px;margin-left:0.5rem;animation:pulseNotif 2s ease-in-out infinite;}
         @keyframes pulseNotif{0%,100%{opacity:1;}50%{opacity:0.5;}}
         
-        /* In-app notification toast */
         .toast-notification{position:fixed;bottom:20px;right:20px;z-index:99999;background:rgba(15,26,43,0.95);backdrop-filter:blur(10px);border-radius:1.2rem;padding:1rem 1.5rem;border:1px solid rgba(0,183,255,0.2);box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:380px;width:100%;transform:translateY(120px);opacity:0;transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);display:flex;gap:0.8rem;align-items:flex-start;pointer-events:none;}
         .toast-notification.show{transform:translateY(0);opacity:1;pointer-events:auto;}
         .toast-notification .toast-icon{font-size:1.8rem;flex-shrink:0;}
@@ -127,9 +137,27 @@
         .toast-notification.video-toast .toast-icon{color:#60a5fa;}
         .toast-notification.announce-toast .toast-icon{color:#fbbf24;}
         .toast-notification.error-toast .toast-icon{color:#ff6b6b;}
+        .toast-notification.panel-toast .toast-icon{color:#ffd700;}
+        .toast-notification.order-toast .toast-icon{color:#60a5fa;}
         
-        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}.toast-notification{max-width:300px;bottom:10px;right:10px;padding:0.8rem 1rem;}}
-        @media(max-width:480px){.file-grid,.video-grid,.error-grid{grid-template-columns:1fr;}}
+        /* Order Status Badges */
+        .order-status{display:inline-block;padding:0.1rem 0.8rem;border-radius:40px;font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+        .order-status.pending{background:#ffd70022;border:1px solid #ffd70044;color:#ffd700;}
+        .order-status.accepted{background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;}
+        .order-status.rejected{background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;}
+        
+        .panel-status-badge{display:inline-block;padding:0.1rem 0.8rem;border-radius:40px;font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+        .panel-status-badge.available{background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;}
+        .panel-status-badge.out-of-stock{background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;}
+        
+        .payment-settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+        .payment-setting-item{background:#0a1a2a;border-radius:1rem;padding:1rem;border:1px solid #1f4a6b;}
+        .payment-setting-item label{color:#8bcbff;font-size:0.7rem;display:block;margin-bottom:0.3rem;}
+        .payment-setting-item input{width:100%;padding:0.5rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;}
+        .payment-setting-item input:focus{border-color:#00a6ff;}
+        
+        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}.toast-notification{max-width:300px;bottom:10px;right:10px;padding:0.8rem 1rem;}}
+        @media(max-width:480px){.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr;}}
     </style>
 </head>
 <body>
@@ -191,12 +219,21 @@
         <div class="stat-item"><i class="fas fa-eye"></i> Visitors <span class="stat-number" id="visitorCounter">0</span></div>
         <div class="stat-item"><i class="fas fa-file-archive"></i> Files <span class="stat-number" id="fileCount">0</span></div>
         <div class="stat-item"><i class="fas fa-users"></i> Users <span class="stat-number" id="userCount">0</span></div>
+        <div class="stat-item"><i class="fas fa-crown"></i> Panels <span class="stat-number" id="panelCount">0</span></div>
+        <div class="stat-item"><i class="fas fa-shopping-cart"></i> Orders <span class="stat-number" id="orderCount">0</span></div>
     </div>
 
     <div class="announce-box">
         <i class="fas fa-bullhorn"></i>
         <div class="announce-text" id="announceText"><strong>📢</strong> Loading...</div>
     </div>
+
+    <!-- ===== PAID PANELS SECTION ===== -->
+    <div class="section-title" style="margin-top:1.5rem;">
+        <h3><i class="fas fa-crown" style="color:#ffd700;"></i> Paid Panels</h3>
+        <span class="ff-badge panel"><i class="fas fa-star"></i> Premium</span>
+    </div>
+    <div class="panel-grid" id="panelGrid"></div>
 
     <div class="section-title"><h3><i class="fas fa-folder-open"></i> Game Files</h3></div>
     <div class="file-grid" id="fileGrid"></div>
@@ -225,7 +262,9 @@
     <div class="section-title"><h3><i class="fas fa-video"></i> Gaming Videos</h3></div>
     <div class="video-grid" id="videoGrid"></div>
 
-    <!-- ===== ADMIN PANEL ===== -->
+    <!-- ============================================================
+         ADMIN PANEL
+         ============================================================ -->
     <div class="admin-panel">
         <div class="admin-header">
             <h3><i class="fas fa-user-cog"></i> Admin Panel</h3>
@@ -235,6 +274,77 @@
             </div>
         </div>
         <div class="admin-grid">
+
+            <!-- ===== PAID PANELS MANAGEMENT ===== -->
+            <div class="admin-card" style="border-color:#ffd70044;">
+                <div class="card-title" style="color:#ffd700;"><i class="fas fa-crown"></i> Manage Paid Panels</div>
+                
+                <!-- Add/Edit Panel Form -->
+                <input type="text" id="adminPanelId" style="display:none;">
+                <input type="text" id="adminPanelName" placeholder="Panel Name (e.g., Premium Gaming Panel)">
+                <input type="text" id="adminPanelShortDesc" placeholder="Short Description (e.g., Best gaming panel)">
+                <textarea id="adminPanelFullDesc" placeholder="Full Description (detailed info about the panel)"></textarea>
+                <input type="text" id="adminPanelPrice" placeholder="Price (e.g., 2000)">
+                <select id="adminPanelStatus">
+                    <option value="Available">Available</option>
+                    <option value="Out of Stock">Out of Stock</option>
+                </select>
+                <input type="text" id="adminPanelImage" placeholder="Image URL (direct link to image)">
+                <input type="text" id="adminPanelVideoProof" placeholder="Video Proof URL (YouTube link)">
+                <input type="text" id="adminPanelFeatures" placeholder="Features (comma separated, e.g., Feature 1, Feature 2, Feature 3)">
+                
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn-sm success" id="adminAddPanel"><i class="fas fa-plus"></i> Add Panel</button>
+                    <button class="btn-sm warning" id="adminUpdatePanel" style="display:none;"><i class="fas fa-save"></i> Update Panel</button>
+                    <button class="btn-sm info" id="adminCancelPanelEdit" style="display:none;"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+                <div class="admin-status" id="adminPanelStatus"></div>
+                
+                <!-- Panel List -->
+                <div class="admin-list" id="adminPanelList">
+                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No panels</div>
+                </div>
+            </div>
+
+            <!-- ===== PAYMENT SETTINGS ===== -->
+            <div class="admin-card" style="border-color:#25d36644;">
+                <div class="card-title" style="color:#25d366;"><i class="fas fa-credit-card"></i> Payment Settings</div>
+                <div class="payment-settings-grid">
+                    <div class="payment-setting-item">
+                        <label><i class="fas fa-mobile-alt" style="color:#25d366;"></i> EasyPaisa Number</label>
+                        <input type="text" id="easyPaisaNumber" placeholder="03XX-XXXXXXX">
+                    </div>
+                    <div class="payment-setting-item">
+                        <label><i class="fas fa-user" style="color:#25d366;"></i> EasyPaisa Name</label>
+                        <input type="text" id="easyPaisaName" placeholder="Account Name">
+                    </div>
+                    <div class="payment-setting-item">
+                        <label><i class="fas fa-mobile-alt" style="color:#fbbf24;"></i> JazzCash Number</label>
+                        <input type="text" id="jazzCashNumber" placeholder="03XX-XXXXXXX">
+                    </div>
+                    <div class="payment-setting-item">
+                        <label><i class="fas fa-user" style="color:#fbbf24;"></i> JazzCash Name</label>
+                        <input type="text" id="jazzCashName" placeholder="Account Name">
+                    </div>
+                </div>
+                <button class="btn-sm success" id="savePaymentSettings"><i class="fas fa-save"></i> Save Payment Settings</button>
+                <div class="admin-status" id="paymentSettingsStatus"></div>
+            </div>
+
+            <!-- ===== ORDERS MANAGEMENT ===== -->
+            <div class="admin-card" style="border-color:#60a5fa44;">
+                <div class="card-title" style="color:#60a5fa;"><i class="fas fa-shopping-cart"></i> Orders Management</div>
+                <div class="admin-list" id="ordersList" style="max-height:400px;">
+                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">Loading orders...</div>
+                </div>
+                <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <span style="font-size:0.6rem;color:#6a8fa8;">Total Orders: <strong id="totalOrdersCount">0</strong></span>
+                    <span style="font-size:0.6rem;color:#ffd700;">Pending: <strong id="pendingOrdersCount">0</strong></span>
+                    <span style="font-size:0.6rem;color:#4ade80;">Accepted: <strong id="acceptedOrdersCount">0</strong></span>
+                    <span style="font-size:0.6rem;color:#ff6b6b;">Rejected: <strong id="rejectedOrdersCount">0</strong></span>
+                </div>
+            </div>
+
             <!-- ===== ANNOUNCEMENT ===== -->
             <div class="admin-card">
                 <div class="card-title"><i class="fas fa-bullhorn"></i> Announcement</div>
@@ -324,6 +434,7 @@
                     <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">Loading users...</div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -332,7 +443,7 @@
 
 <script>
 // ============================================================
-// FIREBASE CONFIG - UNCHANGED
+// FIREBASE CONFIG
 // ============================================================
 const firebaseConfig = {
     apiKey: "AIzaSyALnJyYqSpgZeapdNUkAKkwImgijuG935g",
@@ -349,7 +460,7 @@ const db = firebase.firestore();
 db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
 // ============================================================
-// TOAST NOTIFICATION SYSTEM - NEW
+// TOAST NOTIFICATION SYSTEM
 // ============================================================
 const toast = document.getElementById('toastNotification');
 const toastIcon = document.getElementById('toastIcon');
@@ -359,11 +470,9 @@ const toastClose = document.getElementById('toastClose');
 let toastTimeout = null;
 
 function showToast(title, message, type = 'info') {
-    // Update content
     toastTitle.textContent = title;
     toastMessage.textContent = message;
     
-    // Set icon
     toast.className = 'toast-notification';
     if (type === 'file') {
         toastIcon.innerHTML = '<i class="fas fa-file"></i>';
@@ -377,220 +486,34 @@ function showToast(title, message, type = 'info') {
     } else if (type === 'error') {
         toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
         toast.classList.add('error-toast');
+    } else if (type === 'panel') {
+        toastIcon.innerHTML = '<i class="fas fa-crown"></i>';
+        toast.classList.add('panel-toast');
+    } else if (type === 'order') {
+        toastIcon.innerHTML = '<i class="fas fa-shopping-cart"></i>';
+        toast.classList.add('order-toast');
     } else {
         toastIcon.innerHTML = '<i class="fas fa-bell"></i>';
     }
     
-    // Show toast
     toast.classList.add('show');
     
-    // Clear existing timeout
-    if (toastTimeout) {
-        clearTimeout(toastTimeout);
-    }
-    
-    // Auto-hide after 6 seconds
+    if (toastTimeout) clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
         toast.classList.remove('show');
     }, 6000);
 }
 
-// Close button
 toastClose.addEventListener('click', () => {
     toast.classList.remove('show');
-    if (toastTimeout) {
-        clearTimeout(toastTimeout);
-    }
+    if (toastTimeout) clearTimeout(toastTimeout);
 });
 
-// Click outside to close
-document.addEventListener('click', (e) => {
-    if (toast.classList.contains('show') && !toast.contains(e.target)) {
-        toast.classList.remove('show');
-        if (toastTimeout) {
-            clearTimeout(toastTimeout);
-        }
-    }
-});
-
-// ============================================================
-// BROWSER NOTIFICATION PERMISSION
-// ============================================================
 function requestNotificationPermission() {
     if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-            console.log('📢 Notification permission:', permission);
-        });
+        Notification.requestPermission();
     }
 }
-
-// ============================================================
-// REALTIME NOTIFICATION LISTENERS - NEW
-// ============================================================
-
-// Track previous state for detecting changes
-let previousFileCount = 0;
-let previousVideoCount = 0;
-let previousAnnouncementText = '';
-let previousHeadshotCount = 0;
-let previousLocationCount = 0;
-let previousErrorCount = 0;
-let isFirstLoad = true;
-
-// Store last notification time to prevent spam
-let lastNotifTime = 0;
-const NOTIF_COOLDOWN = 3000; // 3 seconds between notifications
-
-function canSendNotification() {
-    const now = Date.now();
-    if (now - lastNotifTime < NOTIF_COOLDOWN) {
-        return false;
-    }
-    lastNotifTime = now;
-    return true;
-}
-
-// ===== FILES LISTENER - NEW FILE DETECTION =====
-db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-    if (!isFirstLoad && snapshot.size > previousFileCount && previousFileCount > 0) {
-        const newDocs = snapshot.docs.slice(0, snapshot.size - previousFileCount);
-        newDocs.forEach(doc => {
-            const data = doc.data();
-            if (data.title && canSendNotification()) {
-                const title = '🔥 New File Added';
-                const body = `${data.title} - A new premium file has been uploaded.`;
-                
-                // Show toast
-                showToast(title, body, 'file');
-                
-                // Show browser notification
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, {
-                        body: body,
-                        icon: '/favicon.ico',
-                        badge: '/badge-icon.png',
-                        vibrate: [200, 100, 200]
-                    });
-                }
-            }
-        });
-    }
-    previousFileCount = snapshot.size;
-}, () => {});
-
-// ===== VIDEOS LISTENER - NEW VIDEO DETECTION =====
-db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-    if (!isFirstLoad && snapshot.size > previousVideoCount && previousVideoCount > 0) {
-        const newDocs = snapshot.docs.slice(0, snapshot.size - previousVideoCount);
-        newDocs.forEach(doc => {
-            const data = doc.data();
-            if (data.title && canSendNotification()) {
-                const title = '🎥 New Video Added';
-                const body = `${data.title} - A new gaming video has been uploaded.`;
-                
-                showToast(title, body, 'video');
-                
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, {
-                        body: body,
-                        icon: '/favicon.ico',
-                        badge: '/badge-icon.png',
-                        vibrate: [200, 100, 200]
-                    });
-                }
-            }
-        });
-    }
-    previousVideoCount = snapshot.size;
-}, () => {});
-
-// ===== FF HEADSHOTS LISTENER =====
-db.collection('ffHeadshots').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-    if (!isFirstLoad && snapshot.size > previousHeadshotCount && previousHeadshotCount > 0) {
-        const newDocs = snapshot.docs.slice(0, snapshot.size - previousHeadshotCount);
-        newDocs.forEach(doc => {
-            const data = doc.data();
-            if (data.title && canSendNotification()) {
-                const title = '🔥 New Headshot File Added';
-                const body = `${data.title} - Download now!`;
-                showToast(title, body, 'file');
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, { body: body, icon: '/favicon.ico', vibrate: [200, 100, 200] });
-                }
-            }
-        });
-    }
-    previousHeadshotCount = snapshot.size;
-}, () => {});
-
-// ===== FF LOCATION LISTENER =====
-db.collection('ffLocation').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-    if (!isFirstLoad && snapshot.size > previousLocationCount && previousLocationCount > 0) {
-        const newDocs = snapshot.docs.slice(0, snapshot.size - previousLocationCount);
-        newDocs.forEach(doc => {
-            const data = doc.data();
-            if (data.title && canSendNotification()) {
-                const title = '📍 New Location File Added';
-                const body = `${data.title} - Download now!`;
-                showToast(title, body, 'file');
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, { body: body, icon: '/favicon.ico', vibrate: [200, 100, 200] });
-                }
-            }
-        });
-    }
-    previousLocationCount = snapshot.size;
-}, () => {});
-
-// ===== ERROR FIXES LISTENER =====
-db.collection('errorFixes').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-    if (!isFirstLoad && snapshot.size > previousErrorCount && previousErrorCount > 0) {
-        const newDocs = snapshot.docs.slice(0, snapshot.size - previousErrorCount);
-        newDocs.forEach(doc => {
-            const data = doc.data();
-            if (data.title && canSendNotification()) {
-                const title = '🛠️ New Error Fix Added';
-                const body = `${data.title} - Check the solution now!`;
-                showToast(title, body, 'error');
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, { body: body, icon: '/favicon.ico', vibrate: [200, 100, 200] });
-                }
-            }
-        });
-    }
-    previousErrorCount = snapshot.size;
-}, () => {});
-
-// ===== ANNOUNCEMENT LISTENER - NEW ANNOUNCEMENT DETECTION =====
-db.collection('content').doc('announcement').onSnapshot((doc) => {
-    const el = document.getElementById('announceText');
-    let currentText = '';
-    if (doc.exists) {
-        const data = doc.data();
-        currentText = data.text || 'Welcome!';
-        el.innerHTML = `<strong>📢</strong> ${currentText}`;
-        adminAnnounceInput.value = data.text || '';
-    } else {
-        el.innerHTML = '<strong>📢</strong> No announcement';
-        adminAnnounceInput.value = '';
-    }
-    
-    // Detect changes
-    if (!isFirstLoad && currentText && previousAnnouncementText && currentText !== previousAnnouncementText && canSendNotification()) {
-        const title = '📢 New Announcement';
-        const body = currentText;
-        showToast(title, body, 'announcement');
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(title, {
-                body: body,
-                icon: '/favicon.ico',
-                badge: '/badge-icon.png',
-                vibrate: [200, 100, 200]
-            });
-        }
-    }
-    previousAnnouncementText = currentText;
-}, () => {});
 
 // ============================================================
 // DOM REFS
@@ -609,7 +532,39 @@ const logoutBtn = document.getElementById('logoutBtn');
 const togglePass = document.getElementById('togglePass');
 const eyeIcon = document.getElementById('eyeIcon');
 
-// Admin
+// Panel Admin
+const adminPanelName = document.getElementById('adminPanelName');
+const adminPanelShortDesc = document.getElementById('adminPanelShortDesc');
+const adminPanelFullDesc = document.getElementById('adminPanelFullDesc');
+const adminPanelPrice = document.getElementById('adminPanelPrice');
+const adminPanelStatus = document.getElementById('adminPanelStatus');
+const adminPanelImage = document.getElementById('adminPanelImage');
+const adminPanelVideoProof = document.getElementById('adminPanelVideoProof');
+const adminPanelFeatures = document.getElementById('adminPanelFeatures');
+const adminPanelId = document.getElementById('adminPanelId');
+const adminAddPanel = document.getElementById('adminAddPanel');
+const adminUpdatePanel = document.getElementById('adminUpdatePanel');
+const adminCancelPanelEdit = document.getElementById('adminCancelPanelEdit');
+const adminPanelStatusMsg = document.getElementById('adminPanelStatus');
+const adminPanelList = document.getElementById('adminPanelList');
+let editingPanelId = null;
+
+// Payment Settings
+const easyPaisaNumber = document.getElementById('easyPaisaNumber');
+const easyPaisaName = document.getElementById('easyPaisaName');
+const jazzCashNumber = document.getElementById('jazzCashNumber');
+const jazzCashName = document.getElementById('jazzCashName');
+const savePaymentSettings = document.getElementById('savePaymentSettings');
+const paymentSettingsStatus = document.getElementById('paymentSettingsStatus');
+
+// Orders
+const ordersList = document.getElementById('ordersList');
+const totalOrdersCount = document.getElementById('totalOrdersCount');
+const pendingOrdersCount = document.getElementById('pendingOrdersCount');
+const acceptedOrdersCount = document.getElementById('acceptedOrdersCount');
+const rejectedOrdersCount = document.getElementById('rejectedOrdersCount');
+
+// Other admin refs
 const adminAnnounceInput = document.getElementById('adminAnnounceInput');
 const adminUpdateAnnounce = document.getElementById('adminUpdateAnnounce');
 const adminDeleteAnnounce = document.getElementById('adminDeleteAnnounce');
@@ -624,7 +579,6 @@ const adminAddFile = document.getElementById('adminAddFile');
 const adminFileStatus = document.getElementById('adminFileStatus');
 const adminFileList = document.getElementById('adminFileList');
 
-// FF Headshots
 const adminFFHeadshotTitle = document.getElementById('adminFFHeadshotTitle');
 const adminFFHeadshotLink = document.getElementById('adminFFHeadshotLink');
 const adminFFHeadshotVersion = document.getElementById('adminFFHeadshotVersion');
@@ -632,7 +586,6 @@ const adminAddFFHeadshot = document.getElementById('adminAddFFHeadshot');
 const adminFFHeadshotStatus = document.getElementById('adminFFHeadshotStatus');
 const adminFFHeadshotList = document.getElementById('adminFFHeadshotList');
 
-// FF Location
 const adminFFLocationTitle = document.getElementById('adminFFLocationTitle');
 const adminFFLocationLink = document.getElementById('adminFFLocationLink');
 const adminFFLocationVersion = document.getElementById('adminFFLocationVersion');
@@ -640,7 +593,6 @@ const adminAddFFLocation = document.getElementById('adminAddFFLocation');
 const adminFFLocationStatus = document.getElementById('adminFFLocationStatus');
 const adminFFLocationList = document.getElementById('adminFFLocationList');
 
-// ERROR FIR
 const adminErrorTitle = document.getElementById('adminErrorTitle');
 const adminErrorLink = document.getElementById('adminErrorLink');
 const adminErrorLabel = document.getElementById('adminErrorLabel');
@@ -650,7 +602,6 @@ const adminCancelErrorEdit = document.getElementById('adminCancelErrorEdit');
 const adminErrorStatus = document.getElementById('adminErrorStatus');
 const adminErrorList = document.getElementById('adminErrorList');
 
-// Videos
 const adminVideoTitle = document.getElementById('adminVideoTitle');
 const adminVideoLabel = document.getElementById('adminVideoLabel');
 const adminVideoLink = document.getElementById('adminVideoLink');
@@ -659,7 +610,6 @@ const adminCancelVideoEdit = document.getElementById('adminCancelVideoEdit');
 const adminVideoStatus = document.getElementById('adminVideoStatus');
 const adminVideoList = document.getElementById('adminVideoList');
 
-// Users
 const adminUserEmail = document.getElementById('adminUserEmail');
 const adminUserPassword = document.getElementById('adminUserPassword');
 const adminAddUser = document.getElementById('adminAddUser');
@@ -672,8 +622,6 @@ let isAuthorized = false;
 let currentUser = null;
 let userPasswords = {};
 let currentAnnouncementId = null;
-
-// Edit state
 let editingErrorId = null;
 let editingVideoId = null;
 
@@ -683,7 +631,6 @@ togglePass.addEventListener('click', function() {
     passVisible = !passVisible;
     passInput.type = passVisible ? 'text' : 'password';
     eyeIcon.className = passVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
-    eyeIcon.style.color = passVisible ? '#00ccff' : '#3a6a8a';
 });
 
 let adminPassVisible = false;
@@ -691,7 +638,6 @@ adminTogglePass.addEventListener('click', function() {
     adminPassVisible = !adminPassVisible;
     adminUserPassword.type = adminPassVisible ? 'text' : 'password';
     adminEyeIcon.className = adminPassVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
-    adminEyeIcon.style.color = adminPassVisible ? '#00ccff' : '#3a6a8a';
 });
 
 // ========== AUTH STATE ==========
@@ -705,9 +651,8 @@ auth.onAuthStateChanged((user) => {
         userEmail.textContent = user.email || 'User';
         loadAllData();
         loadUsers();
+        loadPaymentSettings();
         requestNotificationPermission();
-        // Mark first load complete after initial data loads
-        setTimeout(() => { isFirstLoad = false; }, 5000);
         console.log('✅ Logged in:', user.email);
     } else {
         overlay.classList.remove('hidden');
@@ -760,6 +705,202 @@ logoutBtn.addEventListener('click', function() {
 });
 
 // ============================================================
+// PAID PANELS FUNCTIONS
+// ============================================================
+
+function resetPanelForm() {
+    adminPanelName.value = '';
+    adminPanelShortDesc.value = '';
+    adminPanelFullDesc.value = '';
+    adminPanelPrice.value = '';
+    adminPanelStatus.value = 'Available';
+    adminPanelImage.value = '';
+    adminPanelVideoProof.value = '';
+    adminPanelFeatures.value = '';
+    adminPanelId.value = '';
+    editingPanelId = null;
+    adminAddPanel.style.display = 'inline-block';
+    adminUpdatePanel.style.display = 'none';
+    adminCancelPanelEdit.style.display = 'none';
+    adminPanelStatusMsg.textContent = '';
+    adminPanelStatusMsg.className = 'admin-status';
+}
+
+function editPanel(id, data) {
+    editingPanelId = id;
+    adminPanelName.value = data.name || '';
+    adminPanelShortDesc.value = data.shortDescription || '';
+    adminPanelFullDesc.value = data.fullDescription || '';
+    adminPanelPrice.value = data.price || '';
+    adminPanelStatus.value = data.status || 'Available';
+    adminPanelImage.value = data.imageUrl || '';
+    adminPanelVideoProof.value = data.videoProof || '';
+    adminPanelFeatures.value = (data.features || []).join(', ');
+    adminPanelId.value = id;
+    adminAddPanel.style.display = 'none';
+    adminUpdatePanel.style.display = 'inline-block';
+    adminCancelPanelEdit.style.display = 'inline-block';
+    adminPanelStatusMsg.textContent = '✏️ Editing: ' + data.name;
+    adminPanelStatusMsg.className = 'admin-status warning';
+}
+
+adminAddPanel.addEventListener('click', function() {
+    const name = adminPanelName.value.trim();
+    const price = adminPanelPrice.value.trim();
+    if (!name || !price) {
+        adminPanelStatusMsg.textContent = '⚠️ Name and Price required.';
+        adminPanelStatusMsg.className = 'admin-status error';
+        return;
+    }
+
+    const features = adminPanelFeatures.value.split(',').map(f => f.trim()).filter(f => f);
+
+    const panelData = {
+        name: name,
+        shortDescription: adminPanelShortDesc.value.trim(),
+        fullDescription: adminPanelFullDesc.value.trim(),
+        price: price,
+        status: adminPanelStatus.value,
+        imageUrl: adminPanelImage.value.trim(),
+        videoProof: adminPanelVideoProof.value.trim(),
+        features: features,
+        timestamp: Date.now()
+    };
+
+    db.collection('paidPanels').add(panelData)
+        .then(() => {
+            adminPanelStatusMsg.textContent = '✅ Panel added successfully!';
+            adminPanelStatusMsg.className = 'admin-status success';
+            resetPanelForm();
+            showToast('Panel Added', `${name} has been added successfully.`, 'panel');
+            setTimeout(() => { adminPanelStatusMsg.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminPanelStatusMsg.textContent = '❌ ' + err.message;
+            adminPanelStatusMsg.className = 'admin-status error';
+        });
+});
+
+adminUpdatePanel.addEventListener('click', function() {
+    if (!editingPanelId) return;
+    
+    const name = adminPanelName.value.trim();
+    const price = adminPanelPrice.value.trim();
+    if (!name || !price) {
+        adminPanelStatusMsg.textContent = '⚠️ Name and Price required.';
+        adminPanelStatusMsg.className = 'admin-status error';
+        return;
+    }
+
+    const features = adminPanelFeatures.value.split(',').map(f => f.trim()).filter(f => f);
+
+    const panelData = {
+        name: name,
+        shortDescription: adminPanelShortDesc.value.trim(),
+        fullDescription: adminPanelFullDesc.value.trim(),
+        price: price,
+        status: adminPanelStatus.value,
+        imageUrl: adminPanelImage.value.trim(),
+        videoProof: adminPanelVideoProof.value.trim(),
+        features: features,
+        updatedAt: Date.now()
+    };
+
+    db.collection('paidPanels').doc(editingPanelId).update(panelData)
+        .then(() => {
+            adminPanelStatusMsg.textContent = '✅ Panel updated successfully!';
+            adminPanelStatusMsg.className = 'admin-status success';
+            resetPanelForm();
+            showToast('Panel Updated', `${name} has been updated.`, 'panel');
+            setTimeout(() => { adminPanelStatusMsg.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            adminPanelStatusMsg.textContent = '❌ ' + err.message;
+            adminPanelStatusMsg.className = 'admin-status error';
+        });
+});
+
+adminCancelPanelEdit.addEventListener('click', function() {
+    resetPanelForm();
+    adminPanelStatusMsg.textContent = '❌ Edit cancelled';
+    adminPanelStatusMsg.className = 'admin-status';
+    setTimeout(() => { adminPanelStatusMsg.textContent = ''; }, 2000);
+});
+
+function deletePanel(id, name) {
+    if (confirm(`Delete panel "${name}" permanently?`)) {
+        db.collection('paidPanels').doc(id).delete()
+            .then(() => {
+                showToast('Panel Deleted', `${name} has been deleted.`, 'panel');
+                if (editingPanelId === id) resetPanelForm();
+            })
+            .catch(() => {});
+    }
+}
+
+function togglePanelStatus(id, currentStatus, name) {
+    const newStatus = currentStatus === 'Available' ? 'Out of Stock' : 'Available';
+    db.collection('paidPanels').doc(id).update({ status: newStatus })
+        .then(() => {
+            showToast('Status Updated', `${name} is now ${newStatus}`, 'panel');
+        })
+        .catch(() => {});
+}
+
+// ============================================================
+// PAYMENT SETTINGS FUNCTIONS
+// ============================================================
+
+function loadPaymentSettings() {
+    db.collection('settings').doc('payment').onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            easyPaisaNumber.value = data.easyPaisaNumber || '';
+            easyPaisaName.value = data.easyPaisaName || 'ABID SIR';
+            jazzCashNumber.value = data.jazzCashNumber || '';
+            jazzCashName.value = data.jazzCashName || 'ABID SIR';
+        }
+    }, () => {});
+}
+
+savePaymentSettings.addEventListener('click', function() {
+    const settings = {
+        easyPaisaNumber: easyPaisaNumber.value.trim(),
+        easyPaisaName: easyPaisaName.value.trim() || 'ABID SIR',
+        jazzCashNumber: jazzCashNumber.value.trim(),
+        jazzCashName: jazzCashName.value.trim() || 'ABID SIR',
+        updatedAt: Date.now()
+    };
+
+    db.collection('settings').doc('payment').set(settings)
+        .then(() => {
+            paymentSettingsStatus.textContent = '✅ Payment settings saved!';
+            paymentSettingsStatus.className = 'admin-status success';
+            showToast('Payment Settings', 'Payment settings updated successfully.', 'announcement');
+            setTimeout(() => { paymentSettingsStatus.textContent = ''; }, 3000);
+        })
+        .catch((err) => {
+            paymentSettingsStatus.textContent = '❌ ' + err.message;
+            paymentSettingsStatus.className = 'admin-status error';
+        });
+});
+
+// ============================================================
+// ORDERS MANAGEMENT FUNCTIONS
+// ============================================================
+
+function updateOrderStatus(orderId, newStatus) {
+    if (!confirm(`Change order status to "${newStatus}"?`)) return;
+    
+    db.collection('orders').doc(orderId).update({
+        orderStatus: newStatus,
+        updatedAt: Date.now()
+    }).then(() => {
+        showToast('Order Updated', `Order status changed to ${newStatus}`, 'order');
+    }).catch(() => {});
+}
+
+// ============================================================
 // ANNOUNCEMENT FUNCTIONS
 // ============================================================
 
@@ -780,6 +921,7 @@ adminUpdateAnnounce.addEventListener('click', function() {
             adminAnnounceStatus.textContent = '✅ Announcement updated!';
             adminAnnounceStatus.className = 'admin-status success';
             adminAnnounceInput.value = '';
+            showToast('Announcement', 'Announcement updated successfully.', 'announcement');
             setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
         })
         .catch((err) => {
@@ -802,6 +944,7 @@ adminDeleteAnnounce.addEventListener('click', function() {
             adminAnnounceStatus.className = 'admin-status success';
             adminAnnounceInput.value = '';
             document.getElementById('announceText').innerHTML = '<strong>📢</strong> No announcement';
+            showToast('Announcement', 'Announcement deleted.', 'announcement');
             setTimeout(() => { adminAnnounceStatus.textContent = ''; }, 3000);
         })
         .catch((err) => {
@@ -835,6 +978,7 @@ adminAddUser.addEventListener('click', function() {
             adminUserStatus.className = 'admin-status success';
             adminUserEmail.value = '';
             adminUserPassword.value = '';
+            showToast('User Added', `User ${email} created successfully.`, 'announcement');
             setTimeout(() => { adminUserStatus.textContent = ''; }, 3000);
             loadUsers();
         })
@@ -935,6 +1079,7 @@ adminAddFFHeadshot.addEventListener('click', function() {
         adminFFHeadshotStatus.className = 'admin-status success';
         adminFFHeadshotTitle.value = '';
         adminFFHeadshotLink.value = '';
+        showToast('Headshot Added', `${title} added to FF Headshots.`, 'file');
         setTimeout(() => { adminFFHeadshotStatus.textContent = ''; }, 3000);
     }).catch((err) => {
         adminFFHeadshotStatus.textContent = '❌ ' + err.message;
@@ -974,6 +1119,7 @@ adminAddFFLocation.addEventListener('click', function() {
         adminFFLocationStatus.className = 'admin-status success';
         adminFFLocationTitle.value = '';
         adminFFLocationLink.value = '';
+        showToast('Location Added', `${title} added to FF Locations.`, 'file');
         setTimeout(() => { adminFFLocationStatus.textContent = ''; }, 3000);
     }).catch((err) => {
         adminFFLocationStatus.textContent = '❌ ' + err.message;
@@ -1042,6 +1188,7 @@ adminAddError.addEventListener('click', function() {
                 adminErrorStatus.textContent = '✅ Video updated!';
                 adminErrorStatus.className = 'admin-status success';
                 resetErrorForm();
+                showToast('Error Fix Updated', `${title} updated.`, 'error');
                 setTimeout(() => { adminErrorStatus.textContent = ''; }, 3000);
             })
             .catch((err) => {
@@ -1054,6 +1201,7 @@ adminAddError.addEventListener('click', function() {
                 adminErrorStatus.textContent = '✅ Video added!';
                 adminErrorStatus.className = 'admin-status success';
                 resetErrorForm();
+                showToast('Error Fix Added', `${title} added.`, 'error');
                 setTimeout(() => { adminErrorStatus.textContent = ''; }, 3000);
             })
             .catch((err) => {
@@ -1128,6 +1276,7 @@ adminAddVideo.addEventListener('click', function() {
                 adminVideoStatus.textContent = '✅ Video updated!';
                 adminVideoStatus.className = 'admin-status success';
                 resetVideoForm();
+                showToast('Video Updated', `${title} updated.`, 'video');
                 setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
             })
             .catch((err) => {
@@ -1140,6 +1289,7 @@ adminAddVideo.addEventListener('click', function() {
                 adminVideoStatus.textContent = '✅ Video added!';
                 adminVideoStatus.className = 'admin-status success';
                 resetVideoForm();
+                showToast('Video Added', `${title} added.`, 'video');
                 setTimeout(() => { adminVideoStatus.textContent = ''; }, 3000);
             })
             .catch((err) => {
@@ -1183,6 +1333,7 @@ adminAddFile.addEventListener('click', function() {
         adminFileStatus.className = 'admin-status success';
         adminFileTitle.value = '';
         adminFileLink.value = '';
+        showToast('File Added', `${title} added to game files.`, 'file');
         setTimeout(() => { adminFileStatus.textContent = ''; }, 3000);
     }).catch((err) => {
         adminFileStatus.textContent = '❌ ' + err.message;
@@ -1213,12 +1364,135 @@ window.deleteFFLocation = deleteFFLocation;
 window.deleteError = deleteError;
 window.editError = editError;
 window.editVideo = editVideo;
+window.editPanel = editPanel;
+window.deletePanel = deletePanel;
+window.togglePanelStatus = togglePanelStatus;
+window.updateOrderStatus = updateOrderStatus;
 
 // ============================================================
 // LOAD DATA
 // ============================================================
 function loadAllData() {
-    // Files
+    // ===== PAID PANELS =====
+    db.collection('paidPanels').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const grid = document.getElementById('panelGrid');
+        grid.innerHTML = '';
+        adminPanelList.innerHTML = '';
+        document.getElementById('panelCount').textContent = snapshot.size;
+
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const panel = doc.data();
+                const id = doc.id;
+                const isAvailable = panel.status === 'Available';
+
+                // Card for main view
+                const card = document.createElement('div');
+                card.className = 'panel-card';
+                card.style.borderColor = '#ffd70044';
+                
+                let imageHtml = panel.imageUrl ? `<img src="${panel.imageUrl}" alt="${panel.name}" style="width:100%;height:150px;object-fit:cover;border-radius:1rem;background:#0a1a2a;">` : 
+                                `<div style="width:100%;height:150px;background:#0a1a2a;border-radius:1rem;display:flex;align-items:center;justify-content:center;color:#3a6a8a;font-size:3rem;"><i class="fas fa-crown"></i></div>`;
+                
+                card.innerHTML = `
+                    ${imageHtml}
+                    <span class="panel-status-badge ${isAvailable ? 'available' : 'out-of-stock'}">${panel.status || 'Available'}</span>
+                    <h4>${panel.name || 'Untitled'}</h4>
+                    <div style="font-size:0.7rem;color:#7797b0;margin:0.2rem 0;">${panel.shortDescription || ''}</div>
+                    <div style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#ffd700;font-weight:700;">${panel.price || '0'} PKR</div>
+                    <button class="delete-btn" onclick="deletePanel('${id}','${panel.name}')"><i class="fas fa-trash"></i></button>
+                `;
+                grid.appendChild(card);
+
+                // Admin list item
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.innerHTML = `
+                    <div class="item-text">👑 ${panel.name || 'Untitled'}</div>
+                    <div class="item-actions">
+                        <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="editPanel('${id}', ${JSON.stringify(panel).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-sm ${isAvailable ? 'danger' : 'success'}" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="togglePanelStatus('${id}','${panel.status || 'Available'}','${panel.name}')">
+                            ${isAvailable ? '<i class="fas fa-times"></i>' : '<i class="fas fa-check"></i>'}
+                        </button>
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deletePanel('${id}','${panel.name}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                adminPanelList.appendChild(item);
+            });
+        } else {
+            adminPanelList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No panels</div>`;
+            grid.innerHTML = `<div class="coming-soon-card" style="grid-column:1/-1;text-align:center;padding:2rem;color:#6a8fa8;">No panels available</div>`;
+        }
+    }, () => {});
+
+    // ===== ORDERS =====
+    db.collection('orders').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        ordersList.innerHTML = '';
+        let total = 0, pending = 0, accepted = 0, rejected = 0;
+
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const order = doc.data();
+                const id = doc.id;
+                total++;
+                if (order.orderStatus === 'Pending') pending++;
+                else if (order.orderStatus === 'Accepted') accepted++;
+                else if (order.orderStatus === 'Rejected') rejected++;
+
+                const statusClass = (order.orderStatus || 'Pending').toLowerCase();
+                const date = order.timestamp ? new Date(order.timestamp).toLocaleDateString() : 'N/A';
+                const time = order.timestamp ? new Date(order.timestamp).toLocaleTimeString() : '';
+
+                const item = document.createElement('div');
+                item.className = 'admin-list-item';
+                item.style.borderBottom = '1px solid #1f4a6b33';
+                item.style.padding = '0.5rem 0.3rem';
+                item.innerHTML = `
+                    <div style="width:100%;display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;">
+                        <span style="font-weight:600;color:#d8edff;font-size:0.8rem;">${order.panelName || 'Unknown'}</span>
+                        <span style="color:#ffd700;font-size:0.7rem;">${order.panelPrice || '0'} PKR</span>
+                        <span style="font-size:0.6rem;color:#6a8fa8;">${order.userEmail || 'N/A'}</span>
+                    </div>
+                    <div style="width:100%;display:flex;flex-wrap:wrap;gap:0.2rem 0.8rem;font-size:0.6rem;color:#6a8fa8;">
+                        <span><i class="fas fa-hashtag"></i> ${order.transactionId || 'N/A'}</span>
+                        <span><i class="fas fa-phone"></i> ${order.senderNumber || 'N/A'}</span>
+                        <span><i class="fas fa-credit-card"></i> ${order.paymentMethod || 'N/A'}</span>
+                        <span><i class="fas fa-calendar"></i> ${date} ${time}</span>
+                    </div>
+                    <div style="width:100%;display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;margin-top:0.2rem;">
+                        <span class="order-status ${statusClass}">${order.orderStatus || 'Pending'}</span>
+                        ${order.orderStatus === 'Pending' ? `
+                            <button class="btn-sm success" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="updateOrderStatus('${id}','Accepted')">
+                                <i class="fas fa-check"></i> Accept
+                            </button>
+                            <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="updateOrderStatus('${id}','Rejected')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        ` : `
+                            <button class="btn-sm info" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#1a3a5f;border:1px solid #2a6a8b;" onclick="updateOrderStatus('${id}','Pending')">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        `}
+                    </div>
+                `;
+                ordersList.appendChild(item);
+            });
+        } else {
+            ordersList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No orders yet</div>`;
+        }
+
+        totalOrdersCount.textContent = total;
+        pendingOrdersCount.textContent = pending;
+        acceptedOrdersCount.textContent = accepted;
+        rejectedOrdersCount.textContent = rejected;
+        document.getElementById('orderCount').textContent = total;
+    }, () => {});
+
+    // ===== FILES =====
     db.collection('files').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('fileGrid');
         grid.innerHTML = '';
@@ -1279,7 +1553,7 @@ function loadAllData() {
         }
     }, () => {});
 
-    // FF Headshots
+    // ===== FF HEADSHOTS =====
     db.collection('ffHeadshots').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('ffHeadshotsGrid');
         grid.innerHTML = '';
@@ -1337,7 +1611,7 @@ function loadAllData() {
         }
     }, () => {});
 
-    // FF Location
+    // ===== FF LOCATION =====
     db.collection('ffLocation').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('ffLocationGrid');
         grid.innerHTML = '';
@@ -1395,7 +1669,7 @@ function loadAllData() {
         }
     }, () => {});
 
-    // ERROR FIR
+    // ===== ERROR FIR =====
     db.collection('errorFixes').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('errorGrid');
         grid.innerHTML = '';
@@ -1443,7 +1717,7 @@ function loadAllData() {
         }
     }, () => {});
 
-    // Videos
+    // ===== VIDEOS =====
     db.collection('videos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         const grid = document.getElementById('videoGrid');
         grid.innerHTML = '';
@@ -1487,7 +1761,7 @@ function loadAllData() {
         }
     }, () => {});
 
-    // Counters
+    // ===== COUNTERS =====
     db.collection('counters').doc('stats').update({ visitors: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
     db.collection('counters').doc('stats').onSnapshot((doc) => {
         if (doc.exists) {
@@ -1498,17 +1772,12 @@ function loadAllData() {
     }, () => {});
 }
 
-console.log('🔥 ABID SIR - Admin Panel with FREE Realtime Notifications');
+console.log('🔥 ABID SIR - Admin Panel with Full Features');
+console.log('✅ Paid Panels: Add, Edit, Delete, Change Price, Upload Image, Upload Video Proof, Enable/Disable');
+console.log('✅ Payment Settings: Change EasyPaisa & JazzCash numbers and names');
+console.log('✅ Orders Management: Accept/Reject orders, real-time updates');
 console.log('✅ All existing features 100% intact');
-console.log('🔔 Realtime Notification System:');
-console.log('   - New Files → 🔥 New File Added');
-console.log('   - New Videos → 🎥 New Video Added');
-console.log('   - New Announcement → 📢 New Announcement');
-console.log('   - New Headshots → 🔥 New Headshot Added');
-console.log('   - New Location → 📍 New Location Added');
-console.log('   - New Error Fix → 🛠️ New Error Fix Added');
-console.log('💡 No Cloud Functions required - Works on Spark Plan!');
-console.log('📢 Browser Notifications + In-App Toasts');
+console.log('🔔 Real-time Notifications Active');
 </script>
 </body>
 </html>
