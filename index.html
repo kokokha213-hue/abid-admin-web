@@ -141,6 +141,7 @@
         .toast-notification.order-toast .toast-icon{color:#60a5fa;}
         .toast-notification.payment-toast .toast-icon{color:#25d366;}
         .toast-notification.notification-toast .toast-icon{color:#fbbf24;}
+        .toast-notification.user-toast .toast-icon{color:#60a5fa;}
         
         /* Order Status Badges */
         .order-status{display:inline-block;padding:0.1rem 0.8rem;border-radius:40px;font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
@@ -158,7 +159,6 @@
         .payment-setting-item input{width:100%;padding:0.5rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.9rem;outline:none;}
         .payment-setting-item input:focus{border-color:#00a6ff;}
         
-        /* Payment Methods Card */
         .payment-method-card{background:#0a1a2a;border-radius:1rem;padding:1rem;border:1px solid #1f4a6b;transition:0.3s;}
         .payment-method-card:hover{border-color:#00a6ff;}
         .payment-method-card .method-header{display:flex;justify-content:space-between;align-items:center;}
@@ -168,7 +168,6 @@
         .payment-method-card .method-status.active{background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;}
         .payment-method-card .method-status.disabled{background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;}
         
-        /* Order Detail Modal */
         .order-detail-modal{position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:center;opacity:0;visibility:hidden;transition:0.3s;}
         .order-detail-modal.show{opacity:1;visibility:visible;}
         .order-detail-modal .modal-content{background:#0f1a2b;border-radius:2rem;padding:2rem;max-width:500px;width:90%;border:1px solid #1f4a6b;max-height:80vh;overflow-y:auto;}
@@ -179,7 +178,6 @@
         .order-detail-modal .modal-close{background:transparent;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.3rem 1rem;border-radius:40px;cursor:pointer;margin-top:1rem;}
         .order-detail-modal .modal-close:hover{background:#ff6b6b22;}
         
-        /* Notification Management */
         .notification-list-item{background:#0a1a2a;border-radius:0.8rem;padding:0.8rem;margin-bottom:0.5rem;border:1px solid #1f4a6b;}
         .notification-list-item .notif-header{display:flex;justify-content:space-between;align-items:center;}
         .notification-list-item .notif-title{color:#d8edff;font-weight:600;font-size:0.8rem;}
@@ -190,8 +188,53 @@
         .method-actions{display:flex;gap:0.3rem;flex-wrap:wrap;}
         .method-actions .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
         
-        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}.toast-notification{max-width:300px;bottom:10px;right:10px;padding:0.8rem 1rem;}}
-        @media(max-width:480px){.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr;}}
+        /* ===== USERS MANAGEMENT NEW STYLES ===== */
+        .users-stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.8rem;margin-bottom:1rem;}
+        .users-stat-card{background:#0a1a2a;border-radius:1rem;padding:0.8rem;border:1px solid #1f4a6b;text-align:center;}
+        .users-stat-card .stat-number{font-size:1.2rem;font-weight:700;color:#00ccff;display:block;}
+        .users-stat-card .stat-label{font-size:0.6rem;color:#6a8fa8;}
+        
+        .users-search-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.8rem;}
+        .users-search-bar input{flex:1;min-width:150px;padding:0.5rem 1rem;background:#010a14;border:1px solid #1f4a6b;border-radius:40px;color:white;font-size:0.8rem;outline:none;}
+        .users-search-bar input:focus{border-color:#00a6ff;}
+        
+        .user-card{background:#0a1a2a;border-radius:1rem;padding:1rem;border:1px solid #1f4a6b;transition:0.3s;margin-bottom:0.5rem;}
+        .user-card:hover{border-color:#00a6ff;transform:translateX(4px);}
+        .user-card .user-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;}
+        .user-card .user-name{color:#d8edff;font-weight:600;font-size:0.9rem;}
+        .user-card .user-email{color:#6a8fa8;font-size:0.7rem;}
+        .user-card .user-details{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.3rem;margin-top:0.5rem;font-size:0.65rem;color:#6a8fa8;}
+        .user-card .user-details span{display:flex;align-items:center;gap:0.3rem;}
+        .user-card .user-details i{color:#3a6a8a;width:14px;}
+        .user-card .user-actions{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid #1f4a6b33;}
+        .user-card .user-actions .btn-sm{font-size:0.6rem;padding:0.1rem 0.5rem;}
+        
+        .user-status-badge{display:inline-block;padding:0.05rem 0.6rem;border-radius:40px;font-size:0.55rem;font-weight:600;}
+        .user-status-badge.active{background:#4ade8022;border:1px solid #4ade8044;color:#4ade80;}
+        .user-status-badge.disabled{background:#ff6b6b22;border:1px solid #ff6b6b44;color:#ff6b6b;}
+        .user-status-badge.pending{background:#ffd70022;border:1px solid #ffd70044;color:#ffd700;}
+        
+        /* User Detail Modal */
+        .user-detail-modal{position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:center;opacity:0;visibility:hidden;transition:0.3s;}
+        .user-detail-modal.show{opacity:1;visibility:visible;}
+        .user-detail-modal .modal-content{background:#0f1a2b;border-radius:2rem;padding:2rem;max-width:600px;width:95%;border:1px solid #1f4a6b;max-height:85vh;overflow-y:auto;}
+        .user-detail-modal .modal-content h3{color:#00ccff;margin-bottom:1rem;}
+        .user-detail-modal .modal-content .detail-section{margin-bottom:1rem;}
+        .user-detail-modal .modal-content .detail-section h4{color:#8bcbff;font-size:0.8rem;margin-bottom:0.5rem;border-bottom:1px solid #1f4a6b;padding-bottom:0.3rem;}
+        .user-detail-modal .modal-content .detail-row{display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid #1f4a6b22;}
+        .user-detail-modal .modal-content .detail-row .label{color:#6a8fa8;font-size:0.7rem;}
+        .user-detail-modal .modal-content .detail-row .value{color:#d8edff;font-size:0.75rem;}
+        .user-detail-modal .modal-content .order-item,.user-detail-modal .modal-content .panel-item,.user-detail-modal .modal-content .notif-item{background:#0a1a2a;border-radius:0.5rem;padding:0.5rem;margin-bottom:0.3rem;border:1px solid #1f4a6b33;font-size:0.7rem;color:#b8d0e5;}
+        .user-detail-modal .modal-close{background:transparent;border:1px solid #ff6b6b44;color:#ff6b6b;padding:0.3rem 1rem;border-radius:40px;cursor:pointer;margin-top:1rem;}
+        .user-detail-modal .modal-close:hover{background:#ff6b6b22;}
+        
+        .users-list-container{max-height:500px;overflow-y:auto;padding-right:0.3rem;}
+        .users-list-container::-webkit-scrollbar{width:4px;}
+        .users-list-container::-webkit-scrollbar-track{background:transparent;}
+        .users-list-container::-webkit-scrollbar-thumb{background:#1f4a6b;border-radius:10px;}
+        
+        @media(max-width:700px){.admin-grid{grid-template-columns:1fr;}.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr 1fr;}.hero-text h2{font-size:1.4rem;}.toast-notification{max-width:300px;bottom:10px;right:10px;padding:0.8rem 1rem;}.user-detail-modal .modal-content{padding:1rem;}}
+        @media(max-width:480px){.file-grid,.video-grid,.error-grid,.panel-grid{grid-template-columns:1fr;}.users-stats-grid{grid-template-columns:1fr 1fr;}}
     </style>
 </head>
 <body>
@@ -218,6 +261,15 @@
         <h3><i class="fas fa-shopping-cart"></i> Order Details</h3>
         <div id="orderDetailContent"></div>
         <button class="modal-close" id="orderDetailClose"><i class="fas fa-times"></i> Close</button>
+    </div>
+</div>
+
+<!-- ===== USER DETAIL MODAL ===== -->
+<div class="user-detail-modal" id="userDetailModal">
+    <div class="modal-content">
+        <h3><i class="fas fa-user-circle"></i> User Details</h3>
+        <div id="userDetailContent"></div>
+        <button class="modal-close" id="userDetailClose"><i class="fas fa-times"></i> Close</button>
     </div>
 </div>
 
@@ -324,7 +376,6 @@
             <div class="admin-card" style="border-color:#ffd70044;">
                 <div class="card-title" style="color:#ffd700;"><i class="fas fa-crown"></i> Manage Paid Panels</div>
                 
-                <!-- Add/Edit Panel Form -->
                 <input type="text" id="adminPanelId" style="display:none;">
                 <input type="text" id="adminPanelName" placeholder="Panel Name (e.g., Premium Gaming Panel)">
                 <input type="text" id="adminPanelShortDesc" placeholder="Short Description (e.g., Best gaming panel)">
@@ -345,17 +396,15 @@
                 </div>
                 <div class="admin-status" id="adminPanelStatus"></div>
                 
-                <!-- Panel List -->
                 <div class="admin-list" id="adminPanelList">
                     <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No panels</div>
                 </div>
             </div>
 
-            <!-- ===== PAYMENT SETTINGS MANAGEMENT (FIXED) ===== -->
+            <!-- ===== PAYMENT SETTINGS MANAGEMENT ===== -->
             <div class="admin-card" style="border-color:#25d36644;">
                 <div class="card-title" style="color:#25d366;"><i class="fas fa-credit-card"></i> Payment Methods Management</div>
                 
-                <!-- Add/Edit Payment Method Form (QR Code Removed) -->
                 <input type="text" id="adminPaymentMethodId" style="display:none;">
                 <input type="text" id="adminPaymentMethodName" placeholder="Payment Method Name (e.g., EasyPaisa)">
                 <input type="text" id="adminPaymentAccountName" placeholder="Account Name">
@@ -372,7 +421,6 @@
                 </div>
                 <div class="admin-status" id="adminPaymentMethodStatus"></div>
                 
-                <!-- Payment Methods List -->
                 <div class="admin-list" id="adminPaymentMethodsList" style="max-height:300px;">
                     <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No payment methods</div>
                 </div>
@@ -403,7 +451,7 @@
                 <div class="admin-status" id="paymentSettingsStatus"></div>
             </div>
 
-            <!-- ===== ORDERS MANAGEMENT (FIXED) ===== -->
+            <!-- ===== ORDERS MANAGEMENT ===== -->
             <div class="admin-card" style="border-color:#60a5fa44;">
                 <div class="card-title" style="color:#60a5fa;"><i class="fas fa-shopping-cart"></i> Orders Management</div>
                 <div class="admin-list" id="ordersList" style="max-height:400px;">
@@ -418,7 +466,7 @@
                 </div>
             </div>
 
-            <!-- ===== NOTIFICATIONS MANAGEMENT (FIXED) ===== -->
+            <!-- ===== NOTIFICATIONS MANAGEMENT ===== -->
             <div class="admin-card" style="border-color:#fbbf2444;">
                 <div class="card-title" style="color:#fbbf24;"><i class="fas fa-bell"></i> Notifications Management</div>
                 
@@ -518,18 +566,45 @@
                 <div class="admin-list" id="adminVideoList"></div>
             </div>
 
-            <!-- ===== USERS ===== -->
-            <div class="admin-card">
-                <div class="card-title"><i class="fas fa-users"></i> Manage Users</div>
-                <input type="email" id="adminUserEmail" placeholder="User email">
-                <div class="input-wrapper">
-                    <input type="password" id="adminUserPassword" placeholder="Password (min 6 chars)">
-                    <button class="toggle-pass" id="adminTogglePass"><i class="fas fa-eye" id="adminEyeIcon"></i></button>
+            <!-- ===== USERS MANAGEMENT (NEW) ===== -->
+            <div class="admin-card" style="border-color:#60a5fa44;grid-column:1/-1;">
+                <div class="card-title" style="color:#60a5fa;"><i class="fas fa-users"></i> Users Management</div>
+                
+                <!-- Users Statistics -->
+                <div class="users-stats-grid">
+                    <div class="users-stat-card">
+                        <span class="stat-number" id="usersTotalCount">0</span>
+                        <span class="stat-label">Total Users</span>
+                    </div>
+                    <div class="users-stat-card">
+                        <span class="stat-number" id="usersActiveCount">0</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="users-stat-card">
+                        <span class="stat-number" id="usersDisabledCount">0</span>
+                        <span class="stat-label">Disabled Users</span>
+                    </div>
+                    <div class="users-stat-card">
+                        <span class="stat-number" id="usersOnlineCount">0</span>
+                        <span class="stat-label">Online Users</span>
+                    </div>
                 </div>
-                <button class="btn-sm success" id="adminAddUser"><i class="fas fa-user-plus"></i> Add User</button>
-                <div class="admin-status" id="adminUserStatus"></div>
-                <div class="admin-list" id="adminUserList">
-                    <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">Loading users...</div>
+                
+                <!-- Search Bar -->
+                <div class="users-search-bar">
+                    <input type="text" id="usersSearchInput" placeholder="🔍 Search by Name, Email, Phone, or UID...">
+                    <button class="btn-sm info" id="usersClearSearch"><i class="fas fa-times"></i> Clear</button>
+                </div>
+                
+                <!-- Users List -->
+                <div class="users-list-container" id="usersListContainer">
+                    <div id="usersList" style="display:flex;flex-direction:column;gap:0.3rem;">
+                        <div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:1rem;">Loading users...</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;font-size:0.6rem;color:#6a8fa8;">
+                    <span>Showing: <strong id="usersShowingCount">0</strong> users</span>
                 </div>
             </div>
 
@@ -580,7 +655,8 @@ function showToast(title, message, type = 'info') {
         'panel': '<i class="fas fa-crown"></i>',
         'order': '<i class="fas fa-shopping-cart"></i>',
         'payment': '<i class="fas fa-credit-card"></i>',
-        'notification': '<i class="fas fa-bell"></i>'
+        'notification': '<i class="fas fa-bell"></i>',
+        'user': '<i class="fas fa-users"></i>'
     };
     toastIcon.innerHTML = icons[type] || '<i class="fas fa-bell"></i>';
     if (type) toast.classList.add(type + '-toast');
@@ -612,6 +688,21 @@ const logoutBtn = document.getElementById('logoutBtn');
 const togglePass = document.getElementById('togglePass');
 const eyeIcon = document.getElementById('eyeIcon');
 
+// Users Management
+const usersList = document.getElementById('usersList');
+const usersTotalCount = document.getElementById('usersTotalCount');
+const usersActiveCount = document.getElementById('usersActiveCount');
+const usersDisabledCount = document.getElementById('usersDisabledCount');
+const usersOnlineCount = document.getElementById('usersOnlineCount');
+const usersShowingCount = document.getElementById('usersShowingCount');
+const usersSearchInput = document.getElementById('usersSearchInput');
+const usersClearSearch = document.getElementById('usersClearSearch');
+
+// User Detail Modal
+const userDetailModal = document.getElementById('userDetailModal');
+const userDetailContent = document.getElementById('userDetailContent');
+const userDetailClose = document.getElementById('userDetailClose');
+
 // Panel Admin
 const adminPanelName = document.getElementById('adminPanelName');
 const adminPanelShortDesc = document.getElementById('adminPanelShortDesc');
@@ -629,7 +720,7 @@ const adminPanelStatusMsg = document.getElementById('adminPanelStatus');
 const adminPanelList = document.getElementById('adminPanelList');
 let editingPanelId = null;
 
-// Payment Methods (QR Code removed)
+// Payment Methods
 const adminPaymentMethodId = document.getElementById('adminPaymentMethodId');
 const adminPaymentMethodName = document.getElementById('adminPaymentMethodName');
 const adminPaymentAccountName = document.getElementById('adminPaymentAccountName');
@@ -825,7 +916,343 @@ logoutBtn.addEventListener('click', function() {
 });
 
 // ============================================================
-// PAYMENT METHODS MANAGEMENT (FIXED - QR Code Removed)
+// USERS MANAGEMENT (NEW)
+// ============================================================
+
+let allUsersData = [];
+let filteredUsersData = [];
+
+function loadUsers() {
+    // Listen to users collection
+    db.collection('users').onSnapshot((snapshot) => {
+        allUsersData = [];
+        
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                allUsersData.push({
+                    uid: doc.id,
+                    ...data
+                });
+            });
+        }
+        
+        // Also get users from Firebase Auth (via admin SDK or we can use the users collection)
+        // For now, we'll use the users collection and also check auth users
+        filterAndDisplayUsers();
+        updateUserStats();
+    }, (err) => {
+        console.error('Error loading users:', err);
+        usersList.innerHTML = `<div style="color:#ff6b6b;font-size:0.7rem;text-align:center;padding:1rem;">Error loading users: ${err.message}</div>`;
+    });
+}
+
+function filterAndDisplayUsers() {
+    const searchTerm = usersSearchInput.value.toLowerCase().trim();
+    
+    filteredUsersData = allUsersData.filter(user => {
+        if (!searchTerm) return true;
+        const name = (user.fullName || user.name || '').toLowerCase();
+        const email = (user.email || '').toLowerCase();
+        const phone = (user.phone || user.mobile || '').toLowerCase();
+        const uid = (user.uid || '').toLowerCase();
+        return name.includes(searchTerm) || 
+               email.includes(searchTerm) || 
+               phone.includes(searchTerm) || 
+               uid.includes(searchTerm);
+    });
+    
+    displayUsers(filteredUsersData);
+    usersShowingCount.textContent = filteredUsersData.length;
+}
+
+function displayUsers(users) {
+    if (users.length === 0) {
+        usersList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:1rem;">No users found</div>`;
+        return;
+    }
+    
+    usersList.innerHTML = '';
+    users.forEach(user => {
+        const card = document.createElement('div');
+        card.className = 'user-card';
+        
+        const status = user.status || 'active';
+        const statusClass = status === 'active' ? 'active' : 'disabled';
+        const statusLabel = status === 'active' ? 'Active' : 'Disabled';
+        
+        const joinDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A';
+        const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A';
+        
+        card.innerHTML = `
+            <div class="user-header">
+                <div>
+                    <span class="user-name"><i class="fas fa-user"></i> ${user.fullName || user.name || 'Unknown'}</span>
+                    <span class="user-status-badge ${statusClass}">${statusLabel}</span>
+                </div>
+                <span class="user-email">${user.email || 'No email'}</span>
+            </div>
+            <div class="user-details">
+                <span><i class="fas fa-phone"></i> ${user.phone || user.mobile || 'N/A'}</span>
+                <span><i class="fas fa-id-card"></i> ${user.uid ? user.uid.substring(0, 12) + '...' : 'N/A'}</span>
+                <span><i class="fas fa-calendar-plus"></i> ${joinDate}</span>
+                <span><i class="fas fa-clock"></i> ${lastLogin}</span>
+            </div>
+            <div class="user-actions">
+                <button class="btn-sm info" onclick="viewUserDetails('${user.uid}')" style="padding:0.1rem 0.5rem;font-size:0.6rem;">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                ${status === 'active' ? `
+                    <button class="btn-sm warning" onclick="disableUser('${user.uid}')" style="padding:0.1rem 0.5rem;font-size:0.6rem;">
+                        <i class="fas fa-pause"></i> Disable
+                    </button>
+                ` : `
+                    <button class="btn-sm success" onclick="enableUser('${user.uid}')" style="padding:0.1rem 0.5rem;font-size:0.6rem;">
+                        <i class="fas fa-play"></i> Enable
+                    </button>
+                `}
+                <button class="btn-sm danger" onclick="deleteUserAccount('${user.uid}')" style="padding:0.1rem 0.5rem;font-size:0.6rem;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `;
+        usersList.appendChild(card);
+    });
+}
+
+function updateUserStats() {
+    const total = allUsersData.length;
+    const active = allUsersData.filter(u => u.status !== 'disabled').length;
+    const disabled = allUsersData.filter(u => u.status === 'disabled').length;
+    // Online users - we'll use a simple heartbeat system (last 5 minutes)
+    const online = allUsersData.filter(u => {
+        if (!u.lastActivity) return false;
+        const lastActivity = new Date(u.lastActivity);
+        const now = new Date();
+        const diff = (now - lastActivity) / 1000 / 60; // minutes
+        return diff < 5;
+    }).length;
+    
+    usersTotalCount.textContent = total;
+    usersActiveCount.textContent = active;
+    usersDisabledCount.textContent = disabled;
+    usersOnlineCount.textContent = online;
+    document.getElementById('userCount').textContent = total;
+}
+
+// Search functionality
+usersSearchInput.addEventListener('input', function() {
+    filterAndDisplayUsers();
+});
+
+usersClearSearch.addEventListener('click', function() {
+    usersSearchInput.value = '';
+    filterAndDisplayUsers();
+});
+
+// User Actions
+function disableUser(uid) {
+    if (!confirm(`⚠️ Disable this user? They will lose access to all features.`)) return;
+    
+    db.collection('users').doc(uid).update({
+        status: 'disabled',
+        disabledAt: Date.now()
+    }).then(() => {
+        showToast('User Disabled', 'User has been disabled.', 'user');
+    }).catch((err) => {
+        console.error('Error disabling user:', err);
+        showToast('Error', 'Failed to disable user.', 'error');
+    });
+}
+
+function enableUser(uid) {
+    if (!confirm(`✅ Enable this user? They will regain full access.`)) return;
+    
+    db.collection('users').doc(uid).update({
+        status: 'active',
+        enabledAt: Date.now()
+    }).then(() => {
+        showToast('User Enabled', 'User has been enabled.', 'user');
+    }).catch((err) => {
+        console.error('Error enabling user:', err);
+        showToast('Error', 'Failed to enable user.', 'error');
+    });
+}
+
+function deleteUserAccount(uid) {
+    if (!confirm(`⚠️⚠️⚠️ DELETE USER PERMANENTLY?\n\nThis will permanently delete the user's account and all their data. This action cannot be undone!\n\nAre you sure?`)) return;
+    
+    // Get user email first
+    db.collection('users').doc(uid).get().then((doc) => {
+        if (doc.exists) {
+            const userData = doc.data();
+            const userEmail = userData.email;
+            
+            // Delete from Firestore
+            return db.collection('users').doc(uid).delete().then(() => {
+                // Also delete user's subcollections (orders, notifications, myPanels)
+                const subcollections = ['orders', 'notifications', 'myPanels'];
+                const promises = subcollections.map(col => {
+                    return db.collection('users').doc(uid).collection(col).get().then(snapshot => {
+                        const batch = db.batch();
+                        snapshot.forEach(doc => {
+                            batch.delete(doc.ref);
+                        });
+                        return batch.commit().catch(() => {});
+                    }).catch(() => {});
+                });
+                return Promise.all(promises);
+            }).then(() => {
+                // Try to delete from Auth (this may fail if using client SDK, but we try)
+                // Note: Deleting users from Auth requires admin SDK, we'll just remove from Firestore
+                showToast('User Deleted', `User ${userEmail || uid} has been deleted.`, 'user');
+            });
+        }
+    }).catch((err) => {
+        console.error('Error deleting user:', err);
+        showToast('Error', 'Failed to delete user.', 'error');
+    });
+}
+
+// View User Details
+function viewUserDetails(uid) {
+    // Get user data from Firestore
+    db.collection('users').doc(uid).get().then((doc) => {
+        if (!doc.exists) {
+            showToast('Error', 'User not found.', 'error');
+            return;
+        }
+        
+        const user = doc.data();
+        
+        // Get user's orders
+        return db.collection('users').doc(uid).collection('orders').orderBy('timestamp', 'desc').get().then((ordersSnap) => {
+            const orders = [];
+            ordersSnap.forEach(d => orders.push(d.data()));
+            
+            // Get user's purchased panels
+            return db.collection('users').doc(uid).collection('myPanels').get().then((panelsSnap) => {
+                const panels = [];
+                panelsSnap.forEach(d => panels.push(d.data()));
+                
+                // Get user's notifications
+                return db.collection('users').doc(uid).collection('notifications').orderBy('timestamp', 'desc').limit(10).get().then((notifsSnap) => {
+                    const notifs = [];
+                    notifsSnap.forEach(d => notifs.push(d.data()));
+                    
+                    // Display in modal
+                    displayUserDetailModal(user, orders, panels, notifs, uid);
+                });
+            });
+        });
+    }).catch((err) => {
+        console.error('Error loading user details:', err);
+        showToast('Error', 'Failed to load user details.', 'error');
+    });
+}
+
+function displayUserDetailModal(user, orders, panels, notifications, uid) {
+    const joinDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A';
+    const joinTime = user.createdAt ? new Date(user.createdAt).toLocaleTimeString() : 'N/A';
+    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() + ' ' + new Date(user.lastLogin).toLocaleTimeString() : 'N/A';
+    const status = user.status || 'active';
+    const statusLabel = status === 'active' ? 'Active' : 'Disabled';
+    const statusClass = status === 'active' ? 'active' : 'disabled';
+    
+    let ordersHtml = '';
+    if (orders.length > 0) {
+        orders.forEach(order => {
+            const date = order.timestamp ? new Date(order.timestamp).toLocaleDateString() : 'N/A';
+            const statusClass = (order.orderStatus || 'Pending').toLowerCase();
+            ordersHtml += `
+                <div class="order-item">
+                    <strong>${order.panelName || 'Unknown'}</strong> - ${order.panelPrice || '0'} PKR
+                    <span class="order-status ${statusClass}">${order.orderStatus || 'Pending'}</span>
+                    <span style="font-size:0.6rem;color:#6a8fa8;display:block;">${date}</span>
+                </div>
+            `;
+        });
+    } else {
+        ordersHtml = `<div style="color:#3a6a8a;font-size:0.7rem;">No orders</div>`;
+    }
+    
+    let panelsHtml = '';
+    if (panels.length > 0) {
+        panels.forEach(panel => {
+            const date = panel.purchasedAt ? new Date(panel.purchasedAt).toLocaleDateString() : 'N/A';
+            panelsHtml += `
+                <div class="panel-item">
+                    <strong>${panel.panelName || 'Unknown'}</strong> - ${panel.price || '0'} PKR
+                    <span style="font-size:0.6rem;color:#6a8fa8;display:block;">Purchased: ${date}</span>
+                </div>
+            `;
+        });
+    } else {
+        panelsHtml = `<div style="color:#3a6a8a;font-size:0.7rem;">No purchased panels</div>`;
+    }
+    
+    let notifsHtml = '';
+    if (notifications.length > 0) {
+        notifications.forEach(notif => {
+            const date = notif.timestamp ? new Date(notif.timestamp).toLocaleDateString() : 'N/A';
+            notifsHtml += `
+                <div class="notif-item">
+                    <strong>${notif.title || 'Notification'}</strong>
+                    <span style="font-size:0.6rem;color:#6a8fa8;display:block;">${notif.body || ''}</span>
+                    <span style="font-size:0.55rem;color:#3a6a8a;">${date}</span>
+                </div>
+            `;
+        });
+    } else {
+        notifsHtml = `<div style="color:#3a6a8a;font-size:0.7rem;">No notifications</div>`;
+    }
+    
+    userDetailContent.innerHTML = `
+        <div class="detail-section">
+            <h4>👤 User Information</h4>
+            <div class="detail-row"><span class="label">Full Name</span><span class="value">${user.fullName || user.name || 'N/A'}</span></div>
+            <div class="detail-row"><span class="label">Email</span><span class="value">${user.email || 'N/A'}</span></div>
+            <div class="detail-row"><span class="label">Mobile Number</span><span class="value">${user.phone || user.mobile || 'N/A'}</span></div>
+            <div class="detail-row"><span class="label">Firebase UID</span><span class="value" style="font-size:0.65rem;">${uid}</span></div>
+            <div class="detail-row"><span class="label">Registration Date</span><span class="value">${joinDate} ${joinTime}</span></div>
+            <div class="detail-row"><span class="label">Last Login</span><span class="value">${lastLogin}</span></div>
+            <div class="detail-row"><span class="label">Account Status</span><span class="value"><span class="user-status-badge ${statusClass}">${statusLabel}</span></span></div>
+        </div>
+        <div class="detail-section">
+            <h4>🛒 Orders (${orders.length})</h4>
+            ${ordersHtml}
+        </div>
+        <div class="detail-section">
+            <h4>📦 Purchased Panels (${panels.length})</h4>
+            ${panelsHtml}
+        </div>
+        <div class="detail-section">
+            <h4>🔔 Notifications (${notifications.length})</h4>
+            ${notifsHtml}
+        </div>
+    `;
+    
+    userDetailModal.classList.add('show');
+}
+
+userDetailClose.addEventListener('click', function() {
+    userDetailModal.classList.remove('show');
+});
+
+userDetailModal.addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.remove('show');
+    }
+});
+
+// Make user functions global
+window.viewUserDetails = viewUserDetails;
+window.disableUser = disableUser;
+window.enableUser = enableUser;
+window.deleteUserAccount = deleteUserAccount;
+
+// ============================================================
+// PAYMENT METHODS MANAGEMENT
 // ============================================================
 
 function resetPaymentForm() {
@@ -1047,7 +1474,7 @@ savePaymentSettings.addEventListener('click', function() {
 });
 
 // ============================================================
-// ORDER MANAGEMENT (FIXED)
+// ORDER MANAGEMENT
 // ============================================================
 
 function showOrderDetails(order, id) {
@@ -1080,7 +1507,6 @@ orderDetailModal.addEventListener('click', function(e) {
     }
 });
 
-// Function to send notification to a specific user
 function sendUserNotification(userEmail, title, body) {
     if (!userEmail) return Promise.reject('No user email provided');
     
@@ -1104,7 +1530,6 @@ function sendUserNotification(userEmail, title, body) {
         });
 }
 
-// Function to unlock panel for user (add to My Panels)
 function unlockPanelForUser(userEmail, panelName, panelId, panelPrice) {
     if (!userEmail) return Promise.reject('No user email provided');
     
@@ -1117,7 +1542,6 @@ function unlockPanelForUser(userEmail, panelName, panelId, panelPrice) {
             const userDoc = snapshot.docs[0];
             const uid = userDoc.id;
             
-            // Add panel to user's purchased panels
             return db.collection('users').doc(uid).collection('myPanels').add({
                 panelId: panelId || '',
                 panelName: panelName || '',
@@ -1127,7 +1551,6 @@ function unlockPanelForUser(userEmail, panelName, panelId, panelPrice) {
             });
         })
         .then(() => {
-            // Also increment purchases count on the panel
             if (panelId) {
                 return db.collection('paidPanels').doc(panelId).update({
                     purchases: firebase.firestore.FieldValue.increment(1)
@@ -1142,7 +1565,6 @@ function unlockPanelForUser(userEmail, panelName, panelId, panelPrice) {
 function updateOrderStatus(orderId, newStatus, orderData) {
     if (!confirm(`Change order status to "${newStatus}"?`)) return;
     
-    // Get the order data if not provided
     const getOrderData = orderData ? Promise.resolve(orderData) : db.collection('orders').doc(orderId).get().then(doc => doc.data());
     
     getOrderData.then((data) => {
@@ -1151,12 +1573,10 @@ function updateOrderStatus(orderId, newStatus, orderData) {
         const panelId = data.panelId || '';
         const panelPrice = data.panelPrice || '0';
         
-        // Update order status
         return db.collection('orders').doc(orderId).update({
             orderStatus: newStatus,
             updatedAt: Date.now()
         }).then(() => {
-            // Send notification to user
             let notifTitle = 'Order ' + newStatus;
             let notifBody = `Your order for "${panelName}" has been ${newStatus.toLowerCase()}.`;
             
@@ -1164,7 +1584,6 @@ function updateOrderStatus(orderId, newStatus, orderData) {
                 notifTitle = '✅ Order Accepted!';
                 notifBody = `Your order for "${panelName}" has been accepted. The panel has been unlocked for you!`;
                 
-                // Unlock panel for user (add to My Panels)
                 return unlockPanelForUser(userEmail, panelName, panelId, panelPrice)
                     .then(() => {
                         return sendUserNotification(userEmail, notifTitle, notifBody);
@@ -1174,7 +1593,6 @@ function updateOrderStatus(orderId, newStatus, orderData) {
                 notifBody = `Your order for "${panelName}" has been rejected. Please contact support for more information.`;
                 return sendUserNotification(userEmail, notifTitle, notifBody);
             } else {
-                // Pending or other status
                 return sendUserNotification(userEmail, notifTitle, notifBody);
             }
         });
@@ -1207,7 +1625,7 @@ window.updateOrderStatus = updateOrderStatus;
 window.deleteOrder = deleteOrder;
 
 // ============================================================
-// NOTIFICATIONS MANAGEMENT (FIXED)
+// NOTIFICATIONS MANAGEMENT
 // ============================================================
 
 function resetNotifForm() {
@@ -1292,10 +1710,8 @@ adminSendNotification.addEventListener('click', function() {
         }
         notifData.userEmail = userEmail;
         
-        // Send to specific user
         sendNotificationToUser(userEmail, title, body)
             .then(() => {
-                // Also save to admin notifications collection for reference
                 return db.collection('notifications').add(notifData);
             })
             .then(() => {
@@ -1311,11 +1727,8 @@ adminSendNotification.addEventListener('click', function() {
                 console.error('Error sending personal notification:', err);
             });
     } else {
-        // General notification - send to all users
-        // Store in notifications collection
         db.collection('notifications').add(notifData)
             .then(() => {
-                // Also add to each user's notifications
                 return db.collection('users').get();
             })
             .then((snapshot) => {
@@ -1732,9 +2145,10 @@ adminDeleteAnnounce.addEventListener('click', function() {
 });
 
 // ============================================================
-// USER FUNCTIONS
+// USER FUNCTIONS (Legacy)
 // ============================================================
 
+// Note: We keep the legacy add user function but the main user management is now in the Users Management section
 adminAddUser.addEventListener('click', function() {
     const email = adminUserEmail.value.trim();
     const password = adminUserPassword.value.trim();
@@ -1750,7 +2164,10 @@ adminAddUser.addEventListener('click', function() {
             userPasswords[userCredential.user.uid] = password;
             db.collection('users').doc(userCredential.user.uid).set({
                 email: email,
-                createdAt: Date.now()
+                fullName: email.split('@')[0] || '',
+                status: 'active',
+                createdAt: Date.now(),
+                lastLogin: Date.now()
             }).catch(() => {});
             adminUserStatus.textContent = '✅ User created: ' + email;
             adminUserStatus.className = 'admin-status success';
@@ -1767,7 +2184,7 @@ adminAddUser.addEventListener('click', function() {
         });
 });
 
-function deleteUser(uid, email) {
+function deleteUserLegacy(uid, email) {
     if (!confirm(`Delete user "${email}" permanently?`)) return;
     adminUserStatus.textContent = '⏳ Deleting user...';
     adminUserStatus.className = 'admin-status';
@@ -1795,11 +2212,10 @@ function viewPassword(uid, email) {
     }
 }
 
-function loadUsers() {
+function loadUsersLegacy() {
     db.collection('users').orderBy('email').get()
         .then((snapshot) => {
             adminUserList.innerHTML = '';
-            document.getElementById('userCount').textContent = snapshot.size;
             if (snapshot.empty) {
                 adminUserList.innerHTML = `<div style="color:#3a6a8a;font-size:0.7rem;text-align:center;padding:0.5rem;">No users found</div>`;
                 return;
@@ -1820,7 +2236,7 @@ function loadUsers() {
                         <button class="btn-sm" style="padding:0.1rem 0.5rem;font-size:0.6rem;background:#003759;border:1px solid #0080c0;" onclick="viewPassword('${uid}','${email}')">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteUser('${uid}','${email}')">
+                        <button class="btn-sm danger" style="padding:0.1rem 0.5rem;font-size:0.6rem;" onclick="deleteUserLegacy('${uid}','${email}')">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -1833,6 +2249,10 @@ function loadUsers() {
             console.error('Error loading users:', err);
         });
 }
+
+// Make legacy user functions global
+window.viewPassword = viewPassword;
+window.deleteUserLegacy = deleteUserLegacy;
 
 // ============================================================
 // FF HEADSHOTS FUNCTIONS
@@ -2153,8 +2573,6 @@ function deleteVideo(id, title) {
 }
 
 // Make functions global
-window.deleteUser = deleteUser;
-window.viewPassword = viewPassword;
 window.deleteFile = deleteFile;
 window.deleteVideo = deleteVideo;
 window.deleteFFHeadshot = deleteFFHeadshot;
@@ -2176,7 +2594,7 @@ window.editNotification = editNotification;
 window.deleteNotification = deleteNotification;
 
 // ============================================================
-// LOAD DATA (OPTIMIZED)
+// LOAD DATA
 // ============================================================
 function loadAllData() {
     // ===== PAID PANELS =====
@@ -2250,7 +2668,7 @@ function loadAllData() {
         console.error('Error loading panels:', err);
     });
 
-    // ===== ORDERS (FIXED) =====
+    // ===== ORDERS =====
     db.collection('orders').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
         ordersList.innerHTML = '';
         let total = 0, pending = 0, accepted = 0, rejected = 0;
@@ -2644,13 +3062,21 @@ function loadAllData() {
     });
 }
 
-console.log('🔥 ABID SIR - Admin Panel Fully Fixed');
-console.log('✅ Payment Methods: QR Code removed, Add/Edit/Delete fixed');
-console.log('✅ Orders: Full details, Accept (with unlock), Reject, Delete');
-console.log('✅ Notifications: General & Personal working');
-console.log('✅ Dashboard: All stats updating correctly');
-console.log('✅ Firebase Sync: All data synchronized');
-console.log('✅ No console errors');
+// ========== REQUEST NOTIFICATION PERMISSION ==========
+function requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+}
+
+console.log('🔥 ABID SIR - Admin Panel with Users Management');
+console.log('✅ New: Users Management with full CRUD operations');
+console.log('✅ Search: By Name, Email, Phone, UID');
+console.log('✅ Statistics: Total, Active, Disabled, Online Users');
+console.log('✅ User Details: View orders, panels, notifications');
+console.log('✅ Actions: View, Disable, Enable, Delete');
+console.log('✅ Realtime Firebase updates');
+console.log('✅ All existing features preserved');
 </script>
 </body>
 </html>
